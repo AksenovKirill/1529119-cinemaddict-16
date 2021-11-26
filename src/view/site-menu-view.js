@@ -1,4 +1,3 @@
-
 export const createSiteMenuTemplate = () => (
   `<nav class="main-navigation">
     <div class="main-navigation__items">
