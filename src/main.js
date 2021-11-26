@@ -8,7 +8,7 @@ import {renderTemplate, RenderPosition} from './render.js';
 import { generateFilmCard, generatePopupCard } from './mock/generateCard.js';
 
 const CARD_COUNT = 5;
-const MOCK_DATE_COUNT = 20;
+const MOCK_DATA_COUNT = 20;
 const siteHeader = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 /* const siteFooter = document.querySelector('.footer'); */
@@ -20,14 +20,15 @@ renderTemplate(siteMainElement, createFilmCardSectionTemplate(), RenderPosition.
 const filmsSection = siteMainElement.querySelector('.films');
 const filmsListContainer = siteMainElement.querySelector('.films-list__container');
 
-for (let i = 0; i < CARD_COUNT; i++) {
-  renderTemplate(filmsListContainer, createFilmCardTemplate(), RenderPosition.BEFOREEND);
-}
-
 renderTemplate(filmsSection, createButtonShowMoreTemplate(), RenderPosition.BEFOREEND);
 /* renderTemplate(siteFooter, createPopUpTemplate(), RenderPosition.AFTEREND); */
-const mockCardDate = Array.from({length: MOCK_DATE_COUNT}, generateFilmCard);
-const mockPopupDate = Array.from({length: MOCK_DATE_COUNT}, generatePopupCard);
+const mockCardData = Array.from({length: MOCK_DATA_COUNT}, generateFilmCard);
+const mockPopupData = Array.from({length: MOCK_DATA_COUNT}, generatePopupCard);
+
 /* eslint-disable no-alert, no-console */
-console.log(mockCardDate);
-console.log(mockPopupDate);
+console.log(mockCardData);
+console.log(mockPopupData);
+
+for (let i = 0; i < CARD_COUNT; i++) {
+  renderTemplate(filmsListContainer, createFilmCardTemplate(mockCardData[i]), RenderPosition.BEFOREEND);
+}

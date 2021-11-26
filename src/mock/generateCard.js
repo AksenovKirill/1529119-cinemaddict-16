@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 
 const COMMENTS_COUNT = 5;
 const EMOJI = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
+
 const userNames = [
   'Tim Macoveev',
   'Kirill Aksenov',
@@ -9,12 +10,22 @@ const userNames = [
   'Elvis Presley',
 ];
 
-const getRandomInteger = (a = 0, b = 1) => {
+const images = [
+  'made-for-each-other.png',
+  'popeye-meets-sinbad.png',
+  'sagebrush-trail.jpg',
+  'santa-claus-conquers-the-martians.jpg',
+  'the-dance-of-life.jpg',
+  'the-great-flamarion.jpg',
+  'the-man-with-the-golden-arm.jpg',
+];
+
+function getRandomInteger(a = 0, b = 1) {
   const lower = Math.ceil(Math.min(a, b));
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
+}
 
 const getRandowArrayElements = (array) => {
   const index = getRandomInteger(0, array.length - 1);
@@ -52,7 +63,7 @@ const generateComment = () => {
 };
 
 export const generateFilmCard = () => ({
-  poster: '/public/images/posters/popeye-meets-sinbad.png',
+  poster: getRandowArrayElements(images),
   control: {
     watchlist: false,
     watched: false,
@@ -61,7 +72,7 @@ export const generateFilmCard = () => ({
   title: 'Popeye the Sailor Meets Sindbad the Sailor',
   rating: '6.3',
   year: '1936',
-  duration: '1h 36m',
+  runTime: '1h 36m',
   genre: 'Cartoon',
   description: generateDescription(),
   comments: Array.from(
@@ -78,7 +89,7 @@ export const generatePopupCard = () => ({
   screenwriter: '',
   cast: [],
   dateOfRelease: '',
-  duration: '',
+  runTime: '',
   country: '',
   genres: [],
   fullDescription: [],
