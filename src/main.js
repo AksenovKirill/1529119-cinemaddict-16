@@ -5,7 +5,7 @@ import {createUserRankTemplate } from './view/user-rank-view.js';
 import {createButtonShowMoreTemplate} from './view/button-showmore-view.js';
 import {renderTemplate, RenderPosition} from './render.js';
 /* import { createPopUpTemplate } from './view/popup-view.js'; */
-import { generateFilmCard } from './mock/generateCard.js';
+import { generateFilmCard, generatePopupCard } from './mock/generateCard.js';
 
 const CARD_COUNT = 5;
 const MOCK_DATE_COUNT = 20;
@@ -26,6 +26,8 @@ for (let i = 0; i < CARD_COUNT; i++) {
 
 renderTemplate(filmsSection, createButtonShowMoreTemplate(), RenderPosition.BEFOREEND);
 /* renderTemplate(siteFooter, createPopUpTemplate(), RenderPosition.AFTEREND); */
-const mockDates = Array.from({length: MOCK_DATE_COUNT}, generateFilmCard);
+const mockCardDate = Array.from({length: MOCK_DATE_COUNT}, generateFilmCard);
+const mockPopupDate = Array.from({length: MOCK_DATE_COUNT}, generatePopupCard);
 /* eslint-disable no-alert, no-console */
-console.log(mockDates);
+console.log(mockCardDate);
+console.log(mockPopupDate);

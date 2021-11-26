@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const COMMENTS_COUNT = 5;
 const EMOJI = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
 const userNames = [
@@ -33,10 +35,16 @@ const generateDescription = () => {
   return descriptions[randomIndex];
 };
 
-export const generateComment = () => {
+const generateDate = () => {
+  const maxDaysGap = 7;
+  const daysGap = getRandomInteger(0, maxDaysGap);
+  return dayjs().add(daysGap, 'day').toDate();
+};
+
+const generateComment = () => {
   const comment = {
     emoji: getRandowArrayElements(EMOJI),
-    date: '',
+    date: generateDate(),
     user: getRandowArrayElements(userNames),
     message: 'Interesting setting and a good cast',
   };
@@ -83,5 +91,5 @@ export const generatePopupCard = () => ({
   comments: Array.from(
     { length: getRandomInteger(0, COMMENTS_COUNT) },
     generateComment
-  ).length,
+  ),
 });
