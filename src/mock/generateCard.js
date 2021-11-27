@@ -1,7 +1,7 @@
 import dayjs from "dayjs";
 
 const COMMENTS_COUNT = 5;
-const EMOJI = ["angry.png", "puke.png", "sleeping.png", "smile.png"];
+export const EMOJI = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
 const AGE_RAITING = ['6 +', '10 +', '13 +', '16 +', '18 +'];
 
 const userNames = [
@@ -28,7 +28,7 @@ export const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 }
 
-const getRandomElements = (array) => {
+export const getRandomElements = (array) => {
   const index = getRandomInteger(0, array.length - 1);
   return array[index];
 };
@@ -109,5 +109,6 @@ export const generatePopupCard = () => ({
   genre: getArrayRandomElements(1, 3, generateGenres),
   fullDescription: generateDescription(),
   ageRaiting: getRandomElements(AGE_RAITING),
+  amountComments: getArrayRandomElements(0, COMMENTS_COUNT, generateComment).length,
   comments: getArrayRandomElements(0, COMMENTS_COUNT, generateComment),
 });

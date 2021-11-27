@@ -9,6 +9,7 @@ import { generateFilmCard, generatePopupCard } from './mock/generateCard.js';
 
 const CARD_COUNT = 5;
 const MOCK_DATA_COUNT = 20;
+
 const siteHeader = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooter = document.querySelector('.footer');
@@ -24,15 +25,14 @@ renderTemplate(filmsSection, createButtonShowMoreTemplate(), RenderPosition.BEFO
 
 const mockCardData = Array.from({length: MOCK_DATA_COUNT}, generateFilmCard);
 const mockPopupData = Array.from({length: MOCK_DATA_COUNT}, generatePopupCard);
-
-/* eslint-disable no-alert, no-console */
-console.log(mockCardData);
 console.log(mockPopupData);
 
 for (let i = 0; i < CARD_COUNT; i++) {
   renderTemplate(filmsListContainer, createFilmCardTemplate(mockCardData[i]), RenderPosition.BEFOREEND);
 }
-
 for (let i = 0; i < CARD_COUNT; i++) {
   renderTemplate(siteFooter, createPopUpTemplate(mockPopupData[i]), RenderPosition.AFTEREND);
 }
+
+  
+
