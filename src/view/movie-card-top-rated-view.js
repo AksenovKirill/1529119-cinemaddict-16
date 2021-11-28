@@ -1,9 +1,9 @@
-import { getRandomInteger } from "../mock/generateCards.js";
+import { getRandomInteger } from '../mock/generateCards.js';
 export const createTopRatedFilmCardTepmplate = (data) => {
   const randomIndex = getRandomInteger(0, data.length - 1);
   if (data[randomIndex].raiting < 8) {
     return `
-              <p class="film-card__description">${"Sorry, there are no highly rated movies at the moment."}</p>
+              <p class="film-card__description">${'Sorry, there are no highly rated movies at the moment.'}</p>
             `;
   } else {
     return `

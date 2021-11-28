@@ -1,9 +1,9 @@
-import { getRandomInteger } from "../mock/generateCards.js";
+import { getRandomInteger } from '../mock/generateCards';
 export const createMostCommentedFilmCardTepmplate = (data) => {
   const randomIndex = getRandomInteger(0, data.length - 1);
-  if (data[randomIndex].comments.length < 3) {
+  if (data[randomIndex].comments.length < 4) {
     return `  
-            <p class="film-card__description">${"Sorry, there are currently no discussed films"}</p>`;
+            <p class="film-card__description">${'Sorry, there are currently no discussed films'}</p>`;
   } else {
     return `<article class="film-card">
         <a class="film-card__link">

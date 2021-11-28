@@ -1,13 +1,11 @@
-import { getRandomInteger } from "../mock/generateCards.js";
 
 export const createPopupCommentsTemplate = (data) => {
-  const randomIndex = getRandomInteger(0, data.length - 1);
-  if (data[randomIndex].comments.length === 0) {
+  if (data.comments.length === 0) {
     return `<div>
-        <p class="film-details__comment-text">${"Sorry there are no comments"}</p>
+        <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
       </div>`;
   } else {
-    return data[randomIndex].comments
+    return data.comments
       .map(
         (comment) =>
           `<li class="film-details__comment">
@@ -24,12 +22,11 @@ export const createPopupCommentsTemplate = (data) => {
             </div>
           </li>`
       )
-      .join("");
+      .join('');
   }
 };
 
 export const createAmountCommentsTemplate = (data) => {
-  const randomIndex = getRandomInteger(0, data.length - 1);
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
-        ${data[randomIndex].comments.length}</span></h3>`;
+        ${data.comments.length}</span></h3>`;
 };

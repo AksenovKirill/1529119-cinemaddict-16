@@ -1,8 +1,5 @@
-import { getRandomInteger } from "../mock/generateCards.js";
 
 export const createPopUpTemplate = (data) => {
-  const randomIndex = getRandomInteger(0, data.length - 1);
-
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
@@ -11,9 +8,9 @@ export const createPopUpTemplate = (data) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${data[randomIndex].poster}" alt="">
+          <img class="film-details__poster-img" src="./images/posters/${data.poster}" alt="">
 
-          <p class="film-details__age">${data[randomIndex].ageRaiting}</p>
+          <p class="film-details__age">${data.ageRaiting}</p>
         </div>
 
         <div class="film-details__info">
@@ -24,7 +21,7 @@ export const createPopUpTemplate = (data) => {
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">${data[randomIndex].raiting}</p>
+              <p class="film-details__total-rating">${data.raiting}</p>
             </div>
           </div>
 
@@ -43,7 +40,7 @@ export const createPopUpTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${data[randomIndex].realeaseDate}</td>
+              <td class="film-details__cell">${data.realeaseDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -56,12 +53,12 @@ export const createPopUpTemplate = (data) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${data[randomIndex].genre}</span></td>
+                <span class="film-details__genre">${data.genre}</span></td>
             </tr>
           </table>
 
           <p class="film-details__film-description">
-            ${data[randomIndex].fullDescription}
+            ${data.description}
           </p>
         </div>
       </div>
