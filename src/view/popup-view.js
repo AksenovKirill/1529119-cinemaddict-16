@@ -1,4 +1,4 @@
-import { getRandomInteger } from "../mock/generateCard.js";
+import { getRandomInteger } from "../mock/generateCards.js";
 
 export const createPopUpTemplate = (data) => {
   const randomIndex = getRandomInteger(0, data.length - 1);
@@ -24,7 +24,7 @@ export const createPopUpTemplate = (data) => {
             </div>
 
             <div class="film-details__rating">
-              <p class="film-details__total-rating">8.9</p>
+              <p class="film-details__total-rating">${data[randomIndex].raiting}</p>
             </div>
           </div>
 

@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 
 const COMMENTS_COUNT = 5;
-
 export const EMOJI = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
 const AGE_RAITING = ['6 +', '10 +', '13 +', '16 +', '18 +'];
 
@@ -27,6 +26,13 @@ export const getRandomInteger = (a = 0, b = 1) => {
   const upper = Math.floor(Math.max(a, b));
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
+}
+
+export const getRandomNotAnInteger = (a = 0, b = 1) => {
+  const lower = Math.ceil(Math.min(a, b));
+  const upper = Math.floor(Math.max(a, b));
+
+  return (lower + Math.random() * (upper - lower + 1));
 }
 
 export const getRandomElements = (array) => {
@@ -90,7 +96,7 @@ const generateComment = () => {
 export const generateFilmCard = () => ({
   poster: getRandomElements(images),
   title: "Popeye the Sailor Meets Sindbad the Sailor",
-  rating: "6.3",
+  raiting: getRandomNotAnInteger(4, 9).toFixed(1),
   year: "1936",
   runTime: "1h 36m",
   genre: getArrayRandomElements(1, 1, generateGenres),
@@ -101,7 +107,7 @@ export const generateFilmCard = () => ({
 export const generatePopupCard = () => ({
   poster: getRandomElements(images),
   title: "Popeye the Sailor Meets Sindbad the Sailor",
-  raiting: "8.9",
+  raiting: getRandomNotAnInteger(4, 9).toFixed(1),
   director: "David Linch",
   screenwriter: "Anne Wigton, Heinz Herald, Richard Weil",
   actors: "Erich von Stroheim, Mary Beth Hughes, Dan Duryea",
