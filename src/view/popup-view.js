@@ -1,10 +1,9 @@
 import { getRandomInteger } from "../mock/generateCard.js";
+
 export const createPopUpTemplate = (data) => {
-  const {poster, director, genre, realeaseDate, fullDescription, ageRaiting, comments, amountComments} = data;
- 
-  const randomIndex = getRandomInteger(0, comments.length - 1);
-  console.log(randomIndex)
-  return  `<section class="film-details">
+  const randomIndex = getRandomInteger(0, data.length - 1);
+
+  return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -12,9 +11,9 @@ export const createPopUpTemplate = (data) => {
       </div>
       <div class="film-details__info-wrap">
         <div class="film-details__poster">
-          <img class="film-details__poster-img" src="./images/posters/${poster}" alt="">
+          <img class="film-details__poster-img" src="./images/posters/${data[randomIndex].poster}" alt="">
 
-          <p class="film-details__age">${ageRaiting}</p>
+          <p class="film-details__age">${data[randomIndex].ageRaiting}</p>
         </div>
 
         <div class="film-details__info">
@@ -31,7 +30,7 @@ export const createPopUpTemplate = (data) => {
 
           <table class="film-details__table">
             <tr class="film-details__row">
-              <td class="film-details__term">${director}</td>
+              <td class="film-details__term">${data.director}</td>
               <td class="film-details__cell">Anthony Mann</td>
             </tr>
             <tr class="film-details__row">
@@ -44,7 +43,7 @@ export const createPopUpTemplate = (data) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${realeaseDate}</td>
+              <td class="film-details__cell">${data[randomIndex].realeaseDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
@@ -57,12 +56,12 @@ export const createPopUpTemplate = (data) => {
             <tr class="film-details__row">
               <td class="film-details__term">Genres</td>
               <td class="film-details__cell">
-                <span class="film-details__genre">${genre}</span></td>
+                <span class="film-details__genre">${data[randomIndex].genre}</span></td>
             </tr>
           </table>
 
           <p class="film-details__film-description">
-            ${fullDescription}
+            ${data[randomIndex].fullDescription}
           </p>
         </div>
       </div>
@@ -76,23 +75,10 @@ export const createPopUpTemplate = (data) => {
 
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
-        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
-        ${amountComments}</span></h3>
+        
 
         <ul class="film-details__comments-list">
-        <li class="film-details__comment">
-    <span class="film-details__comment-emoji">
-    <img src="./images/emoji/${data.comments[randomIndex].emoji}" width="55" height="55" alt="emoji-smile">
-    </span>
-    <div>
-      <p class="film-details__comment-text">I${data.comments[randomIndex].message}</p>
-      <p class="film-details__comment-info">
-        <span class="film-details__comment-author">${data.comments[randomIndex].user}</span>
-        <span class="film-details__comment-day">${data.comments[randomIndex].date}</span>
-        <button class="film-details__comment-delete">Delete</button>
-      </p>
-    </div>
-  </li>
+       
   
         </ul>
 
@@ -128,5 +114,5 @@ export const createPopUpTemplate = (data) => {
       </section>
     </div>
   </form>
-</section>`
+</section>`;
 };

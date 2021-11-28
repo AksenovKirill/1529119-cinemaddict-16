@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 
 const COMMENTS_COUNT = 5;
+
 export const EMOJI = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
 const AGE_RAITING = ['6 +', '10 +', '13 +', '16 +', '18 +'];
 
@@ -55,9 +56,10 @@ const generateDescription = () => {
 };
 
 const generateDate = () => {
-  const maxDaysGap = 7;
-  const daysGap = getRandomInteger(0, maxDaysGap);
-  return dayjs().add(daysGap, "day").toDate();
+  const minGap = -30;
+  const maxGap = 10;
+  const daysGap = getRandomInteger(minGap, maxGap);
+  return dayjs().add(daysGap, "day").format('YYYY/MM/DD HH:mm');
 };
 
 const generateGenres = () => {
@@ -109,6 +111,5 @@ export const generatePopupCard = () => ({
   genre: getArrayRandomElements(1, 3, generateGenres),
   fullDescription: generateDescription(),
   ageRaiting: getRandomElements(AGE_RAITING),
-  amountComments: getArrayRandomElements(0, COMMENTS_COUNT, generateComment).length,
   comments: getArrayRandomElements(0, COMMENTS_COUNT, generateComment),
 });

@@ -1,5 +1,5 @@
 export const createFilmCardTemplate = (data) => {
-  const {description, poster, comments, genres} = data;
+  const {description, poster, comments, genres} = data; //убрать деструкт
   return `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">Popeye the Sailor Meets Sindbad the Sailor</h3>
