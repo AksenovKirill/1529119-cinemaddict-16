@@ -1,4 +1,3 @@
-
 export const createPopupCommentsTemplate = (data) => {
   if (data.comments.length === 0) {
     return `<div>

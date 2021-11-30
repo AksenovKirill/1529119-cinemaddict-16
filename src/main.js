@@ -6,10 +6,9 @@ import { createFilmCardTemplate } from './view/movie-card-view.js';
 import { createUserRankTemplate } from './view/user-rank-view.js';
 import { createButtonShowMoreTemplate } from './view/button-showmore-view.js';
 import { createPopUpTemplate } from './view/popup-view.js';
-import { createPopupCommentsTemplate } from './view/popup-comments-view.js';
-import { createAmountCommentsTemplate } from './view/popup-comments-view.js';
-import { createContainerFilmTopTemplate } from './view/container-top-rated-view.js';
-import { createContainerFilmCommentedTemplate } from './view/container-most-commented-view.js';
+import { createPopupCommentsTemplate, createAmountCommentsTemplate } from './view/popup-comments-view.js';
+import { createContainerFilmTopRaitedTemplate } from './view/container-top-rated-view.js';
+import { createContainerFilmMostCommentedTemplate } from './view/container-most-commented-view.js';
 import { createTopRatedFilmCardTepmplate } from './view/movie-card-top-rated-view.js';
 import { createMostCommentedFilmCardTepmplate } from './view/movie-card-most-commented-view.js';
 import { createFooterStatisticsTemplate } from './view/footer-view.js';
@@ -23,7 +22,15 @@ const siteFooter = document.querySelector('.footer');
 const siteFooterStatistics = siteFooter.querySelector('.footer__statistics');
 const mockCardData = Array.from({ length: MOCK_DATA_COUNT }, generateFilmCard);
 
-renderTemplate(siteHeader, createUserRankTemplate(), RenderPosition.BEFOREEND);
+export const sortDataByRaitings = mockCardData.slice().sort((a,b) => b.raiting - a.raiting);
+export const sortDataByComments = mockCardData.slice().sort((a,b) => b.comments.length - a.comments.length);
+export const sortDataByDate = mockCardData.slice().sort((a,b) => b.year - a.year);
+
+renderTemplate(
+  siteHeader,
+  createUserRankTemplate(),
+  RenderPosition.BEFOREEND
+);
 
 renderTemplate(
   siteMainElement,
@@ -55,39 +62,79 @@ for (let i = 0; i < Math.min(mockCardData.length, CARD_COUNT_PER_STEP); i++) {
   );
 }
 
-if(mockCardData.length > CARD_COUNT_PER_STEP) {
-  let renderedCardCount = CARD_COUNT_PER_STEP;
-  renderTemplate(
-    filmsList,
-    createButtonShowMoreTemplate(),
-    RenderPosition.BEFOREEND
-  );
-  const showButton = document.querySelector('.films-list__show-more');
-  showButton.addEventListener('click', (evt) => {
+renderTemplate(
+  filmsList,
+  createButtonShowMoreTemplate(),
+  RenderPosition.BEFOREEND
+);
+
+const sortButtons = document.querySelectorAll('.sort__button');
+const showMoreButton = document.querySelector('.films-list__show-more');
+let renderedCardCount = CARD_COUNT_PER_STEP;
+
+sortButtons.forEach((element) => {
+  element.addEventListener('click', (evt) => {
     evt.preventDefault();
-    mockCardData
-      .slice(renderedCardCount, renderedCardCount + CARD_COUNT_PER_STEP)
-      .forEach((card) =>  renderTemplate(
-        filmsListContainer,
-        createFilmCardTemplate(card),
-        RenderPosition.BEFOREEND
-      ));
-    renderedCardCount += CARD_COUNT_PER_STEP;
-    if(renderedCardCount >= mockCardData.length) {
-      showButton.remove();
+    element.classList.add('sort__button--active');
+  });});
+
+sortButtons.forEach((element) => {
+  element.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    if(element.classList.contains('sort__button--active') && element.textContent === 'Sort by rating') {
+      filmsListContainer.innerHTML = '';
+      sortDataByRaitings
+        .forEach((card) =>  renderTemplate(
+          filmsListContainer,
+          createFilmCardTemplate(card),
+          RenderPosition.BEFOREEND
+        ));
     }
-  });
-}
+    else if (element.classList.contains('sort__button--active') && element.textContent === 'Sort by date') {
+      filmsListContainer.innerHTML = '';
+      sortDataByDate
+        .forEach((card) =>  renderTemplate(
+          filmsListContainer,
+          createFilmCardTemplate(card),
+          RenderPosition.BEFOREEND
+        ));
+    }
+    else if (element.classList.contains('sort__button--active') && element.textContent === 'Sort by default') {
+      filmsListContainer.innerHTML = '';
+      for (let i = 0; i < Math.min(mockCardData.length, CARD_COUNT_PER_STEP); i++) {
+        renderTemplate(
+          filmsListContainer,
+          createFilmCardTemplate(mockCardData[i]),
+          RenderPosition.BEFOREEND
+        );
+      }
+    }
+  });});
+
+showMoreButton.addEventListener('click', (evt) => {
+  evt.preventDefault();
+  mockCardData
+    .slice(renderedCardCount, renderedCardCount + CARD_COUNT_PER_STEP)
+    .forEach((card) =>  renderTemplate(
+      filmsListContainer,
+      createFilmCardTemplate(card),
+      RenderPosition.BEFOREEND
+    ));
+  renderedCardCount += CARD_COUNT_PER_STEP;
+  if(renderedCardCount >= mockCardData.length) {
+    showMoreButton.remove();
+  }
+});
 
 renderTemplate(
   sectionFilms,
-  createContainerFilmTopTemplate(mockCardData),
+  createContainerFilmTopRaitedTemplate(mockCardData),
   RenderPosition.BEFOREEND
 );
 
 renderTemplate(
   sectionFilms,
-  createContainerFilmCommentedTemplate(mockCardData),
+  createContainerFilmMostCommentedTemplate(mockCardData),
   RenderPosition.BEFOREEND
 );
 
@@ -100,13 +147,13 @@ const filmsCardsTopComments = filmsListExtraCommentedContainer.querySelector(
 
 renderTemplate(
   filmsListExtraContainer,
-  createTopRatedFilmCardTepmplate(mockCardData),
+  createTopRatedFilmCardTepmplate(sortDataByRaitings),
   RenderPosition.AFTERBEGIN
 );
 
 renderTemplate(
   filmsCardsTopComments,
-  createMostCommentedFilmCardTepmplate(mockCardData),
+  createMostCommentedFilmCardTepmplate(sortDataByComments),
   RenderPosition.AFTERBEGIN
 );
 

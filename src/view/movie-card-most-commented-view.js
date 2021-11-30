@@ -1,10 +1,5 @@
-import { getRandomInteger } from '../mock/generateCards';
 export const createMostCommentedFilmCardTepmplate = (data) => {
-  const randomIndex = getRandomInteger(0, data.length - 1);
-  if (data[randomIndex].comments.length < 4) {
-    return `  
-            <p class="film-card__description">${'Sorry, there are currently no discussed films'}</p>`;
-  } else {
+
     return  data.slice(0,2).map((card) =>`<article class="film-card">
         <a class="film-card__link">
           <h3 class="film-card__title">Santa Claus Conquers the Martians</h3>
@@ -24,5 +19,4 @@ export const createMostCommentedFilmCardTepmplate = (data) => {
           <button class="film-card__controls-item film-card__controls-item--favorite film-card__controls-item--active" type="button">Mark as favorite</button>
         </div>
       </article>`);
-  }
-};
+  };

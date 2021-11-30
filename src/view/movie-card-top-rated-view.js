@@ -1,11 +1,5 @@
-import { getRandomInteger } from '../mock/generateCards.js';
 export const createTopRatedFilmCardTepmplate = (data) => {
-  const randomIndex = getRandomInteger(0, data.length - 1);
-  if (data[randomIndex].raiting < 8) {
-    return `
-              <p class="film-card__description">${'Sorry, there are no highly rated movies at the moment.'}</p>
-            `;
-  } else {
+
     return data.slice(0,2).map((card) =>`
     <article class="film-card">
       <a class="film-card__link">
@@ -26,5 +20,4 @@ export const createTopRatedFilmCardTepmplate = (data) => {
         <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
       </div>
     </article>`);
-  }
-};
+  };
