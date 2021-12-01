@@ -3,12 +3,12 @@ export const createPopupCommentsTemplate = (data) => {
     return `<div>
         <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
       </div>`;
-  } else {
-    return data.comments
-      .map(
-        (comment) =>
-          `<li class="film-details__comment">
-            <span class="film-details__comment-emoji">
+  }
+  return data.comments
+    .map(
+      (comment) =>
+        `<li class="film-details__comment">
+    <span class="film-details__comment-emoji">
             <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
@@ -20,12 +20,11 @@ export const createPopupCommentsTemplate = (data) => {
               </p>
             </div>
           </li>`
-      )
-      .join('');
-  }
+    )
+    .join('');
 };
 
-export const createAmountCommentsTemplate = (data) => {
-  return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
-        ${data.comments.length}</span></h3>`;
-};
+export const createAmountCommentsTemplate = (data) => (
+  `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
+  ${data.comments.length}</span></h3>`
+);

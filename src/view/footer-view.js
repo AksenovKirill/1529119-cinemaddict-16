@@ -1,3 +1,4 @@
-export const createFooterStatisticsTemplate = (data) => {
-  return `<p>${data.length} movies inside</p>`;
-};
+export const createFooterStatisticsTemplate = (data) => (
+  `<p>${data.length} movies inside</p>`
+);
+

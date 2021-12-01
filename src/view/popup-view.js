@@ -1,5 +1,5 @@
-export const createPopUpTemplate = (data) => {
-  return `<section class="film-details">
+export const createPopUpTemplate = (data) => (
+  `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     <div class="film-details__top-container">
       <div class="film-details__close">
@@ -72,10 +72,7 @@ export const createPopUpTemplate = (data) => {
     <div class="film-details__bottom-container">
       <section class="film-details__comments-wrap">
         
-
         <ul class="film-details__comments-list">
-       
-  
         </ul>
 
         <div class="film-details__new-comment">
@@ -110,5 +107,5 @@ export const createPopUpTemplate = (data) => {
       </section>
     </div>
   </form>
-</section>`;
-};
+</section>`
+);

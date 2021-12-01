@@ -68,20 +68,33 @@ renderTemplate(
   RenderPosition.BEFOREEND
 );
 
-const sortButtons = document.querySelectorAll('.sort__button');
+const sortButtonsList = document.querySelectorAll('.sort__button');
 const showMoreButton = document.querySelector('.films-list__show-more');
+const filterCardButtonsList = document.querySelectorAll('.film-card__controls-item');
+
 let renderedCardCount = CARD_COUNT_PER_STEP;
 
-sortButtons.forEach((element) => {
-  element.addEventListener('click', (evt) => {
+sortButtonsList.forEach((button) => {
+  button.addEventListener('click', (evt) => {
     evt.preventDefault();
-    element.classList.add('sort__button--active');
-  });});
+    sortButtonsList.forEach((element) => {
+      element.classList.remove('sort__button--active');
+    });
+    button.classList.add('sort__button--active');
+  });
+});
 
-sortButtons.forEach((element) => {
-  element.addEventListener('click', (evt) => {
+filterCardButtonsList.forEach((button) => {
+  button.addEventListener('click', (evt) => {
     evt.preventDefault();
-    if(element.classList.contains('sort__button--active') && element.textContent === 'Sort by rating') {
+    button.classList.toggle('film-card__controls-item--active');
+  });
+});
+
+sortButtonsList.forEach((button) => {
+  button.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    if(button.classList.contains('sort__button--active') && button === sortButtonsList.item(2)) {
       filmsListContainer.innerHTML = '';
       sortDataByRaitings
         .forEach((card) =>  renderTemplate(
@@ -89,8 +102,9 @@ sortButtons.forEach((element) => {
           createFilmCardTemplate(card),
           RenderPosition.BEFOREEND
         ));
+      showMoreButton.remove();
     }
-    else if (element.classList.contains('sort__button--active') && element.textContent === 'Sort by date') {
+    else if (button.classList.contains('sort__button--active') && button === sortButtonsList.item(1)) {
       filmsListContainer.innerHTML = '';
       sortDataByDate
         .forEach((card) =>  renderTemplate(
@@ -98,8 +112,9 @@ sortButtons.forEach((element) => {
           createFilmCardTemplate(card),
           RenderPosition.BEFOREEND
         ));
+      showMoreButton.remove();
     }
-    else if (element.classList.contains('sort__button--active') && element.textContent === 'Sort by default') {
+    else if (button.classList.contains('sort__button--active') && button === sortButtonsList.item(0)) {
       filmsListContainer.innerHTML = '';
       for (let i = 0; i < Math.min(mockCardData.length, CARD_COUNT_PER_STEP); i++) {
         renderTemplate(
@@ -109,7 +124,8 @@ sortButtons.forEach((element) => {
         );
       }
     }
-  });});
+  });
+});
 
 showMoreButton.addEventListener('click', (evt) => {
   evt.preventDefault();

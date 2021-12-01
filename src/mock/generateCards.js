@@ -49,12 +49,12 @@ const getRandomElements = (array) => {
   return array[index];
 };
 
-const getArrayRandomElements = (firstNumber, secondNumber, func) => {
-  return Array.from(
+const getArrayRandomElements = (firstNumber, secondNumber, func) => (
+  Array.from(
     { length: getRandomInteger(firstNumber, secondNumber) },
     func
-  );
-};
+  ));
+
 
 const generateDate = () => {
   const minGap = -30;
