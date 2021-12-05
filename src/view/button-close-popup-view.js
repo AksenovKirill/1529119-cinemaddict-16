@@ -1,9 +1,11 @@
 import { createElement } from '../render.js';
 
-const createButtonShowMoreTemplate = () =>
-  '<button class="films-list__show-more">Show more</button>';
+const createButtonClosePopupTemplate = () =>
+   `<div class="film-details__close">
+   <button class="film-details__close-btn" type="button">close</button>
+ </div>`
 
-export default class ButtonShowMoreView {
+ export default class ButtonClosePopupView {
   #element = null;
 
   get element() {
@@ -14,10 +16,12 @@ export default class ButtonShowMoreView {
   }
 
   get template() {
-    return createButtonShowMoreTemplate();
+    return createButtonClosePopupTemplate(this.#element);
   }
 
   removeElement() {
     this.#element = null;
   }
 }
+
+

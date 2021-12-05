@@ -1,83 +1,112 @@
-import { renderTemplate, RenderPosition } from './render.js';
-import { generateFilmCard } from './mock/generateCards.js';
-import { createSiteMenuTemplate } from './view/site-menu-view.js';
-import { createSectionFilmsTemplate } from './view/container-card-view.js';
-import { createFilmCardTemplate } from './view/movie-card-view.js';
-import { createUserRankTemplate } from './view/user-rank-view.js';
-import { createButtonShowMoreTemplate } from './view/button-showmore-view.js';
-import { createPopUpTemplate } from './view/popup-view.js';
-import { createPopupCommentsTemplate, createAmountCommentsTemplate } from './view/popup-comments-view.js';
-import { createContainerFilmTopRaitedTemplate } from './view/container-top-rated-view.js';
-import { createContainerFilmMostCommentedTemplate } from './view/container-most-commented-view.js';
-import { createTopRatedFilmCardTepmplate } from './view/movie-card-top-rated-view.js';
-import { createMostCommentedFilmCardTepmplate } from './view/movie-card-most-commented-view.js';
-import { createFooterStatisticsTemplate } from './view/footer-view.js';
+import {render, RenderPosition} from './render.js';
+import {generateFilmCard, getRandomElements} from './mock/generateCards.js';
+
+import UserRankView from './view/user-rank-view.js';
+import SiteMenuView from './view/site-menu-view.js';
+import SortCardsView from './view/sort-cards-view.js';
+import SectionFilmsView from './view/container-card-view.js';
+import FilmCard from './view/movie-card-view.js';
+import ButtonsControlFilmCardView from './view/buttons-control-film-card-view.js';
+import ButtonShowMoreView from './view/button-showmore-view.js';
+import ContainerTopRaitedFilmView from './view/container-top-rated-view.js';
+import ContainerMostCommentedFilmView from './view/container-most-commented-view';
+import TopRatedFilmCardView from './view/movie-card-top-rated-view.js';
+import MostCommentedFilmCardView from './view/movie-card-most-commented-view.js';
+import FooterStatisticsView from './view/footer-statistics-view.js';
+import ContainerPopupView  from './view/container-popup-view.js';
+import ButtonClosePopupView from './view/button-close-popup-view.js';
+import PopupView from './view/popup-view.js';
+import ButtonsControlPopupView from './view/buttons-control-popup-view.js';
+import PopupCommentsView from './view/popup-comments-view.js';
+import PopupNewCommentsView from './view/popup-new-comments-view.js';
+import AmountCommentsView from './view/popup-amount-comments-view.js';
 
 const CARD_COUNT_PER_STEP = 5;
 const MOCK_DATA_COUNT = 20;
+let renderedCardCount = CARD_COUNT_PER_STEP;
+
+const mockCardData = Array.from({ length: MOCK_DATA_COUNT }, generateFilmCard);
+export const sortDataByRaitings = mockCardData.slice().sort((a,b) => b.raiting - a.raiting);
+export const sortDataByComments = mockCardData.slice().sort((a,b) => b.comments.length - a.comments.length);
+export const sortDataByDate = mockCardData.slice().sort((a,b) => b.year - a.year);
 
 const siteHeader = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
 const siteFooter = document.querySelector('.footer');
 const siteFooterStatistics = siteFooter.querySelector('.footer__statistics');
-const mockCardData = Array.from({ length: MOCK_DATA_COUNT }, generateFilmCard);
 
-export const sortDataByRaitings = mockCardData.slice().sort((a,b) => b.raiting - a.raiting);
-export const sortDataByComments = mockCardData.slice().sort((a,b) => b.comments.length - a.comments.length);
-export const sortDataByDate = mockCardData.slice().sort((a,b) => b.year - a.year);
+render(siteHeader, new UserRankView().element, RenderPosition.BEFOREEND);
+render(siteMainElement, new SiteMenuView().element, RenderPosition.AFTERBEGIN);
 
-renderTemplate(
-  siteHeader,
-  createUserRankTemplate(),
-  RenderPosition.BEFOREEND
-);
+const siteMenuElement = document.querySelector('.main-navigation');
 
-renderTemplate(
-  siteMainElement,
-  createSiteMenuTemplate(),
-  RenderPosition.AFTERBEGIN
-);
-
-renderTemplate(
-  siteMainElement,
-  createSectionFilmsTemplate(),
-  RenderPosition.BEFOREEND
-);
-
-renderTemplate(
-  siteFooterStatistics,
-  createFooterStatisticsTemplate(mockCardData),
-  RenderPosition.AFTERBEGIN
-);
+render(siteMenuElement, new SortCardsView().element, RenderPosition.AFTEREND);
+render(siteMainElement, new SectionFilmsView().element, RenderPosition.BEFOREEND);
 
 const sectionFilms = document.querySelector('.films');
 const filmsList = siteMainElement.querySelector('.films-list');
 const filmsListContainer = siteMainElement.querySelector('.films-list__container');
 
 for (let i = 0; i < Math.min(mockCardData.length, CARD_COUNT_PER_STEP); i++) {
-  renderTemplate(
+  render(
     filmsListContainer,
-    createFilmCardTemplate(mockCardData[i]),
+    new FilmCard(mockCardData[i]).element,
     RenderPosition.BEFOREEND
   );
 }
 
-renderTemplate(
-  filmsList,
-  createButtonShowMoreTemplate(),
-  RenderPosition.BEFOREEND
-);
+const filmCardElements = filmsListContainer.querySelectorAll('.film-card');
 
-const sortButtonsList = document.querySelectorAll('.sort__button');
+filmCardElements.forEach((element) => {
+  render(element, new ButtonsControlFilmCardView().element, RenderPosition.BEFOREEND);
+});
+
+render(filmsList, new ButtonShowMoreView().element, RenderPosition.BEFOREEND);
+render(sectionFilms, new ContainerTopRaitedFilmView().element, RenderPosition.BEFOREEND);
+render(sectionFilms, new ContainerMostCommentedFilmView().element, RenderPosition.BEFOREEND);
+
+const sortButtonsListCard = document.querySelectorAll('.sort__button');
 const showMoreButton = document.querySelector('.films-list__show-more');
 const filterCardButtonsList = document.querySelectorAll('.film-card__controls-item');
+const filmsListExtra = document.querySelector('.films-list--extra');
+const filmsCardsTopRaited = filmsListExtra.querySelector('.films-list__container');
+const filmsListExtraCommentedContainer = document.querySelector('.most');
+const filmsCardsMostComments = filmsListExtraCommentedContainer.querySelector('.films-list__container');
 
-let renderedCardCount = CARD_COUNT_PER_STEP;
+for (let i = 0; i< 2; i++) {
+  render(filmsCardsTopRaited, new TopRatedFilmCardView(sortDataByRaitings[i]).element, RenderPosition.AFTERBEGIN);
+  render(filmsCardsMostComments, new MostCommentedFilmCardView(sortDataByComments[i]).element, RenderPosition.AFTERBEGIN);
+}
 
-sortButtonsList.forEach((button) => {
+render(siteFooterStatistics, new FooterStatisticsView(mockCardData).element, RenderPosition.AFTERBEGIN);
+  render(siteFooter, new ContainerPopupView().element, RenderPosition.AFTEREND);
+  const popupTopContainer = document.querySelector('.film-details__top-container');
+  render(popupTopContainer, new ButtonClosePopupView().element, RenderPosition.AFTERBEGIN);
+  const buttonClosePopupWrap = document.querySelector('.film-details__close');
+  render(buttonClosePopupWrap, new PopupView(mockCardData[0]).element, RenderPosition.AFTEREND);
+  const popupElementWrap = document.querySelector('.film-details__info-wrap');
+  render(popupElementWrap, new ButtonsControlPopupView().element, RenderPosition.AFTEREND);
+  const commentsList =  document.querySelector('.film-details__comments-list');
+  for (let i = 0; i < 5; i++) {
+    render(commentsList, new PopupCommentsView(mockCardData[i]).element, RenderPosition.AFTERBEGIN);
+  }
+  render(commentsList, new PopupNewCommentsView().element, RenderPosition.AFTEREND);
+  
+const filmCardComponent = new FilmCard(mockCardData[0]);
+const ButtonClosePopupComponent = new ButtonClosePopupView();
+
+filmCardComponent.element.querySelector('img').addEventListener('click', () => {
+
+});
+
+ButtonClosePopupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+});
+
+const sortButtonsListPopup = document.querySelectorAll('.film-details__control-button');
+sortButtonsListCard.forEach((button) => {
   button.addEventListener('click', (evt) => {
     evt.preventDefault();
-    sortButtonsList.forEach((element) => {
+    sortButtonsListCard.forEach((element) => {
       element.classList.remove('sort__button--active');
     });
     button.classList.add('sort__button--active');
@@ -91,35 +120,35 @@ filterCardButtonsList.forEach((button) => {
   });
 });
 
-sortButtonsList.forEach((button) => {
+sortButtonsListCard.forEach((button) => {
   button.addEventListener('click', (evt) => {
     evt.preventDefault();
-    if(button.classList.contains('sort__button--active') && button === sortButtonsList.item(2)) {
+    if(button.classList.contains('sort__button--active') && button === sortButtonsListCard.item(2)) {
       filmsListContainer.innerHTML = '';
       sortDataByRaitings
-        .forEach((card) =>  renderTemplate(
+        .forEach((card) =>  render(
           filmsListContainer,
-          createFilmCardTemplate(card),
+          new FilmCard(card).element,
           RenderPosition.BEFOREEND
         ));
       showMoreButton.remove();
     }
-    else if (button.classList.contains('sort__button--active') && button === sortButtonsList.item(1)) {
+    else if (button.classList.contains('sort__button--active') && button === sortButtonsListCard.item(1)) {
       filmsListContainer.innerHTML = '';
       sortDataByDate
-        .forEach((card) =>  renderTemplate(
+        .forEach((card) =>  render(
           filmsListContainer,
-          createFilmCardTemplate(card),
+          new FilmCard(card).element,
           RenderPosition.BEFOREEND
         ));
       showMoreButton.remove();
     }
-    else if (button.classList.contains('sort__button--active') && button === sortButtonsList.item(0)) {
+    else if (button.classList.contains('sort__button--active') && button === sortButtonsListCard.item(0)) {
       filmsListContainer.innerHTML = '';
       for (let i = 0; i < Math.min(mockCardData.length, CARD_COUNT_PER_STEP); i++) {
-        renderTemplate(
+        render(
           filmsListContainer,
-          createFilmCardTemplate(mockCardData[i]),
+          new FilmCard(mockCardData[i]).element,
           RenderPosition.BEFOREEND
         );
       }
@@ -131,9 +160,9 @@ showMoreButton.addEventListener('click', (evt) => {
   evt.preventDefault();
   mockCardData
     .slice(renderedCardCount, renderedCardCount + CARD_COUNT_PER_STEP)
-    .forEach((card) =>  renderTemplate(
+    .forEach((card) => render(
       filmsListContainer,
-      createFilmCardTemplate(card),
+      new FilmCard(card).element,
       RenderPosition.BEFOREEND
     ));
   renderedCardCount += CARD_COUNT_PER_STEP;
@@ -142,54 +171,16 @@ showMoreButton.addEventListener('click', (evt) => {
   }
 });
 
-renderTemplate(
-  sectionFilms,
-  createContainerFilmTopRaitedTemplate(mockCardData),
-  RenderPosition.BEFOREEND
-);
+sortButtonsListPopup.forEach((button) => {
+  button.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    sortButtonsListPopup.forEach((element) => {
+      element.classList.remove('film-details__control-button--active');
+    });
+    button.classList.add('film-details__control-button--active');
+  });
+});
 
-renderTemplate(
-  sectionFilms,
-  createContainerFilmMostCommentedTemplate(mockCardData),
-  RenderPosition.BEFOREEND
-);
 
-const filmsListExtra = document.querySelector('.films-list--extra');
-const filmsListExtraContainer = filmsListExtra.querySelector('div');
-const filmsListExtraCommentedContainer = document.querySelector('.most');
-const filmsCardsTopComments = filmsListExtraCommentedContainer.querySelector(
-  '.films-list__container'
-);
 
-renderTemplate(
-  filmsListExtraContainer,
-  createTopRatedFilmCardTepmplate(sortDataByRaitings),
-  RenderPosition.AFTERBEGIN
-);
 
-renderTemplate(
-  filmsCardsTopComments,
-  createMostCommentedFilmCardTepmplate(sortDataByComments),
-  RenderPosition.AFTERBEGIN
-);
-
-renderTemplate(
-  siteFooter,
-  createPopUpTemplate(mockCardData.shift()),
-  RenderPosition.AFTEREND
-);
-
-const popUpCommentsContainer = document.querySelector('.film-details__comments-list');
-const sectionCommentsDetails = document.querySelector('.film-details__comments-wrap');
-
-renderTemplate(
-  popUpCommentsContainer,
-  createPopupCommentsTemplate(mockCardData.shift()),
-  RenderPosition.AFTERBEGIN
-);
-
-renderTemplate(
-  sectionCommentsDetails,
-  createAmountCommentsTemplate(mockCardData.shift()),
-  RenderPosition.BEFOREBEGIN
-);

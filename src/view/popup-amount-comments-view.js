@@ -1,9 +1,11 @@
 import { createElement } from '../render.js';
 
-const createButtonShowMoreTemplate = () =>
-  '<button class="films-list__show-more">Show more</button>';
+const createAmountCommentsTemplate = (data) => (
+  `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
+  ${data.comments.length}</span></h3>`
+);
 
-export default class ButtonShowMoreView {
+export default class AmountCommentsView {
   #element = null;
 
   get element() {
@@ -14,7 +16,7 @@ export default class ButtonShowMoreView {
   }
 
   get template() {
-    return createButtonShowMoreTemplate();
+    return createAmountCommentsTemplate();
   }
 
   removeElement() {

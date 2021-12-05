@@ -1,10 +1,16 @@
 import { createElement } from '../render.js';
 
-const createButtonShowMoreTemplate = () =>
-  '<button class="films-list__show-more">Show more</button>';
+const createFooterStatisticsTemplate = (data) => (
+  `<p>${data.length} movies inside</p>`
+);
 
-export default class ButtonShowMoreView {
+export default class FooterStatisticsView {
   #element = null;
+  #data = null;
+
+  constructor(data) {
+    this.#data = data;
+  }
 
   get element() {
     if (!this.#element) {
@@ -14,7 +20,7 @@ export default class ButtonShowMoreView {
   }
 
   get template() {
-    return createButtonShowMoreTemplate();
+    return createFooterStatisticsTemplate(this.#data);
   }
 
   removeElement() {
