@@ -56,8 +56,7 @@ const createPopupTemplate = (data) => (
       ${data.description}
     </p>
   </div>
-  </div>
-  </div>`)
+  </div>`);
 
 export default class PopupView {
   #element = null;

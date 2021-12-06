@@ -1,7 +1,7 @@
 import { createElement } from '../render.js';
 
 const createTopRatedFilmCardTepmplate = (data) => (
-`<article class="film-card">
+  `<article class="film-card">
     <a class="film-card__link">
       <h3 class="film-card__title">The Man with the Golden Arm</h3>
       <p class="film-card__rating">${data.raiting}</p>
@@ -19,7 +19,7 @@ const createTopRatedFilmCardTepmplate = (data) => (
       <button class="film-card__controls-item film-card__controls-item--mark-as-watched film-card__controls-item--active" type="button">Mark as watched</button>
       <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
     </div>
-  </article>`)
+  </article>`);
 
 export default class TopRatedFilmCardView {
   #element = null;

@@ -7,6 +7,11 @@ const createAmountCommentsTemplate = (data) => (
 
 export default class AmountCommentsView {
   #element = null;
+  #data = null;
+
+  constructor(data) {
+    this.#data = data;
+  }
 
   get element() {
     if (!this.#element) {
@@ -16,7 +21,7 @@ export default class AmountCommentsView {
   }
 
   get template() {
-    return createAmountCommentsTemplate();
+    return createAmountCommentsTemplate(this.#data);
   }
 
   removeElement() {

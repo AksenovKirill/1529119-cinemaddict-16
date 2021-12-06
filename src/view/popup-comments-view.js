@@ -1,12 +1,12 @@
 import { createElement } from '../render.js';
 
 const createPopupCommentsTemplate = (data) => {
-  if (data.comments.length === 0) {
+  if (data.length === 0) {
     return `<div>
         <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
       </div>`;
   }
-  return data.comments
+  return data
     .map(
       (comment) =>
         `<li class="film-details__comment">

@@ -19,7 +19,7 @@ const createMostCommentedFilmCardTepmplate = (data) => (
     <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
     <button class="film-card__controls-item film-card__controls-item--favorite film-card__controls-item--active" type="button">Mark as favorite</button>
   </div>
-</article>`)
+</article>`);
 
 export default class MostCommentedFilmCardView {
   #element = null;
