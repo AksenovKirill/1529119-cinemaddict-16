@@ -1,6 +1,6 @@
 import { createElement } from '../render.js';
 
-const createMostCommentedFilmCardTepmplate = (data) => (
+const createMostCommentedFilmCardTepmplate = (data) =>
   `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">Santa Claus Conquers the Martians</h3>
@@ -19,7 +19,7 @@ const createMostCommentedFilmCardTepmplate = (data) => (
     <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
     <button class="film-card__controls-item film-card__controls-item--favorite film-card__controls-item--active" type="button">Mark as favorite</button>
   </div>
-</article>`);
+</article>`;
 
 export default class MostCommentedFilmCardView {
   #element = null;
@@ -44,4 +44,3 @@ export default class MostCommentedFilmCardView {
     this.#element = null;
   }
 }
-
