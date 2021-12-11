@@ -56,15 +56,11 @@ if (mockCardData.length === 0) {
     RenderPosition.AFTEREND);
 }
 
-const deletePopup = () => {
-  popupComponent.element.remove(siteMainElement);
-};
-
 const onEscKeyDown = (evt) => {
   if (evt.key === 'Escape' || evt.key === 'Esc') {
     evt.preventDefault();
-    deletePopup();
-    document.removeEventListener('keydown', onEscKeyDown);
+    bodyElement.classList.remove('hide-overflow');
+    popupComponent.element.remove(siteMainElement);
   }
 };
 
@@ -72,7 +68,7 @@ const renderPopup = (popupListElement, data) => {
   popupComponent = new PopupView(data);
 
   popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
-    deletePopup();
+    popupComponent.element.remove(siteMainElement);
     bodyElement.classList.remove('hide-overflow');
     document.removeEventListener('keydown', onEscKeyDown);
   });
@@ -80,10 +76,7 @@ const renderPopup = (popupListElement, data) => {
   render(popupListElement, popupComponent.element, RenderPosition.AFTEREND);
 };
 
-document.addEventListener('keydown', () => {
-  deletePopup();
-  bodyElement.classList.remove('hide-overflow');
-});
+document.addEventListener('keydown', onEscKeyDown);
 
 const renderCard = (cardListElement, data) => {
   const cardComponent = new FilmCardView(data);
@@ -122,7 +115,6 @@ render(
   RenderPosition.AFTEREND
 );
 
-
 for (let i = 0; i < Math.min(mockCardData.length, CARD_COUNT_PER_STEP); i++) {
   renderCard(
     sectionFilmsComponent.element
@@ -137,7 +129,6 @@ render(
   RenderPosition.BEFOREEND
 );
 
-//отрисовка карточек после сортировки в секциях ТОП
 for (let i = 0; i < 2; i++) {
   render(
     sectionFilmsComponent.element.querySelector('.films-list--extra')
@@ -154,7 +145,7 @@ for (let i = 0; i < 2; i++) {
     RenderPosition.BEFOREEND
   );
 }
-//отрисовка стастистики в footer
+
 render(
   siteFooterStatistics,
   new FooterStatisticsView(mockCardData).element,
