@@ -1,10 +1,12 @@
-export const createPopupCommentsTemplate = (data) => {
-  if (data.comments.length === 0) {
+import { createElement } from '../render.js';
+
+const createPopupCommentsTemplate = (data) => {
+  if (data.length === 0) {
     return `<div>
         <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
       </div>`;
   }
-  return data.comments
+  return data
     .map(
       (comment) =>
         `<li class="film-details__comment">
@@ -24,7 +26,26 @@ export const createPopupCommentsTemplate = (data) => {
     .join('');
 };
 
-export const createAmountCommentsTemplate = (data) => (
-  `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">
-  ${data.comments.length}</span></h3>`
-);
+export default class PopupCommentsView {
+  #element = null;
+  #data = null;
+
+  constructor(data) {
+    this.#data = data;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createPopupCommentsTemplate(this.#data);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

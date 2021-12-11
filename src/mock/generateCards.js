@@ -44,7 +44,7 @@ const getRandomNotAnInteger = (a = 0, b = 1) => {
   return (lower + Math.random() * (upper - lower + 1));
 };
 
-const getRandomElements = (array) => {
+export const getRandomElements = (array) => {
   const index = getRandomInteger(0, array.length - 1);
   return array[index];
 };
@@ -84,7 +84,6 @@ const generateComment = () => {
     date: generateDate(),
     user: getRandomElements(userNames),
     message: 'Interesting setting and a good cast',
-    commentsCount: getRandomInteger(0,5),
   };
   return comment;
 };
