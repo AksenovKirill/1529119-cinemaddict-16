@@ -56,28 +56,22 @@ if (mockCardData.length === 0) {
     RenderPosition.AFTEREND);
 }
 
+const deletePopup = () => {
+  popupComponent.element.remove(siteMainElement);
+};
+
+const onEscKeyDown = (evt) => {
+  if (evt.key === 'Escape' || evt.key === 'Esc') {
+    evt.preventDefault();
+    deletePopup();
+    document.removeEventListener('keydown', onEscKeyDown);
+  }
+};
+
 const renderPopup = (popupListElement, data) => {
   popupComponent = new PopupView(data);
 
-  const deletePopup = () => {
-    popupComponent.element.remove(siteMainElement);
-  };
-
-  const onEscKeyDown = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      deletePopup();
-      document.removeEventListener('keydown', onEscKeyDown);
-    }
-  };
-
   popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
-    deletePopup();
-    bodyElement.classList.remove('hide-overflow');
-    document.addEventListener('keydown', onEscKeyDown);
-  });
-
-  popupComponent.element.addEventListener('keydown', () => {
     deletePopup();
     bodyElement.classList.remove('hide-overflow');
     document.removeEventListener('keydown', onEscKeyDown);
@@ -86,14 +80,17 @@ const renderPopup = (popupListElement, data) => {
   render(popupListElement, popupComponent.element, RenderPosition.AFTEREND);
 };
 
+document.addEventListener('keydown', () => {
+  deletePopup();
+  bodyElement.classList.remove('hide-overflow');
+});
+
 const renderCard = (cardListElement, data) => {
   const cardComponent = new FilmCardView(data);
-  const addPopup = () => {
-    siteMainElement.appendChild(popupComponent.element);
-  };
   cardComponent.element.addEventListener('click', () => {
     bodyElement.classList.add('hide-overflow');
     renderPopup(siteFooter,mockCardData.shift());
+
     render(
       popupComponent.element
         .querySelector('.film-details__comments-list'),
@@ -107,7 +104,7 @@ const renderCard = (cardListElement, data) => {
       new PopupNewCommentsView().element,
       RenderPosition.AFTEREND
     );
-    addPopup();
+    siteMainElement.appendChild(popupComponent.element);
   });
 
   render(cardListElement, cardComponent.element, RenderPosition.BEFOREEND);
