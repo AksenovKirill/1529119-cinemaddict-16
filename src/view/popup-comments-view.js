@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createPopupCommentsTemplate = (data) => {
   if (data.length === 0) {
@@ -26,26 +26,15 @@ const createPopupCommentsTemplate = (data) => {
     .join('');
 };
 
-export default class PopupCommentsView {
-  #element = null;
+export default class PopupCommentsView extends AbstractView {
   #data = null;
 
   constructor(data) {
+    super();
     this.#data = data;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
   }
 
   get template() {
     return createPopupCommentsTemplate(this.#data);
-  }
-
-  removeElement() {
-    this.#element = null;
   }
 }

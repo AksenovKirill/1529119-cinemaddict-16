@@ -1,27 +1,25 @@
-import { createElement } from '../render.js';
+import AbstractView from './abstract-view.js';
 
-const createSortCards = () =>
+const createSortButtonsCards = () =>
   `<ul class="sort">
   <li><a href="#" class="sort__button sort__button--active">Sort by default</a></li>
   <li><a href="#" class="sort__button">Sort by date</a></li>
   <li><a href="#" class="sort__button">Sort by rating</a></li>
 </ul>`;
 
-export default class SortCardsView {
-  #element = null;
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
-  }
-
+export default class SortButtonsCardsView extends AbstractView {
   get template() {
-    return createSortCards();
+    return createSortButtonsCards();
   }
 
-  removeElement() {
-    this.#element = null;
+  setEditClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickHandler);
   }
+
+    #clickHandler = (evt) => {
+      evt.preventDefault();
+      this._callback.click();
+    }
 }
+
