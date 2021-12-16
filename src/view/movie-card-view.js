@@ -42,5 +42,7 @@ export default class FilmCardView extends AbstractView {
     #clickHandler = (evt) => {
       evt.preventDefault();
       this._callback.click();
+      document.querySelector('.film-card__controls-item--active').classList.remove('film-card__controls-item--active');
+      evt.target.classList.add('film-card__controls-item--active');
     }
 }
