@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from './abstract-view.js';
 
 const createFilmCardTemplate = (data) => (
   `<article class="film-card">
@@ -17,31 +17,32 @@ const createFilmCardTemplate = (data) => (
   <div class="film-card__controls">
   <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
   <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
-  <button class="film-card__controls-item film-card__controls-item--favorite film-card__controls-item--active" type="button">Mark as favorite</button>
+  <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
 </div>
 </article>`
 );
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #data = null;
 
   constructor(data) {
+    super();
     this.#data = data;
-  }
-
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-    return this.#element;
   }
 
   get template() {
     return createFilmCardTemplate(this.#data);
   }
 
-  removeElement() {
-    this.#element = null;
+  setEditClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickHandler);
   }
+
+    #clickHandler = (evt) => {
+      evt.preventDefault();
+      this._callback.click();
+      document.querySelector('.film-card__controls-item--active').classList.remove('film-card__controls-item--active');
+      evt.target.classList.add('film-card__controls-item--active');
+    }
 }
