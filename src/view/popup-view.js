@@ -11,7 +11,7 @@ export const createPopupTemplate = (data) =>
 <div class="film-details__poster">
   <img class="film-details__poster-img" src="./images/posters/${data.poster}" alt="">
 
-  <p class="film-details__age">${data.ageRaiting}</p>
+  <p class="film-details__age">${data.ageRating}</p>
 </div>
 
 <div class="film-details__info">
@@ -22,34 +22,34 @@ export const createPopupTemplate = (data) =>
     </div>
 
     <div class="film-details__rating">
-      <p class="film-details__total-rating">${data.raiting}</p>
+      <p class="film-details__total-rating">${data.rating}</p>
     </div>
   </div>
 
   <table class="film-details__table">
     <tr class="film-details__row">
-      <td class="film-details__term">${data.director}</td>
-      <td class="film-details__cell">Anthony Mann</td>
+      <td class="film-details__term">Director</td>
+      <td class="film-details__cell">${data.director}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Writers</td>
-      <td class="film-details__cell">Anne Wigton, Heinz Herald, Richard Weil</td>
+      <td class="film-details__cell">${data.screenwriter}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Actors</td>
-      <td class="film-details__cell">Erich von Stroheim, Mary Beth Hughes, Dan Duryea</td>
+      <td class="film-details__cell">${data.actors}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Release Date</td>
-      <td class="film-details__cell">${data.realeaseDate}</td>
+      <td class="film-details__cell">${data.year}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Runtime</td>
-      <td class="film-details__cell">1h 18m</td>
+      <td class="film-details__cell">${data.runTime}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Country</td>
-      <td class="film-details__cell">USA</td>
+      <td class="film-details__cell">${data.country}</td>
     </tr>
     <tr class="film-details__row">
       <td class="film-details__term">Genres</td>

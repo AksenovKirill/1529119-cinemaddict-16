@@ -63,7 +63,7 @@ const generateComment = () => {
 export const generateFilmCard = () => ({
   poster: images[0, getRandomInteger(0, images.length - 1)],
   title: 'Popeye the Sailor Meets Sindbad the Sailor',
-  raiting: getRandomFloat(4, 9).toFixed(1),
+  rating: getRandomFloat(4, 9).toFixed(1),
   year: getRandomInteger(1930, 1955),
   genre:  shuffle(genres)[0, getRandomInteger(0, genres.length-1)],
   description: descriptions[0, getRandomInteger(0, descriptions.length - 1)],
@@ -73,7 +73,7 @@ export const generateFilmCard = () => ({
   realeaseDate: generateDate(),
   runTime: '1h 18m',
   country: 'USA',
-  ageRaiting: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
+  ageRating: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
   comments: Array.from({length: getRandomInteger(0, COMMENTS_COUNT)}, generateComment),
   isAllMovies: true,
   isWatchList: Boolean(getRandomInteger(0,1)),
