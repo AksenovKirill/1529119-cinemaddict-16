@@ -4,7 +4,7 @@ const createMostCommentedFilmCardTepmplate = (data) =>
   `<article class="film-card">
   <a class="film-card__link">
     <h3 class="film-card__title">Santa Claus Conquers the Martians</h3>
-    <p class="film-card__rating">${data.raiting}</p>
+    <p class="film-card__rating">${data.rating}</p>
     <p class="film-card__info">
       <span class="film-card__year">${data.year}</span>
       <span class="film-card__duration">1h 21m</span>

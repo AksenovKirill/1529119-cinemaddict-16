@@ -101,9 +101,25 @@ export default class PopupView extends AbstractView {
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#editClickCloseButtonHandler);
   }
 
-    #editClickCloseButtonHandler = (evt) => {
-      evt.preventDefault();
-      this._callback.editClick();
-      this.element.remove();
-    }
+  setEditClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.addEventListener('click', this.#clickHandler);
+  }
+
+  #editClickCloseButtonHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+    this.element.remove();
+  }
+
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    const buttonControls = this.element.querySelectorAll('.film-details__control-button');
+    buttonControls.forEach((button) => {
+      if(evt.target === button ) {
+        document.querySelector('.film-details__control-button--active').classList.remove('film-details__control-button--active');
+        evt.target.classList.add('film-details__control-button--active');
+      }
+    });
+  }
 }

@@ -30,7 +30,7 @@ const cardFilters = {
 
 export const sorters = {
   'date': (a,b) => b.year - a.year,
-  'rating': (a,b) => b.raiting - a.raiting,
+  'rating': (a,b) => b.rating - a.rating,
   'comments': (a, b) => b.comments.length - a.comments.length,
 };
 
