@@ -32,4 +32,19 @@ export default class MostCommentedFilmCardView extends AbstractView {
   get template() {
     return createMostCommentedFilmCardTepmplate(this.#data);
   }
+
+  setCardButtonsClickHandler = (callback) => {
+    this._callback.click = callback;
+
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#cardButtonsClickHadler);
+    this.element.querySelector('.film-card__controls-item--favorite')
+      .addEventListener('click', this.#cardButtonsClickHadler);
+    this.element.querySelector('.film-card__controls-item--mark-as-watched')
+      .addEventListener('click', this.#cardButtonsClickHadler);
+  }
+
+  #cardButtonsClickHadler = (evt) => {
+    evt.target.classList.toggle('film-card__controls-item--active');
+  }
 }
