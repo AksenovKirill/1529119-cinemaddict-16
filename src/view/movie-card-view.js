@@ -15,7 +15,7 @@ const createFilmCardTemplate = (data) => (
     <span class="film-card__comments">${data.comments.length} comments</span>
   </a>
   <div class="film-card__controls">
-  <button class="film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
+  <button class="film-card__controls-item film-card__controls-item film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
   <button class="film-card__controls-item film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
   <button class="film-card__controls-item film-card__controls-item--favorite" type="button">Mark as favorite</button>
 </div>
@@ -45,18 +45,34 @@ export default class FilmCardView extends AbstractView {
     this._callback.cardClickCallback();
   }
 
-  setCardButtonsClickHandler = (callback) => {
+  setWatchListClickHandler = (callback) => {
     this._callback.click = callback;
 
     this.element.querySelector('.film-card__controls-item--add-to-watchlist')
-      .addEventListener('click', this.#cardButtonsClickHadler);
-    this.element.querySelector('.film-card__controls-item--favorite')
-      .addEventListener('click', this.#cardButtonsClickHadler);
-    this.element.querySelector('.film-card__controls-item--mark-as-watched')
-      .addEventListener('click', this.#cardButtonsClickHadler);
+      .addEventListener('click', this.#watchListClickHadler);
   }
 
-  #cardButtonsClickHadler = (evt) => {
+  #watchListClickHadler = (evt) => {
+    evt.target.classList.toggle('film-card__controls-item--active');
+  }
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#favoriteClickHadler);
+  }
+
+  #favoriteClickHadler = (evt) => {
+    evt.target.classList.toggle('film-card__controls-item--active');
+  }
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#watchedClickHadler);
+  }
+
+  #watchedClickHadler = (evt) => {
     evt.target.classList.toggle('film-card__controls-item--active');
   }
 }

@@ -109,7 +109,7 @@ export default class PopupView extends AbstractView {
     return createPopupTemplate(this.#data);
   }
 
-  setCloseButtonClickHandler = (callback) => {
+  setClosePopupButtonClickHandler = (callback) => {
     this._callback.closeButtonClick = callback;
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#closeButtonClick);
   }
@@ -119,18 +119,34 @@ export default class PopupView extends AbstractView {
     this._callback.closeButtonClick();
   }
 
-  setCardButtonsClickHandler = (callback) => {
+  setWatchListClickHandler = (callback) => {
     this._callback.click = callback;
 
-    this.element.querySelector('.film-details__control-button--watchlist')
-      .addEventListener('click', this.#cardButtonsClickHadler);
-    this.element.querySelector('film-details__control-button--favorite')
-      .addEventListener('click', this.#cardButtonsClickHadler);
-    this.element.querySelector('film-details__control-button--mark-as-watched')
-      .addEventListener('click', this.#cardButtonsClickHadler);
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist')
+      .addEventListener('click', this.#watchListClickHadler);
   }
 
-  #cardButtonsClickHadler = (evt) => {
-    evt.target.classList.toggle('film-details__control-button--active');
+  #watchListClickHadler = (evt) => {
+    evt.target.classList.toggle('film-card__controls-item--active');
+  }
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__control-button--favorite')
+      .addEventListener('click', this.#favoriteClickHadler);
+  }
+
+  #favoriteClickHadler = (evt) => {
+    evt.target.classList.toggle('film-card__controls-item--active');
+  }
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.click = callback;
+    this.element.querySelector('.film-details__control-button--mark-as-watched')
+      .addEventListener('click', this.#watchedClickHadler);
+  }
+
+  #watchedClickHadler = (evt) => {
+    evt.target.classList.toggle('film-card__controls-item--active');
   }
 }

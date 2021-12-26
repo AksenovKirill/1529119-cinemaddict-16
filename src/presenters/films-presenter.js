@@ -49,15 +49,11 @@ export default class FilmsPresenter {
     const popupComments = new PopupCommentsView(film.comments).element;
     const popupCommentsList = this.#popupComponent.element.querySelector('.film-details__comments-list');
 
-    if(this.#popupComponent) {
-      this.#popupComponent.setCloseButtonClickHandler(this.#closePopup);
-    }
+    this.#popupComponent.setWatchListClickHandler(this.#openPopup);
+    this.#popupComponent.setFavoriteClickHandler(this.#openPopup);
+    this.#popupComponent.setWatchedClickHandler(this.#openPopup);
 
-    if(this.#popupComponent) {
-      this.#popupComponent.setCardButtonsClickHandler();
-    }
-
-    document.addEventListener('keydown', this.#handleEsckeyDown);
+    this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
 
     if(previous === null) {
       render(siteFooter, this.#popupComponent.element, RenderPosition.AFTEREND);
@@ -90,21 +86,20 @@ export default class FilmsPresenter {
     render(siteMainElement, this.#noFilmCardsComponent, RenderPosition.BEFOREEND);
   }
 
-
   #renderFilmCard = (film) => {
     this.#filmCardComponent = new FilmCardView(film);
     const filmCardContainer = this.#sectionFilmsComponent.element.querySelector('.films-list__container');
     render(filmCardContainer,  this.#filmCardComponent, RenderPosition.BEFOREEND);
 
-    if(this.#filmCardComponent) {
-      this.#filmCardComponent.setCardButtonsClickHandler();
-    }
+    this.#filmCardComponent.setWatchListClickHandler();
 
-    if(this.#filmCardComponent) {
-      this.#filmCardComponent.setCardClickHandler(() => {
-        this.#renderPopup(film);
-      });
-    }
+    this.#filmCardComponent.setWatchedClickHandler();
+
+    this.#filmCardComponent.setFavoriteClickHandler();
+
+    this.#filmCardComponent.setCardClickHandler(() => {
+      this.#renderPopup(film);
+    });
   }
 
   #renderFilmCards = (from, to) => {
@@ -134,6 +129,11 @@ export default class FilmsPresenter {
     document.removeEventListener('keydown', this.#handleEsckeyDown);
     remove(this.#popupComponent);
     this.#popupComponent = null;
+  }
+
+  #openPopup = () => {
+    bodyElement.classList.add('hide-overflow');
+    document.addEventListener('keydown', this.#handleEsckeyDown);
   }
 
   #renderShowMoreButton = () => {
