@@ -119,34 +119,18 @@ export default class PopupView extends AbstractView {
     this._callback.closeButtonClick();
   }
 
-  setWatchListClickHandler = (callback) => {
+  setPopupButtonsClickHandler = (callback) => {
     this._callback.click = callback;
 
-    this.element.querySelector('.film-card__controls-item--add-to-watchlist')
-      .addEventListener('click', this.#watchListClickHadler);
-  }
-
-  #watchListClickHadler = (evt) => {
-    evt.target.classList.toggle('film-card__controls-item--active');
-  }
-
-  setFavoriteClickHandler = (callback) => {
-    this._callback.click = callback;
+    this.element.querySelector('.film-details__control-button--watchlist')
+      .addEventListener('click', this.#popupButtonsClickHadler);
     this.element.querySelector('.film-details__control-button--favorite')
-      .addEventListener('click', this.#favoriteClickHadler);
+      .addEventListener('click', this.#popupButtonsClickHadler);
+    this.element.querySelector('.film-details__control-button--watched')
+      .addEventListener('click', this.#popupButtonsClickHadler);
   }
 
-  #favoriteClickHadler = (evt) => {
-    evt.target.classList.toggle('film-card__controls-item--active');
-  }
-
-  setWatchedClickHandler = (callback) => {
-    this._callback.click = callback;
-    this.element.querySelector('.film-details__control-button--mark-as-watched')
-      .addEventListener('click', this.#watchedClickHadler);
-  }
-
-  #watchedClickHadler = (evt) => {
-    evt.target.classList.toggle('film-card__controls-item--active');
+  #popupButtonsClickHadler = (evt) => {
+    evt.target.classList.toggle('film-details__control-button--active');
   }
 }

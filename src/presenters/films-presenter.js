@@ -49,17 +49,14 @@ export default class FilmsPresenter {
     const popupComments = new PopupCommentsView(film.comments).element;
     const popupCommentsList = this.#popupComponent.element.querySelector('.film-details__comments-list');
 
-    this.#popupComponent.setWatchListClickHandler(this.#openPopup);
-    this.#popupComponent.setFavoriteClickHandler(this.#openPopup);
-    this.#popupComponent.setWatchedClickHandler(this.#openPopup);
-
-    this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
-
     if(previous === null) {
       render(siteFooter, this.#popupComponent.element, RenderPosition.AFTEREND);
       render(popupCommentsList, popupComments, RenderPosition.AFTERBEGIN);
       return;
     }
+
+    this.#popupComponent.setClosePopupButtonClickHandler(() => this.#closePopup());
+    this.#popupComponent.setPopupButtonsClickHandler();
 
     replace(this.#popupComponent, previous);
     remove(previous);
@@ -91,15 +88,12 @@ export default class FilmsPresenter {
     const filmCardContainer = this.#sectionFilmsComponent.element.querySelector('.films-list__container');
     render(filmCardContainer,  this.#filmCardComponent, RenderPosition.BEFOREEND);
 
-    this.#filmCardComponent.setWatchListClickHandler();
-
-    this.#filmCardComponent.setWatchedClickHandler();
-
-    this.#filmCardComponent.setFavoriteClickHandler();
-
     this.#filmCardComponent.setCardClickHandler(() => {
       this.#renderPopup(film);
+      this.#openPopup();
     });
+
+    this.#filmCardComponent.setCardButtonsClickHandler();
   }
 
   #renderFilmCards = (from, to) => {
@@ -206,6 +200,5 @@ export default class FilmsPresenter {
     this.#renderTopRatedFilms(0, 2);
 
     this.#renderMostCommentedFilms(0, 2);
-
   }
 }
