@@ -3,15 +3,15 @@ import AbstractView from './abstract-view.js';
 const createPopupCommentsTemplate = (data) => {
   if (data.length === 0) {
     return `<div>
-        <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
-      </div>`;
+              <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
+            </div>`;
   }
   return data
     .map(
       (comment) =>
         `<li class="film-details__comment">
-    <span class="film-details__comment-emoji">
-            <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-smile">
+            <span class="film-details__comment-emoji">
+              <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
               <p class="film-details__comment-text">I${comment.message}</p>

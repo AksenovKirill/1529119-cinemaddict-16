@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import {getRandomInteger, shuffle, getRandomFloat} from '../utils.js';
 
 const COMMENTS_COUNT = 5;
@@ -78,5 +79,6 @@ export const generateFilmCard = () => ({
   isAllMovies: true,
   isWatchList: Boolean(getRandomInteger(0,1)),
   isHistory: Boolean(getRandomInteger(0,1)),
-  isFavorites: Boolean(getRandomInteger(0,1)),
+  isFavorite: Boolean(getRandomInteger(0,1)),
+  id: nanoid(),
 });

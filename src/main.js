@@ -4,7 +4,7 @@ import FooterStatisticsView from './view/footer-statistics-view.js';
 import {render, RenderPosition} from './render.js';
 import {generateFilmCard} from './mock/generateCards.js';
 import { generateFilter } from './utils.js';
-import FilmsPresenter from './presenters/films-presenter.js';
+import FilmsPresenter from './presenters/film-list-presenter.js';
 
 const MOCK_DATA_COUNT = 20;
 const siteMainElement = document.querySelector('.main');
