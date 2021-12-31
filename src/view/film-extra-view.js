@@ -1,13 +1,13 @@
 import AbstractView from './abstract-view.js';
 
-const createMostCommentedFilmCardTepmplate = (film) =>
+const createFilmExtraCardTepmplate = (film) =>
   `<article class="film-card">
     <a class="film-card__link">
-      <h3 class="film-card__title">Santa Claus Conquers the Martians</h3>
+      <h3 class="film-card__title">The Man with the Golden Arm</h3>
       <p class="film-card__rating">${film.rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${film.year}</span>
-        <span class="film-card__duration">1h 21m</span>
+        <span class="film-card__duration">1h 59m</span>
         <span class="film-card__genre">${film.genre}</span>
       </p>
       <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
@@ -17,20 +17,23 @@ const createMostCommentedFilmCardTepmplate = (film) =>
     <div class="film-card__controls">
       <button class="film-card__controls-item
         film-card__controls-item--add-to-watchlist"
-        type="button">Add to watchlist
+        type="button">
+        Add to watchlist
       </button>
       <button class="film-card__controls-item
         film-card__controls-item--mark-as-watched"
-        type="button">Mark as watched
+        type="button">
+        Mark as watched
       </button>
       <button class="film-card__controls-item
         film-card__controls-item--favorite"
-        type="button">Mark as favorite
+        type="button">
+        Mark as favorite
       </button>
     </div>
   </article>`;
 
-export default class MostCommentedFilmCardView extends AbstractView {
+export default class FilmExtraCardView extends AbstractView  {
   #film = null;
 
   constructor(film) {
@@ -39,7 +42,7 @@ export default class MostCommentedFilmCardView extends AbstractView {
   }
 
   get template() {
-    return createMostCommentedFilmCardTepmplate(this.#film);
+    return createFilmExtraCardTepmplate(this.#film);
   }
 
   setFavoriteClickHandler = (callback) => {
@@ -50,7 +53,7 @@ export default class MostCommentedFilmCardView extends AbstractView {
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.classList.toggle('film-details__controls-item--active');
+    evt.target.classList.toggle('film-card__controls-item--active');
     this.#film.isFavorite = !this.#film.isFavorite;
     this._callback.favoriteClick(this.#film);
   }
@@ -63,7 +66,7 @@ export default class MostCommentedFilmCardView extends AbstractView {
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.classList.toggle('film-details__controls-item--active');
+    evt.target.classList.toggle('film-card__controls-item--active');
     this.#film.isHistory = !this.#film.isHistory;
     this._callback.watchedClick(this.#film);
   }
@@ -76,7 +79,7 @@ export default class MostCommentedFilmCardView extends AbstractView {
 
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.classList.toggle('film-details__controls-item--active');
+    evt.target.classList.toggle('film-card__controls-item--active');
     this.#film.isWatchList = !this.#film.isWatchList;
     this._callback.watchListClick(this.#film);
   }

@@ -3,9 +3,8 @@ import NoFilmCardView from '../view/no-filmcard-view.js';
 import SortButtonsCardsView from '../view/sort-cards-view.js';
 import SectionFilmsView from '../view/film-list-view.js';
 import ShowMoreButtonView from '../view/button-showmore-view.js';
-import TopRatedFilmCardView from '../view/movie-card-top-rated-view.js';
-import MostCommentedFilmCardView from '../view/movie-card-most-commented-view.js';
 import FilmPresenter from '../presenters/film-presenter.js';
+import FilmsExtraPresenter from './film-extra-list-presenter.js';
 import { remove, render, RenderPosition, updateItem } from '../render.js';
 import { sorters, sortCards } from '../utils.js';
 
@@ -119,41 +118,28 @@ init = (films) => {
   this.#renderedCardCount = CARD_COUNT_PER_STEP;
 };
 
-
 #renderTopRatedFilm = (film) => {
-  const topRatedFilmsComponent = new TopRatedFilmCardView(film);
-
-  render(
-    this.#sectionFilmsComponent.filmListTopRatedTemplate,
-    topRatedFilmsComponent,
-    RenderPosition.BEFOREEND
-  );
+  const topRatedFilmsPresenter = new FilmsExtraPresenter(this.#sectionFilmsComponent.filmListTopRatedTemplate);
+  topRatedFilmsPresenter.init(film);
 };
 
 #renderTopRatedFilms = (from, to) => {
   [...this.#films]
     .sort(sorters.rating)
     .slice(from, to)
-    .forEach((filmTopRated) => this.#renderTopRatedFilm(filmTopRated));
+    .forEach((film) => this.#renderTopRatedFilm(film));
 };
 
 #renderMostCommentedFilm = (film) => {
-  const mostCommentedFilmsComponent = new MostCommentedFilmCardView(film);
-
-  render(
-    this.#sectionFilmsComponent.filmListMostCommentedTemplate,
-    mostCommentedFilmsComponent,
-    RenderPosition.BEFOREEND
-  );
+  const mostCommentedFilmsPresenter = new FilmsExtraPresenter(this.#sectionFilmsComponent.filmListMostCommentedTemplate);
+  mostCommentedFilmsPresenter.init(film);
 };
 
 #renderMostCommentedFilms = (from, to) => {
   [...this.#films]
     .sort(sorters.comments)
     .slice(from, to)
-    .forEach((filmMostCommented) =>
-      this.#renderMostCommentedFilm(filmMostCommented)
-    );
+    .forEach((film) => this.#renderMostCommentedFilm(film));
 };
 
 #renderFilmCardList = () => {
