@@ -1,6 +1,5 @@
 import FilmCardView from '../view/movie-card-view.js';
 import PopupView from '../view/popup-view.js';
-import PopupCommentsView from '../view/popup-comments-view.js';
 import {remove,render,RenderPosition,replace} from '../render.js';
 
 const bodyElement = document.querySelector('body');
@@ -12,7 +11,6 @@ export default class FilmPresenter {
 
   #filmCardComponent = null;
   #popupComponent = null;
-  #popupComments = null;
 
   #film = null;
 
@@ -29,83 +27,68 @@ export default class FilmPresenter {
 
     this.#filmCardComponent = new FilmCardView(film);
     this.#popupComponent = new PopupView(film);
-    this.#popupComments = new PopupCommentsView(film.comments).element;
 
     this.#filmCardComponent.setCardClickHandler(() => {
-      render(siteFooter, this.#popupComponent, RenderPosition.BEFOREEND);
-      render(
-        this.#popupComponent.popupCommentsTemplate,
-        this.#popupComments,
-        RenderPosition.BEFOREEND
-      );
+      render(siteFooter, this.#popupComponent, RenderPosition.AFTEREND);
+
       this.#handleCardClick();
     });
 
-    this.#filmCardComponent.setFavoriteClickHandler(this.#handleSetFavorite);
-    this.#filmCardComponent.setWatchedClickHandler(this.#handleSetWatched);
-    this.#filmCardComponent.setWatchListClickHandler(this.#handleSetWatchList);
+    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
 
     this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
 
-    this.#popupComponent.setFavoriteClickHandler(this.#handleSetFavorite);
-    this.#popupComponent.setWatchedClickHandler(this.#handleSetWatched);
-    this.#popupComponent.setWatchListClickHandler(this.#handleSetWatchList);
+    this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#popupComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#popupComponent.setWatchListClickHandler(this.#handleWatchListClick);
 
     if (previousFilmComponent === null || previousPopupComponent === null) {
-      render(
-        this.#filmListContainer,
-        this.#filmCardComponent,
-        RenderPosition.BEFOREEND
-      );
+      render(this.#filmListContainer, this.#filmCardComponent, RenderPosition.BEFOREEND);
       return;
     }
 
-    if (this.#filmListContainer.element.contains(previousFilmComponent.element)) {
-      replace(this.#filmCardComponent, previousFilmComponent);
-    }
-
-    if (
-      this.#filmListContainer.element.contains(previousPopupComponent.element)
-    ) {
+    if (this.#filmListContainer.element.contains(previousPopupComponent.element)) {
       replace(this.#popupComponent, previousPopupComponent);
     }
 
     remove(previousFilmComponent);
     remove(previousPopupComponent);
+  };
 
-    destroy = () => {
-      remove(this.#filmCardComponent);
-      remove(this.#popupComponent);
-    };
+  destroy = () => {
+    remove(this.#filmCardComponent);
+    remove(this.#popupComponent);
   };
 
   #handleCardClick = () => {
     bodyElement.classList.add('hide-overflow');
-    document.addEventListener('keydown', this.#handleEsckeyDown);
+    document.addEventListener('keydown', this.#handleEscKeyDown);
   };
 
   #closePopup = () => {
     bodyElement.classList.remove('hide-overflow');
-    document.removeEventListener('keydown', this.#handleEsckeyDown);
+    document.removeEventListener('keydown', this.#handleEscKeyDown);
     remove(this.#popupComponent);
     this.#popupComponent = null;
   };
 
-  #handleEsckeyDown = (evt) => {
+  #handleEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       this.#closePopup();
     }
   };
 
-  #handleSetFavorite = () => {
+  #handleFavoriteClick = () => {
     this.changeData({...this.#film, isFavorite: !this.#film.isFavorite});
   };
 
-  #handleSetWatched = () => {
+  #handleWatchedClick = () => {
     this.changeData({ ...this.#film, isHistory: !this.#film.isHistory });
   };
 
-  #handleSetWatchList = () => {
+  #handleWatchListClick = () => {
     this.changeData({ ...this.#film, isWatchList: !this.#film.isWatchList });
   };
 }

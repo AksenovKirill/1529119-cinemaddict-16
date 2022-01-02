@@ -7,12 +7,12 @@ const createFilmCardTemplate = (film) =>
         <p class="film-card__rating">${film.rating}</p>
         <p class="film-card__info">
           <span class="film-card__year">${film.year}</span>
-          <span class="film-card__duration">16m</span>
+          <span class="film-card__duration">${film.runTime}</span>
           <span class="film-card__genre">${film.genre}</span>
         </p>
         <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
-        <p class="film-card__description">${film.description}</p>
-        <span class="film-card__comments">${film.comments.length}comments</span>
+        <p class="film-card__description">${film.shortDescription}</p>
+        <span class="film-card__comments">${film.comments.length} comments</span>
       </a>
       <div class="film-card__controls">
         <button class="film-card__controls-item film-card__controls-item
@@ -63,8 +63,6 @@ export default class FilmCardView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-card__controls-item--active');
-    this.#film.isFavorite = !this.#film.isFavorite;
-    this._callback.favoriteClick(this.#film);
   }
 
   setWatchedClickHandler = (callback) => {
@@ -76,8 +74,6 @@ export default class FilmCardView extends AbstractView {
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-card__controls-item--active');
-    this.#film.isHistory = !this.#film.isHistory;
-    this._callback.watchedClick(this.#film);
   }
 
   setWatchListClickHandler = (callback) => {
@@ -89,7 +85,5 @@ export default class FilmCardView extends AbstractView {
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-card__controls-item--active');
-    this.#film.isWatchList = !this.#film.isWatchList;
-    this._callback.watchListClick(this.#film);
   }
 }

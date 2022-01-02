@@ -40,11 +40,28 @@ const descriptions = [
   'Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra.',
-  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis.',
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at.',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.',
 ];
 
+const countrys = [
+  'USA',
+  'Canada',
+  'Germany',
+  'France',
+  'Spain',
+  'Russia',
+  'Vietnam'
+];
+
 const generateDate = () => {
+  const minGap = 10;
+  const maxGap = 30;
+  const gap = getRandomInteger(minGap, maxGap);
+  return dayjs(`19${gap}`).add(gap, 'day').format('DD MMMM YYYY');
+};
+
+const generateDateComments = () => {
   const minGap = -30;
   const maxGap = 10;
   const daysGap = getRandomInteger(minGap, maxGap);
@@ -54,11 +71,20 @@ const generateDate = () => {
 const generateComment = () => {
   const comment = {
     emoji: emojis[0, getRandomInteger(0,emojis.length - 1)],
-    date: generateDate(),
+    date: generateDateComments(),
     user: userNames[0, getRandomInteger(0, userNames.length - 1)],
     message: 'Interesting setting and a good cast',
   };
   return comment;
+};
+
+const sliceText = (text, limit) => {
+  text = text.trim();
+  if( text.length <= limit) {
+    return text;
+  }
+  text = text.slice(0, limit);
+  return `${text.trim()}...`;
 };
 
 export const generateFilmCard = () => ({
@@ -66,14 +92,16 @@ export const generateFilmCard = () => ({
   title: 'Popeye the Sailor Meets Sindbad the Sailor',
   rating: getRandomFloat(4, 9).toFixed(1),
   year: getRandomInteger(1930, 1955),
+  date: generateDate(),
   genre:  shuffle(genres)[0, getRandomInteger(0, genres.length-1)],
   description: descriptions[0, getRandomInteger(0, descriptions.length - 1)],
+  shortDescription: sliceText(descriptions[0, getRandomInteger(0, descriptions.length - 1)], 140),
   director: 'David Linch',
   screenwriter: 'Anne Wigton, Heinz Herald, Richard Weil',
   actors: 'Erich von Stroheim, Mary Beth Hughes, Dan Duryea',
   realeaseDate: generateDate(),
-  runTime: '1h 18m',
-  country: 'USA',
+  runTime: `1h ${getRandomInteger(10,59)} m`,
+  country: countrys[0, getRandomInteger(0, countrys.length - 1)],
   ageRating: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
   comments: Array.from({length: getRandomInteger(0, COMMENTS_COUNT)}, generateComment),
   isAllMovies: true,

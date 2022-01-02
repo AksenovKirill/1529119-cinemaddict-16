@@ -37,7 +37,7 @@ export const createPopupTemplate = (film) =>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${film.year}</td>
+                <td class="film-details__cell">${film.date}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
@@ -75,7 +75,8 @@ export const createPopupTemplate = (film) =>
           <h3 class="film-details__comments-title">Comments
           <span class="film-details__comments-count">${film.comments.length}</span>
           </h3>
-          <ul class="film-details__comments-list"></ul>
+          <ul class="film-details__comments-list">
+          </ul>
           <div class="film-details__new-comment">
             <div class="film-details__add-emoji-label"></div>
               <label class="film-details__comment-label">
@@ -116,6 +117,32 @@ export const createPopupTemplate = (film) =>
     </form>
   </section>`;
 
+export const createPopupCommentsTemplate = (film) => {
+  if (film.length === 0) {
+    return `<div>
+              <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
+            </div>`;
+  }
+  return film
+    .map(
+      (comment) =>
+        `<li class="film-details__comment">
+            <span class="film-details__comment-emoji">
+              <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-smile">
+            </span>
+            <div>
+              <p class="film-details__comment-text">I${comment.message}</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">${comment.user}</span>
+                <span class="film-details__comment-day">${comment.date}</span>
+                <button class="film-details__comment-delete">Delete</button>
+              </p>
+            </div>
+          </li>`
+    )
+    .join('');
+};
+
 export default class PopupView extends AbstractView {
   #film = null;
 
@@ -126,6 +153,10 @@ export default class PopupView extends AbstractView {
 
   get template() {
     return createPopupTemplate(this.#film);
+  }
+
+  get templateComments() {
+    return createPopupCommentsTemplate(this.#film);
   }
 
   get popupCommentsTemplate() {
@@ -151,8 +182,6 @@ export default class PopupView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-details__control-button--active');
-    this.#film.isFavorite = !this.#film.isFavorite;
-    this._callback.favoriteClick(this.#film);
   }
 
   setWatchedClickHandler = (callback) => {
@@ -164,8 +193,6 @@ export default class PopupView extends AbstractView {
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-details__control-button--active');
-    this.#film.isHistory = !this.#film.isHistory;
-    this._callback.watchedClick(this.#film);
   }
 
   setWatchListClickHandler = (callback) => {
@@ -177,7 +204,5 @@ export default class PopupView extends AbstractView {
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-details__control-button--active');
-    this.#film.isWatchList = !this.#film.isWatchList;
-    this._callback.watchListClick(this.#film);
   }
 }
