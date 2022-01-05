@@ -44,7 +44,7 @@ const descriptions = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus.',
 ];
 
-const countrys = [
+const countries = [
   'USA',
   'Canada',
   'Germany',
@@ -101,7 +101,7 @@ export const generateFilmCard = () => ({
   actors: 'Erich von Stroheim, Mary Beth Hughes, Dan Duryea',
   realeaseDate: generateDate(),
   runTime: `1h ${getRandomInteger(10,59)} m`,
-  country: countrys[0, getRandomInteger(0, countrys.length - 1)],
+  country: countries[0, getRandomInteger(0, countries.length - 1)],
   ageRating: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
   comments: Array.from({length: getRandomInteger(0, COMMENTS_COUNT)}, generateComment),
   isAllMovies: true,
