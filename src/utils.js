@@ -18,7 +18,7 @@ export const shuffle = (array) => {
 
 export const getRandomFloat = (min, max) => Math.random() * (max - min) + min;
 
-const cardToFilter = {
+const cardFilters = {
   all: (cards) => cards.filter((card) => card.isAllMovies === true),
   watchList: (cards) => cards
     .filter((card) => card.isWatchList === true).length,
@@ -28,9 +28,10 @@ const cardToFilter = {
     .filter((card) => card.isFavorites === true).length,
 };
 
-const sorters = {
+export const sorters = {
   'date': (a,b) => b.year - a.year,
-  'rating': (a,b) => b.raiting - a.raiting,
+  'rating': (a,b) => b.rating - a.rating,
+  'comments': (a, b) => b.comments.length - a.comments.length,
 };
 
 export const sortCards = (card, sortType) => {
@@ -45,7 +46,7 @@ export const sortCards = (card, sortType) => {
   }
 };
 
-export const generateFilter = (cards) => Object.entries(cardToFilter).map(
+export const generateFilter = (cards) => Object.entries(cardFilters).map(
   ([filterName, countCards]) => ({
     name: filterName,
     count: countCards(cards),
