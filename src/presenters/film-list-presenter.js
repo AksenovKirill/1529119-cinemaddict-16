@@ -12,7 +12,7 @@ const CARD_COUNT_PER_STEP = 5;
 
 const siteHeader = document.querySelector('.header');
 const siteMainElement = document.querySelector('.main');
-const bodyElement = document.querySelector('body');
+export const bodyElement = document.querySelector('body');
 const siteFooter = document.querySelector('.footer');
 
 export default class FilmsPresenter {
@@ -80,10 +80,11 @@ constructor(filmListContainer) {
     bodyElement.classList.add('hide-overflow');
 
     this.#popupComponent = new PopupView(film);
+    this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
     this.#popupComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#popupComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#popupComponent.setWatchListClickHandler(this.#handleWatchListClick);
-    this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
+
     document.addEventListener('keydown', this.#handleEscKeyDown);
 
     render(siteFooter, this.#popupComponent, RenderPosition.AFTEREND);
@@ -103,7 +104,7 @@ constructor(filmListContainer) {
   };
 
   #handleFavoriteClick = (film) => {
-    updateItem({...film, isFavorite: !film.isFavorite});
+    updateItem({ ...film, isFavorite: !film.isFavorite });
   };
 
   #handleWatchedClick = (film) => {
@@ -111,7 +112,7 @@ constructor(filmListContainer) {
   };
 
   #handleWatchListClick = (film) => {
-    updateItem({ ...film, isWatchList: !film.isWatchList });
+    updateItem({ ...film, isWatchList: !film.watchList });
   };
 
   #renderNoFilms = () => {
@@ -133,7 +134,7 @@ constructor(filmListContainer) {
   };
 
   #renderShowMoreButton = () => {
-    render(this.#filmListComponent.filmListTemplate,this.#showMoreButtonComponent,RenderPosition.BEFOREEND    );
+    render(this.#filmListComponent.filmListTemplate,this.#showMoreButtonComponent,RenderPosition.BEFOREEND);
     this.#showMoreButtonComponent.setEditClickHandler(
       this.#handleShowMoreButtonClick
     );
