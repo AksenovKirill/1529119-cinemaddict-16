@@ -11,7 +11,6 @@ const siteMainElement = document.querySelector('.main');
 const siteFooter = document.querySelector('.footer');
 const siteFooterStatistics = siteFooter.querySelector('.footer__statistics');
 
-
 export const mockData = Array.from({ length: MOCK_DATA_COUNT }, generateFilmCard);
 const filters = generateFilter(mockData);
 const footerStaticsComponent = new FooterStatisticsView(mockData).element;

@@ -112,7 +112,7 @@ constructor(filmListContainer) {
   };
 
   #handleWatchListClick = (film) => {
-    updateItem({ ...film, isWatchList: !film.watchList });
+    updateItem({ ...film, isWatchList: !film.isWatchList });
   };
 
   #renderNoFilms = () => {
