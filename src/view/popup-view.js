@@ -28,7 +28,7 @@ export const createPopupCommentsTemplate = (comments) => {
 
 export const createPopupNewCommentsTemplate = (film) =>
   `<div class="film-details__add-emoji-label">
-    ${film.isEmoji ? `<img src="./images/emoji/${film.emoji}.png" width="55" height="55" alt="emoji-${film.emoji}">` : '' }
+    ${film.emoji ? `<img src="./images/emoji/${film.emoji}.png" width="55" height="55" alt="emoji-${film.emoji}">` : '' }
   </div>
   <label class="film-details__comment-label">
     <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -139,11 +139,14 @@ export const createPopupTemplate = (film) =>
   </section>`;
 
 export default class PopupView extends SmartView {
+  #currentScrollTop = 0;
+
   constructor(film) {
     super();
     this._data = PopupView.parseFilmToData(film);
-
     this.#setNewCommentClickHandlers();
+
+    this.element.addEventListener('scroll', this.#handleScroll);
   }
 
   get template() {
@@ -163,6 +166,7 @@ export default class PopupView extends SmartView {
   }
 
   restoreHandlers = () => {
+    this.element.scrollTop = this.#currentScrollTop;
     this.#setNewCommentClickHandlers();
     this.setClosePopupButtonClickHandler(this._callback.closeButtonClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
@@ -171,20 +175,20 @@ export default class PopupView extends SmartView {
   };
 
   #setNewCommentClickHandlers = () => {
-    this.element.querySelector('#emoji-smile').addEventListener('click', this.#emojiClickHandler);
-    this.element.querySelector('#emoji-sleeping').addEventListener('click', this.#emojiClickHandler);
-    this.element.querySelector('#emoji-puke').addEventListener('click', this.#emojiClickHandler);
-    this.element.querySelector('#emoji-angry').addEventListener('click', this.#emojiClickHandler);
+    this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiClickHandler);
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#descriptionInputHandler);
   };
 
   #emojiClickHandler = (evt) => {
     evt.stopPropagation();
     this.updateData({
-      isEmoji: !this._data.isEmoji,
       emoji: evt.target.value,
     });
   };
+
+  #handleScroll = (evt) => {
+    this.#currentScrollTop = evt.target.scrollTop;
+  }
 
   #descriptionInputHandler = (evt) => {
     evt.preventDefault();
@@ -275,7 +279,7 @@ export default class PopupView extends SmartView {
     const film = {...data};
 
     if(!film.isEmoji) {
-      film.emoji !== null;
+      film.emoji === null;
     }
 
     delete film.isEmoji;
