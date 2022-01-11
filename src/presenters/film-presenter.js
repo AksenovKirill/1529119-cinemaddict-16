@@ -1,14 +1,11 @@
 import FilmCardView from '../view/movie-card-view.js';
-import {remove,render,RenderPosition, replace, updateItem} from '../render.js';
-
-const siteFooter = document.querySelector('.footer');
+import {remove,render,RenderPosition, updateItem} from '../render.js';
 
 export default class FilmPresenter {
   #filmListContainer = null;
   changeData = null;
 
   #filmCardComponent = null;
-  #popupComponent = null;
   #handleCardClick = null;
 
   #film = null;
@@ -22,12 +19,10 @@ export default class FilmPresenter {
     this.#film = film;
 
     const previous = this.#filmCardComponent;
-    const previousPopupComponent = this.#popupComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
 
     this.#filmCardComponent.setCardClickHandler(() => {
-      render(siteFooter, this.#popupComponent, RenderPosition.AFTEREND);
       this.#handleCardClick(this.#film);
     });
 
@@ -40,17 +35,11 @@ export default class FilmPresenter {
       return;
     }
 
-    if (this.#filmListContainer.element.contains(previousPopupComponent.element)) {
-      replace(this.#popupComponent, previousPopupComponent);
-    }
-
     remove(previous);
-    remove(previousPopupComponent);
   };
 
   destroy = () => {
     remove(this.#filmCardComponent);
-    remove(this.#popupComponent);
   };
 
   #handleFavoriteClick = (film) => {
