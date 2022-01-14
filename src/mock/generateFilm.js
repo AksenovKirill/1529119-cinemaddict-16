@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
-import {getRandomInteger, shuffle, getRandomFloat} from '../utils.js';
+import {getRandomInteger, shuffle, getRandomFloat} from '../utils/common.js';
 
 const COMMENTS_COUNT = 5;
 
@@ -87,7 +87,7 @@ const sliceText = (text, limit) => {
   return `${text.trim()}...`;
 };
 
-export const generateFilmCard = () => ({
+export const generateFilm = () => ({
   poster: images[0, getRandomInteger(0, images.length - 1)],
   title: 'Popeye the Sailor Meets Sindbad the Sailor',
   rating: getRandomFloat(4, 9).toFixed(1),

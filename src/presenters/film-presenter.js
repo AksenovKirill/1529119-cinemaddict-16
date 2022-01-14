@@ -1,5 +1,5 @@
 import FilmCardView from '../view/movie-card-view.js';
-import {remove,render,RenderPosition, updateItem} from '../render.js';
+import { remove, render, RenderPosition } from '../utils/render.js';
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -7,12 +7,18 @@ export default class FilmPresenter {
 
   #filmCardComponent = null;
   #handleCardClick = null;
+  #filmsModel = null;
 
   #film = null;
 
-  constructor(filmListContainer, handleCardClick) {
+  constructor(filmListContainer, handleCardClick, filmsModel) {
     this.#filmListContainer = filmListContainer;
     this.#handleCardClick = handleCardClick;
+    this.#filmsModel = filmsModel;
+  }
+
+  get films() {
+    return this.#filmsModel.films;
   }
 
   init = (film) => {

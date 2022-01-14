@@ -1,21 +1,38 @@
 import AbstractView from './abstract-view.js';
 
-const createSortButtonsCards = () =>
+const createSortButtons = () =>
   `<ul class="sort">
     <li>
-      <a href="#" class="sort__button sort__button--default sort__button--active" data-sort-by-type="default">Sort by default</a>
+      <a href="#" class="sort__button sort__button--default sort__button--active" data-sort-type="default">Sort by default</a>
     </li>
     <li>
-      <a href="#" class="sort__button sort__button--date" data-sort-by-type="date">Sort by date</a>
+      <a href="#" class="sort__button sort__button--date" data-sort-type="date">Sort by date</a>
     </li>
     <li>
-      <a href="#" class="sort__button sort__button--rating" data-sort-by-type="rating">Sort by rating</a>
+      <a href="#" class="sort__button sort__button--rating" data-sort-type="rating">Sort by rating</a>
     </li>
   </ul>`;
 
-export default class SortButtonsCardsView extends AbstractView {
+export default class SortView extends AbstractView {
+  #currentSortType = null;
+
+  constructor(currentSortType) {
+    super();
+    this.#currentSortType = currentSortType;
+  }
+
   get template() {
-    return createSortButtonsCards();
+    return createSortButtons(this.#currentSortType);
+  }
+
+  setSortTypeChangeHandler = (callback) => {
+    this._callback.sortTypeChange = callback;
+    this.element.addEventListener('click', this.#sortTypeChangeHandler);
+  }
+
+  #sortTypeChangeHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 
   setClickHandler = (callback) => {
