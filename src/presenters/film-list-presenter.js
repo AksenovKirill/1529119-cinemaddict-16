@@ -7,8 +7,8 @@ import PopupView from '../view/popup-view.js';
 import FilmPresenter from '../presenters/film-presenter.js';
 import { remove, render, RenderPosition } from '../utils/render.js';
 import { sorters, sortFilmsType } from '../utils/film.js';
-import { filterFilms } from '../utils/filter.js'
-import { SortType, UpdateType, UserAction } from '../const.js';
+import { filmFilters } from '../utils/filter.js'
+import { SortType, UpdateType, UserAction, FilterType } from '../const.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
@@ -52,7 +52,7 @@ get films () {
 sortFilms() {
   const filterType = this.#filterModel.filter;
   const films = this.#filmsModel.films;
-  const filteredFilms = filterFilms[filterType](films);
+  const filteredFilms = filmFilters[filterType](films);
 
   switch (this.#currentSortType) {
     case SortType.DATE:

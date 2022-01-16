@@ -24,10 +24,9 @@ const filterModel = new FilterModel();
 const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel, filterModel);
 const filterPresent = new FilterPresent(siteMainElement, filterModel, filmsModel);
 
-const siteMenuComponent = new SiteMenuView();
+
 const footerStaticsComponent = new FooterStatisticsView(films).element;
 
-render(siteMainElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
 render(siteFooterStatistics, footerStaticsComponent, RenderPosition.AFTERBEGIN);
 
 filterPresent.init();
