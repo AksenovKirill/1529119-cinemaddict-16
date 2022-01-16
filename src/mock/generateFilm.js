@@ -73,7 +73,7 @@ const generateComment = () => {
     emoji: emojis[0, getRandomInteger(0,emojis.length - 1)],
     date: generateDateComments(),
     user: userNames[0, getRandomInteger(0, userNames.length - 1)],
-    message: 'Interesting setting and a good cast',
+    message: descriptions[0, getRandomInteger(0, descriptions.length - 1)],
   };
   return comment;
 };

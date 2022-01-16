@@ -1,34 +1,34 @@
 import SiteMenuView from './view/site-menu-view.js';
-import filterMenuView from './view/filters-menu-view.js';
 import FooterStatisticsView from './view/footer-statistics-view.js';
 import {render, RenderPosition} from './utils/render.js';
 import {generateFilm} from './mock/generateFilm.js';
-import { generateFilter } from './utils/filter.js';
 import FilmListPresenter from './presenters/film-list-presenter.js';
+import FilterPresent from './presenters/filter-presenter.js';
 import FilmsModel from './model/films-model.js';
+import FilterModel from './model/filter-model.js';
 
 
-const FILM_COUNT = 24;
+const FILM_COUNT = 21;
 
 const siteMainElement = document.querySelector('.main');
 const siteFooter = document.querySelector('.footer');
 const siteFooterStatistics = siteFooter.querySelector('.footer__statistics');
 
 export const films = Array.from({ length: FILM_COUNT }, generateFilm);
-const filters = generateFilter(films);
 
 const filmsModel = new FilmsModel();
 filmsModel.films = films;
 
-const footerStaticsComponent = new FooterStatisticsView(films).element;
+const filterModel = new FilterModel();
 
-const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel);
+const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel, filterModel);
+const filterPresent = new FilterPresent(siteMainElement, filterModel, filmsModel);
 
 const siteMenuComponent = new SiteMenuView();
-const filterMenuComponent = new filterMenuView(filters);
+const footerStaticsComponent = new FooterStatisticsView(films).element;
 
 render(siteMainElement, siteMenuComponent, RenderPosition.AFTERBEGIN);
-render(siteMenuComponent, filterMenuComponent, RenderPosition.AFTERBEGIN);
 render(siteFooterStatistics, footerStaticsComponent, RenderPosition.AFTERBEGIN);
 
+filterPresent.init();
 filmListPresenter.init();

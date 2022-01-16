@@ -1,24 +1,20 @@
-import FilmCardView from '../view/movie-card-view.js';
+import FilmView from '../view/film-view.js';
 import { remove, render, RenderPosition } from '../utils/render.js';
+import { UpdateType, UserAction } from '../const.js';
 
 export default class FilmPresenter {
   #filmListContainer = null;
-  changeData = null;
+  #changeData = null;
 
   #filmCardComponent = null;
   #handleCardClick = null;
-  #filmsModel = null;
 
   #film = null;
 
-  constructor(filmListContainer, handleCardClick, filmsModel) {
+  constructor(filmListContainer, changeData, handleCardClick) {
     this.#filmListContainer = filmListContainer;
+    this.#changeData = changeData;
     this.#handleCardClick = handleCardClick;
-    this.#filmsModel = filmsModel;
-  }
-
-  get films() {
-    return this.#filmsModel.films;
   }
 
   init = (film) => {
@@ -26,7 +22,7 @@ export default class FilmPresenter {
 
     const previous = this.#filmCardComponent;
 
-    this.#filmCardComponent = new FilmCardView(film);
+    this.#filmCardComponent = new FilmView(film);
 
     this.#filmCardComponent.setCardClickHandler(() => {
       this.#handleCardClick(this.#film);
@@ -42,21 +38,30 @@ export default class FilmPresenter {
     }
 
     remove(previous);
-  };
+  }
 
   destroy = () => {
     remove(this.#filmCardComponent);
-  };
+  }
 
-  #handleFavoriteClick = (film) => {
-    updateItem({...film, isFavorite: !film.isFavorite});
-  };
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      UserAction.ADD_TO_FAVORITE,
+      UpdateType.MINOR,
+      {...this.#film, isFavorite: this.#film.isFavorite});
+  }
 
-  #handleWatchedClick = (film) => {
-    updateItem({ ...film, isHistory: !film.isHistory });
-  };
+  #handleWatchedClick = () => {
+    this.#changeData(
+      UserAction.ADD_TO_HISTORY,
+      UpdateType.MINOR,
+      {...this.#film, isHistory: this.#film.isHistory});
+  }
 
-  #handleWatchListClick = (film) => {
-    updateItem({ ...film, isWatchList: !film.isWatchList });
+  #handleWatchListClick = () => {
+    this.#changeData(
+      UserAction.ADD_TO_WATCHLIST,
+      UpdateType.MINOR,
+      {...this.#film, isWatchList: this.#film.isWatchList});
   };
 }

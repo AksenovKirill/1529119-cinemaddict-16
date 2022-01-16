@@ -27,7 +27,11 @@ export default class SortView extends AbstractView {
 
   setSortTypeChangeHandler = (callback) => {
     this._callback.sortTypeChange = callback;
+    this._callback.click = callback;
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
+    this.element.querySelector('.sort__button--default').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.sort__button--date').addEventListener('click', this.#clickHandler);
+    this.element.querySelector('.sort__button--rating').addEventListener('click', this.#clickHandler);
   }
 
   #sortTypeChangeHandler = (evt) => {
@@ -35,18 +39,11 @@ export default class SortView extends AbstractView {
     this._callback.sortTypeChange(evt.target.dataset.sortType);
   }
 
-  setClickHandler = (callback) => {
-    this._callback.click = callback;
-    this.element.querySelector('.sort__button--default').addEventListener('click', this.#clickHandler);
-    this.element.querySelector('.sort__button--date').addEventListener('click', this.#clickHandler);
-    this.element.querySelector('.sort__button--rating').addEventListener('click', this.#clickHandler);
+  #clickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.click(evt);
+    this.element.querySelector('.sort__button--active').classList.remove('sort__button--active');
+    evt.target.classList.add('sort__button--active');
   }
-
-    #clickHandler = (evt) => {
-      evt.preventDefault();
-      this._callback.click(evt);
-      this.element.querySelector('.sort__button--active').classList.remove('sort__button--active');
-      evt.target.classList.add('sort__button--active');
-    }
 }
 

@@ -30,7 +30,7 @@ const createFilmCardTemplate = (film) =>
       </div>
   </article>`;
 
-export default class FilmCardView extends AbstractView {
+export default class FilmView extends AbstractView {
   #film = null;
 
   constructor(film) {

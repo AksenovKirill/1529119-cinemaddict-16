@@ -245,17 +245,16 @@ export default class PopupView extends SmartView {
     evt.target.classList.toggle('film-details__control-button--active');
   };
 
-  setSubmitNewCommentHandler = (callback) => {
-    this._callback.newCommentSubmit = callback;
+  setAddCommentHandler = (callback) => {
+    this._callback.addCommentSubmit = callback;
     this.element
       .querySelector('form')
-      .addEventListener('submit', this.#handleSubmitNewComment);
+      .addEventListener('submit', this.#handleAddComment);
   };
 
-  #handleSubmitNewComment = (evt) => {
+  #handleAddComment = (evt) => {
     evt.preventDefault();
-    this._callback.newCommentSubmit(PopupView.parseDataToFilm(this._data));
-
+    this._callback.addCommentSubmit(PopupView.parseDataToFilm(this._data));
   };
 
   setDeleteCommentClickHandler = (callback) => {
@@ -277,13 +276,8 @@ export default class PopupView extends SmartView {
 
   static parseDataToFilm = (data) => {
     const film = {...data};
-
-    if(!film.isEmoji) {
-      film.emoji === null;
-    }
-
-    delete film.isEmoji;
-
-    return film;
-  };
+    const comment = new Object;
+    comment.message = commentText;
+    comment.emoji = emoji;
+}
 }

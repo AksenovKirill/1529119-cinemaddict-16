@@ -7,7 +7,7 @@ const createNoFilmCardTemplate = () =>
     </section>
   </section>`;
 
-export default class NoFilmCardView extends AbstractView {
+export default class NoFilmView extends AbstractView {
   get template() {
     return createNoFilmCardTemplate();
   }

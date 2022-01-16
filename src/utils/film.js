@@ -4,7 +4,7 @@ export const sorters = {
   'comments': (a, b) => b.comments.length - a.comments.length,
 };
 
-export const sortFilms = (film, sortType) => {
+export const sortFilmsType = (film, sortType) => {
   if (sortType === 'rating') {
     return [...film].sort(sorters.rating);
   }
