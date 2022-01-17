@@ -6,7 +6,7 @@ export default class FilmPresenter {
   #filmListContainer = null;
   #changeData = null;
 
-  #filmCardComponent = null;
+  #filmComponent = null;
   #handleCardClick = null;
 
   #film = null;
@@ -20,20 +20,20 @@ export default class FilmPresenter {
   init = (film) => {
     this.#film = film;
 
-    const previous = this.#filmCardComponent;
+    const previous = this.#filmComponent;
 
-    this.#filmCardComponent = new FilmView(film);
+    this.#filmComponent = new FilmView(film);
 
-    this.#filmCardComponent.setCardClickHandler(() => {
+    this.#filmComponent.setCardClickHandler(() => {
       this.#handleCardClick(this.#film);
     });
 
-    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#filmCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmComponent.setWatchListClickHandler(this.#handleWatchListClick);
 
     if (previous === null) {
-      render(this.#filmListContainer, this.#filmCardComponent, RenderPosition.BEFOREEND);
+      render(this.#filmListContainer, this.#filmComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -41,27 +41,27 @@ export default class FilmPresenter {
   }
 
   destroy = () => {
-    remove(this.#filmCardComponent);
+    remove(this.#filmComponent);
   }
 
   #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.ADD_TO_FAVORITE,
       UpdateType.MINOR,
-      {...this.#film, isFavorite: this.#film.isFavorite});
+      {...this.#film, isFavorite: !this.#film.isFavorite});
   }
 
   #handleWatchedClick = () => {
     this.#changeData(
       UserAction.ADD_TO_HISTORY,
       UpdateType.MINOR,
-      {...this.#film, isHistory: this.#film.isHistory});
+      {...this.#film, isHistory: !this.#film.isHistory});
   }
 
   #handleWatchListClick = () => {
     this.#changeData(
       UserAction.ADD_TO_WATCHLIST,
       UpdateType.MINOR,
-      {...this.#film, isWatchList: this.#film.isWatchList});
+      {...this.#film, isWatchList: !this.#film.isWatchList});
   };
 }

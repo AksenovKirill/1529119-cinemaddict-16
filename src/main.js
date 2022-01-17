@@ -1,4 +1,3 @@
-import SiteMenuView from './view/site-menu-view.js';
 import FooterStatisticsView from './view/footer-statistics-view.js';
 import {render, RenderPosition} from './utils/render.js';
 import {generateFilm} from './mock/generateFilm.js';

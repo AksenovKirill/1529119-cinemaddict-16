@@ -144,7 +144,7 @@ export default class PopupView extends SmartView {
   constructor(film) {
     super();
     this._data = PopupView.parseFilmToData(film);
-    this.#setNewCommentClickHandlers();
+    this.setInnerHandlers();
 
     this.element.addEventListener('scroll', this.#handleScroll);
   }
@@ -167,16 +167,92 @@ export default class PopupView extends SmartView {
 
   restoreHandlers = () => {
     this.element.scrollTop = this.#currentScrollTop;
-    this.#setNewCommentClickHandlers();
+    this.setInnerHandlers();
     this.setClosePopupButtonClickHandler(this._callback.closeButtonClick);
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchListClickHandler(this._callback.watchListClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
+    this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
   };
 
-  #setNewCommentClickHandlers = () => {
+  setClosePopupButtonClickHandler = (callback) => {
+    this._callback.closeButtonClick = callback;
+    this.element
+      .querySelector('.film-details__close-btn')
+      .addEventListener('click', this.#handleCloseButtonClick);
+  };
+
+  setFavoriteClickHandler = (callback) => {
+    this._callback.favoriteClick = callback;
+    this.element
+      .querySelector('.film-details__control-button--favorite')
+      .addEventListener('click', this.#handleFavoriteClick);
+  };
+
+  setWatchedClickHandler = (callback) => {
+    this._callback.watchedClick = callback;
+    this.element
+      .querySelector('.film-details__control-button--watched')
+      .addEventListener('click', this.#handleWatchedClick);
+  };
+
+  setWatchListClickHandler = (callback) => {
+    this._callback.watchListClick = callback;
+    this.element
+      .querySelector('.film-details__control-button--watchlist')
+      .addEventListener('click', this.#handleWatchListClick);
+  };
+
+  setAddCommentHandler = (callback) => {
+    this._callback.addCommentSubmit = callback;
+    this.element
+      .querySelector('form')
+      .addEventListener('submit', this.#handleAddComment);
+  };
+
+  setDeleteCommentClickHandler = (callback) => {
+    this._callback.deleteCommentClick = callback;
+    this.element
+      .querySelector('.film-details__comment-delete')
+      .addEventListener('click', this.#handleDeleteComment);
+  };
+
+  setInnerHandlers = () => {
     this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiClickHandler);
     this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#descriptionInputHandler);
+  };
+
+  #handleCloseButtonClick = (evt) => {
+    evt.preventDefault();
+    this._callback.closeButtonClick();
+  };
+
+  #handleFavoriteClick = (evt) => {
+    evt.preventDefault();
+    evt.target.classList.toggle('film-details__control-button--active');
+    this._callback.favoriteClick(this._data);
+  };
+
+  #handleWatchedClick = (evt) => {
+    evt.preventDefault();
+    evt.target.classList.toggle('film-details__control-button--active');
+    this._callback.watchedClick(this._data);
+  };
+
+  #handleWatchListClick = (evt) => {
+    evt.preventDefault();
+    evt.target.classList.toggle('film-details__control-button--active');
+    this._callback.watchListClick(this._data);
+  };
+
+  #handleAddComment = (evt) => {
+    evt.preventDefault();
+    this._callback.addCommentSubmit(this._data);
+  };
+
+  #handleDeleteComment = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteCommentClick(this._data);
   };
 
   #emojiClickHandler = (evt) => {
@@ -197,87 +273,10 @@ export default class PopupView extends SmartView {
     }, true);
   };
 
-  setClosePopupButtonClickHandler = (callback) => {
-    this._callback.closeButtonClick = callback;
-    this.element
-      .querySelector('.film-details__close-btn')
-      .addEventListener('click', this.#handleCloseButtonClick);
-  };
-
-  #handleCloseButtonClick = (evt) => {
-    evt.preventDefault();
-    this._callback.closeButtonClick();
-  };
-
-  setFavoriteClickHandler = (callback) => {
-    this._callback.favoriteClick = callback;
-    this.element
-      .querySelector('.film-details__control-button--favorite')
-      .addEventListener('click', this.#handleFavoriteClick);
-  };
-
-  #handleFavoriteClick = (evt) => {
-    evt.preventDefault();
-    evt.target.classList.toggle('film-details__control-button--active');
-  };
-
-  setWatchedClickHandler = (callback) => {
-    this._callback.watchedClick = callback;
-    this.element
-      .querySelector('.film-details__control-button--watched')
-      .addEventListener('click', this.#handleWatchedClick);
-  };
-
-  #handleWatchedClick = (evt) => {
-    evt.preventDefault();
-    evt.target.classList.toggle('film-details__control-button--active');
-  };
-
-  setWatchListClickHandler = (callback) => {
-    this._callback.watchListClick = callback;
-    this.element
-      .querySelector('.film-details__control-button--watchlist')
-      .addEventListener('click', this.#handleWatchListClick);
-  };
-
-  #handleWatchListClick = (evt) => {
-    evt.preventDefault();
-    evt.target.classList.toggle('film-details__control-button--active');
-  };
-
-  setAddCommentHandler = (callback) => {
-    this._callback.addCommentSubmit = callback;
-    this.element
-      .querySelector('form')
-      .addEventListener('submit', this.#handleAddComment);
-  };
-
-  #handleAddComment = (evt) => {
-    evt.preventDefault();
-    this._callback.addCommentSubmit(PopupView.parseDataToFilm(this._data));
-  };
-
-  setDeleteCommentClickHandler = (callback) => {
-    this._callback.deleteCommentClick = callback;
-    this.element
-      .querySelector('.film-details__comment-delete')
-      .addEventListener('click', this.#handleDeleteComment);
-  };
-
-  #handleDeleteComment = (evt) => {
-    evt.preventDefault();
-    this._callback.deleteCommentClick(PopupView.parseDataToFilm(this._data));
-  };
-
   static parseFilmToData = (film) => ({...film,
     isEmoji: null,
     emoji: null,
   });
 
-  static parseDataToFilm = (data) => {
-    const film = {...data};
-    const comment = new Object;
-    comment.message = commentText;
-    comment.emoji = emoji;
-}
+  static parseDataToFilm = (data) => data;
 }

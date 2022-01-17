@@ -1,5 +1,5 @@
 import AbstractView from './abstract-view.js';
-import createFilterTemplate from './filter-view.js'
+
 const createSiteMenuTemplate = () =>
   `<nav class="main-navigation">
 

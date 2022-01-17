@@ -18,7 +18,7 @@ export const createFilterTemplate = (filter, currentFilterType) => {
 </div>
     <a href="#stats" class="main-navigation__additional">Stats</a>
   </nav>`;
-}
+};
 
 
 export default class FilterView extends AbstractView {

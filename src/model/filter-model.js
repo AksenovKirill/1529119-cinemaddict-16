@@ -1,5 +1,5 @@
 import AbstractObservable from '../utils/abstract-observable.js';
-import { FilterType, UpdateType } from '../const.js';
+import { FilterType } from '../const.js';
 
 export default class FilterModel extends AbstractObservable {
   #filter = FilterType.ALL_MOVIES;
