@@ -104,7 +104,6 @@ export const generateFilm = () => ({
   country: countries[0, getRandomInteger(0, countries.length - 1)],
   ageRating: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
   comments: Array.from({length: getRandomInteger(0, COMMENTS_COUNT)}, generateComment),
-  isAllMovies: true,
   isWatchList: Boolean(getRandomInteger(0,1)),
   isHistory: Boolean(getRandomInteger(0,1)),
   isFavorite: Boolean(getRandomInteger(0,1)),

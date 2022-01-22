@@ -7,7 +7,7 @@ import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';
 
 
-const FILM_COUNT = 21;
+const FILM_COUNT = 29;
 
 const siteMainElement = document.querySelector('.main');
 const siteFooter = document.querySelector('.footer');

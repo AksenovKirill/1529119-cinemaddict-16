@@ -1,5 +1,5 @@
 import FilmView from '../view/film-view.js';
-import { remove, render, RenderPosition } from '../utils/render.js';
+import { remove, render, RenderPosition, replace } from '../utils/render.js';
 import { UpdateType, UserAction } from '../const.js';
 
 export default class FilmPresenter {
@@ -37,6 +37,7 @@ export default class FilmPresenter {
       return;
     }
 
+    replace(this.#filmComponent, previous);
     remove(previous);
   }
 
@@ -63,5 +64,5 @@ export default class FilmPresenter {
       UserAction.ADD_TO_WATCHLIST,
       UpdateType.MINOR,
       {...this.#film, isWatchList: !this.#film.isWatchList});
-  };
+  }
 }

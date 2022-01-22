@@ -1,4 +1,6 @@
+
 import SmartView from './smart-view.js';
+import he from 'he';
 
 export const createPopupCommentsTemplate = (comments) => {
   if (comments.length === 0) {
@@ -25,32 +27,6 @@ export const createPopupCommentsTemplate = (comments) => {
     )
     .join('');
 };
-
-export const createPopupNewCommentsTemplate = (film) =>
-  `<div class="film-details__add-emoji-label">
-    ${film.emoji ? `<img src="./images/emoji/${film.emoji}.png" width="55" height="55" alt="emoji-${film.emoji}">` : '' }
-  </div>
-  <label class="film-details__comment-label">
-    <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
-  </label>
-  <div class="film-details__emoji-list">
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
-    <label class="film-details__emoji-label" for="emoji-smile">
-      <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
-    </label>
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
-    <label class="film-details__emoji-label" for="emoji-sleeping">
-      <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
-    </label>
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
-    <label class="film-details__emoji-label" for="emoji-puke">
-      <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
-    </label>
-    <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
-    <label class="film-details__emoji-label" for="emoji-angry">
-      <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
-    </label>
-  </div>`;
 
 export const createPopupTemplate = (film) =>
   `<section class="film-details">
@@ -132,7 +108,32 @@ export const createPopupTemplate = (film) =>
             <ul class="film-details__comments-list">
             ${createPopupCommentsTemplate(film.comments)}
             </ul>
-            <div class="film-details__new-comment">${createPopupNewCommentsTemplate(film)}</div>
+            <div class="film-details__new-comment">
+              <div class="film-details__add-emoji-label">
+              ${film.emoji ? `<img src="./images/emoji/${film.emoji}.png" width="55" height="55" alt="emoji-${film.emoji}">` : '' }
+            </div>
+            <label class="film-details__comment-label">
+              <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${he.encode(film.commentText)}</textarea>
+            </label>
+            <div class="film-details__emoji-list">
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+              <label class="film-details__emoji-label" for="emoji-smile">
+                <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+              </label>
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+              <label class="film-details__emoji-label" for="emoji-sleeping">
+                <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+              </label>
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+              <label class="film-details__emoji-label" for="emoji-puke">
+                <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+              </label>
+              <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+              <label class="film-details__emoji-label" for="emoji-angry">
+                <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+              </label>
+            </div>
+          </div>
           </section>
         </div>
     </form>
@@ -172,7 +173,8 @@ export default class PopupView extends SmartView {
     this.setFavoriteClickHandler(this._callback.favoriteClick);
     this.setWatchListClickHandler(this._callback.watchListClick);
     this.setWatchedClickHandler(this._callback.watchedClick);
-    this.setDeleteCommentClickHandler(this._callback.deleteCommentClick);
+    this.setDeleteCommentHandler(this._callback.deleteCommentClick);
+    this.setAddCommentHandler(this._callback.addCommentSubmit);
   };
 
   setClosePopupButtonClickHandler = (callback) => {
@@ -205,16 +207,12 @@ export default class PopupView extends SmartView {
 
   setAddCommentHandler = (callback) => {
     this._callback.addCommentSubmit = callback;
-    this.element
-      .querySelector('form')
-      .addEventListener('submit', this.#handleAddComment);
+    this.element.querySelector('.film-details__inner').addEventListener('submit', this.#handleAddComment);
   };
 
-  setDeleteCommentClickHandler = (callback) => {
+  setDeleteCommentHandler = (callback) => {
     this._callback.deleteCommentClick = callback;
-    this.element
-      .querySelector('.film-details__comment-delete')
-      .addEventListener('click', this.#handleDeleteComment);
+    this.element.querySelector('.film-details__comment').addEventListener('click', this.#handleDeleteComment);
   };
 
   setInnerHandlers = () => {
@@ -247,11 +245,15 @@ export default class PopupView extends SmartView {
 
   #handleAddComment = (evt) => {
     evt.preventDefault();
-    this._callback.addCommentSubmit(this._data);
+    this.updateData({
+      emoji: evt.target.value,
+      commentText: evt.target.value,
+    });
   };
 
   #handleDeleteComment = (evt) => {
     evt.preventDefault();
+    evt.stopPropagation();
     this._callback.deleteCommentClick(this._data);
   };
 
@@ -274,8 +276,8 @@ export default class PopupView extends SmartView {
   };
 
   static parseFilmToData = (film) => ({...film,
-    isEmoji: null,
     emoji: null,
+    commentText: '',
   });
 
   static parseDataToFilm = (data) => data;
