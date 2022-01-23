@@ -70,7 +70,8 @@ const generateDateComments = () => {
 
 const generateComment = () => {
   const comment = {
-    emoji: emojis[0, getRandomInteger(0,emojis.length - 1)],
+    id: nanoid(),
+    emoji: emojis[0, getRandomInteger(0, emojis.length - 1)],
     date: generateDateComments(),
     user: userNames[0, getRandomInteger(0, userNames.length - 1)],
     message: descriptions[0, getRandomInteger(0, descriptions.length - 1)],

@@ -74,19 +74,20 @@ export default class FilmView extends AbstractView {
 
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.classList.toggle('film-card__controls-item--active');
+    evt.stopPropagation();
     this._callback.favoriteClick();
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.classList.toggle('film-card__controls-item--active');
+    evt.stopPropagation();
     this._callback.watchedClick();
   }
 
   #watchListClickHandler = (evt) => {
+    console.log(evt)
     evt.preventDefault();
-    evt.target.classList.toggle('film-card__controls-item--active');
+    evt.stopPropagation();
     this._callback.watchListClick();
   }
 }

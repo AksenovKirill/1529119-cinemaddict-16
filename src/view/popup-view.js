@@ -20,7 +20,7 @@ export const createPopupCommentsTemplate = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.user}</span>
                 <span class="film-details__comment-day">${comment.date}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button type="button" class="film-details__comment-delete" data-id="${comment.id}">Delete</button>
               </p>
             </div>
           </li>`
@@ -205,14 +205,14 @@ export default class PopupView extends SmartView {
       .addEventListener('click', this.#handleWatchListClick);
   };
 
-  setAddCommentHandler = (callback) => {
+    setAddCommentHandler = (callback) => {
     this._callback.addCommentSubmit = callback;
     this.element.querySelector('.film-details__inner').addEventListener('submit', this.#handleAddComment);
   };
 
   setDeleteCommentHandler = (callback) => {
     this._callback.deleteCommentClick = callback;
-    this.element.querySelector('.film-details__comment').addEventListener('click', this.#handleDeleteComment);
+    this.element.querySelector('.film-details__comments-list').addEventListener('click', this.#handleDeleteComment);
   };
 
   setInnerHandlers = () => {
@@ -243,18 +243,22 @@ export default class PopupView extends SmartView {
     this._callback.watchListClick(this._data);
   };
 
-  #handleAddComment = (evt) => {
-    evt.preventDefault();
-    this.updateData({
-      emoji: evt.target.value,
-      commentText: evt.target.value,
-    });
-  };
-
   #handleDeleteComment = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    this._callback.deleteCommentClick(this._data);
+
+    if(evt.target.classList.contains('films-details__comment-delete')) {
+      this._callback.deleteCommentClick(this._data, evt.target.dataset.id);
+    }
+  };
+
+  #handleAddComment = (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+
+    if(evt.target.dataset.id) {
+      this._callback.addCommentSubmit(this._data, evt.target.dataset.id);
+    }
   };
 
   #emojiClickHandler = (evt) => {

@@ -6,7 +6,7 @@ import ShowMoreButtonView from '../view/showmore-view.js';
 import PopupView from '../view/popup-view.js';
 import FilmPresenter from '../presenters/film-presenter.js';
 import { remove, render, RenderPosition } from '../utils/render.js';
-import { sorters, sortFilmsType } from '../utils/film.js';
+import { sorters, sortFilmsType } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
 import { FilterType, SortType, UpdateType, UserAction } from '../const.js';
 
@@ -50,8 +50,7 @@ get films () {
 
 filterFilms(films) {
   this.#filterType = this.#filterModel.filter;
-  const filteredFilms = filter[this.#filterType](films);
-  return filteredFilms;
+  return filter[this.#filterType](films);
 }
 
 sortFilms(films) {
@@ -60,7 +59,7 @@ sortFilms(films) {
       return sortFilmsType(films, SortType.DATE);
     case SortType.RATING:
       return sortFilmsType(films, SortType.RATING);
-    default:
+      case SortType.DEFAULT:
       return films;
   }
 }
@@ -102,19 +101,19 @@ sortFilms(films) {
         break;
 
       case UpdateType.MINOR:
-        this.#clearList();
-        this.#renderFilmList();
-        this.#renderShowMoreButton();
-
         if(this.#popupComponent !== null) {
           this.#closePopup();
         }
         this.#renderPopup(data);
+
+        this.#clearList();
+        this.#renderFilmList();
+
         break;
 
       case UpdateType.MAJOR:
         this.#clearList({resetRenderedFilmCount: true, resetSortType:true});
-        this.#renderFilms();
+        this.#renderFilmList();
         break;
     }
   };
@@ -136,10 +135,8 @@ sortFilms(films) {
       return;
     }
     this.#currentSortType = sortType;
-
     this.#clearList();
     this.#renderFilmList();
-    this.#renderShowMoreButton();
   }
 
   #renderSort = () => {
@@ -154,13 +151,6 @@ sortFilms(films) {
       this.#filmListComponent.filmListContainerTemplate, this.#handleViewAction, this.#handleFilmClick);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
-  };
-
-  #renderFilms = () => {
-    const filteredFilms = this.filterFilms(this.films);
-    const sortedFilms = this.sortFilms(filteredFilms);
-
-    sortedFilms.slice(0, 5).forEach((film) => this.#renderFilm(film));
   };
 
   #renderNoFilms = () => {
@@ -254,7 +244,7 @@ sortFilms(films) {
     }
 
     if(resetRenderedFilmCount) {
-      this.#renderedFilmCount = this.#renderedFilmCount + FILM_COUNT_PER_STEP;
+      this.#renderedFilmCount = FILM_COUNT_PER_STEP;
     }
 
     if (resetSortType) {
@@ -267,11 +257,17 @@ sortFilms(films) {
     const sortedFilms = this.sortFilms(filteredFilms);
     const filmCount = sortedFilms.length;
 
+
     if (filmCount === 0) {
       this.#renderNoFilms();
       return;
     }
-    this.#renderFilms(sortedFilms.slice(0, Math.min(filmCount, this.#renderedFilmCount)));
+
+    sortedFilms.slice(0, this.#renderedFilmCount).forEach((film) => this.#renderFilm(film));
+
+    if(this.#renderedFilmCount < sortedFilms.length) {
+      this.#renderShowMoreButton();
+    }
   };
 
   #renderPopup = (film) => {
@@ -283,7 +279,7 @@ sortFilms(films) {
     this.#popupComponent.setWatchListClickHandler(this.#handleWatchListClick);
     this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
     this.#popupComponent.setDeleteCommentHandler(this.#handleDeleteComment);
-    this.#popupComponent.setAddCommentHandler(this.#handleAddComment);
+    //this.#popupComponent.setAddCommentHandler(this.#handleAddComment);
     document.addEventListener('keydown', this.#handleEscKeyDown);
     document.addEventListener('keydown', this.#handleCtrlEnterKeyDown);
 
@@ -310,19 +306,21 @@ sortFilms(films) {
     }
   }
 
-  #handleDeleteComment = (film) => {
+  #handleDeleteComment = (film, commentId) => {
+    const newFilm =  {...film, comments: film.comments.filter((comment) => (comment.id !== commentId))};
     this.#handleViewAction(
-      UserAction.ADD_COMMENT,
-      UpdateType.PATCH,
-      {...film, ...film.comments.shift()}
-      );
+      UserAction.DELETE_COMMENT,
+      UpdateType.MINOR,
+      newFilm
+    );
   }
 
   #handleAddComment = (film) => {
+    const newFilm =  {...film, comments: film.comments.push((comment))};
     this.#handleViewAction(
       UserAction.ADD_COMMENT,
-      UpdateType.PATCH,
-      {...film, ...film.comments}
+      UpdateType.MINOR,
+      newFilm
       );
   }
 
@@ -335,10 +333,9 @@ sortFilms(films) {
 
     this.#renderSort();
 
-    this.#renderShowMoreButton();
-
     this.#renderTopRatedFilms();
 
     this.#renderMostCommentedFilms();
   };
 }
+
