@@ -45,28 +45,28 @@ export default class FilmView extends AbstractView {
 
   setCardClickHandler = (callback) => {
     this._callback.cardClick = callback;
-    this.element.querySelector('.film-card__poster').addEventListener('click', this.#cardClickHandler);
-    this.element.querySelector('.film-card__title').addEventListener('click', this.#cardClickHandler);
+    this.element.addEventListener('click', this.#cardClickHandler);
   }
 
   #cardClickHandler = (evt) => {
-    evt.stopPropagation();
-    this._callback.cardClick();
+    if (!(evt.target.closest('.film-card__controls'))) {
+      this._callback.cardClick();
+    }
   }
 
-  setFavoriteClickHandler = (callback) => {
+  setIsFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.film-card__controls-item--favorite')
       .addEventListener('click', this.#favoriteClickHandler);
   }
 
-  setWatchedClickHandler = (callback) => {
+  setIsWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
     this.element.querySelector('.film-card__controls-item--mark-as-watched')
       .addEventListener('click', this.#watchedClickHandler);
   }
 
-  setWatchListClickHandler = (callback) => {
+  setIsWatchListClickHandler = (callback) => {
     this._callback.watchListClick = callback;
     this.element.querySelector('.film-card__controls-item--add-to-watchlist')
       .addEventListener('click', this.#watchListClickHandler);
@@ -75,19 +75,24 @@ export default class FilmView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    this._callback.favoriteClick();
+    if(evt.target.classList.contains('film-card__controls-item--favorite')) {
+      this._callback.favoriteClick();
+    }
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    this._callback.watchedClick();
+    if(evt.target.classList.contains('film-card__controls-item--mark-as-watched')) {
+      this._callback.watchedClick();
+    }
   }
 
   #watchListClickHandler = (evt) => {
-    console.log(evt)
     evt.preventDefault();
     evt.stopPropagation();
-    this._callback.watchListClick();
+    if(evt.target.classList.contains('film-card__controls-item--add-to-watchlist')) {
+      this._callback.watchListClick();
+    }
   }
 }

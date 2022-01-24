@@ -6,7 +6,6 @@ import FilterPresent from './presenters/filter-presenter.js';
 import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';
 
-
 const FILM_COUNT = 29;
 
 const siteMainElement = document.querySelector('.main');

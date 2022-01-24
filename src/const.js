@@ -16,11 +16,7 @@ export const SortType = {
 };
 
 export const UserAction = {
-  ADD_TO_FAVORITE: ' ADD_TO_FAVORITE',
-  ADD_TO_HISTORY: 'ADD_TO_HISTORY',
-  ADD_TO_WATCHLIST: 'ADD_TO_WATCHLIST',
-  ADD_COMMENT: 'ADD_COMMENT',
-  DELETE_COMMENT: 'DELETE_COMMENT',
+  UPDATE: 'update',
 };
 
 export const UpdateType = {

@@ -28,9 +28,9 @@ export default class FilmPresenter {
       this.#handleCardClick(this.#film);
     });
 
-    this.#filmComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#filmComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#filmComponent.setIsFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmComponent.setIsWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmComponent.setIsWatchListClickHandler(this.#handleWatchListClick);
 
     if (previous === null) {
       render(this.#filmListContainer, this.#filmComponent, RenderPosition.BEFOREEND);

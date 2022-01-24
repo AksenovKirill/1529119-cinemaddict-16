@@ -1,49 +1,64 @@
 import AbstractView from './abstract-view.js';
 import { SortType } from '../const.js';
 
-const createSortButtons = (currentSortType) =>
-  `<ul class="sort">
-    <li>
-      <a href="#"
-      class="sort__button ${currentSortType === SortType.DEFAULT ? 'sort__button--active' : ''}"
-      data-type="${SortType.DEFAULT}">
-      Sort by default</a>
-    </li>
-    <li>
-      <a href="#"
-      class="sort__button ${currentSortType === SortType.DATE ? 'sort__button--active' : ''}"
-      data-type="${SortType.DATE}">
-      Sort by date</a>
-    </li>
-    <li>
-      <a href="#"
-      class="sort__button ${currentSortType === SortType.RATING ? 'sort__button--active' : ''}"
-      data-type="${SortType.RATING}">
-      Sort by rating</a>
-    </li>
-  </ul>`;
+const createSortFilmsViewTemplate = (currentSortType) => {
 
-export default class SortView extends AbstractView {
-  #currentSort = null;
+  const getSortTemplate = (sortType) => (
+    `<li><a href="#" class="sort__button ${currentSortType === sortType ? 'sort__button--active' : ''}" data-sort-type="${sortType}">Sort by ${sortType}</a></li>`
+  );
 
-  constructor(sort, currentSortType) {
+  const sortValues = Object.values(SortType);
+
+  const sortTemplate = sortValues.map((value) => getSortTemplate(value)).join('');
+
+  return (
+    `<ul class="sort">
+      ${sortTemplate}
+    </ul>`
+  );
+};
+
+export default class SortFilmsView extends AbstractView {
+  #currentSortType = null;
+
+  constructor(currentSortType) {
     super();
-    this.#currentSort = currentSortType;
+
+    this.#currentSortType = currentSortType;
   }
 
   get template() {
-    return createSortButtons(this.#currentSort);
+    return createSortFilmsViewTemplate(this.#currentSortType);
   }
 
-  setSortTypeChangeHandler = (callback) => {
+  setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
     this.element.addEventListener('click', this.#sortTypeChangeHandler);
   }
 
   #sortTypeChangeHandler = (evt) => {
-    if(evt.target.dataset.type) {
-      this._callback.sortTypeChange(evt.target.dataset.type);
+    if (evt.target.tagName !== 'A') {
+      return;
     }
+
+    evt.preventDefault();
+
+    this._callback.sortTypeChange(evt.target.dataset.sortType);
+    this.#renderActiveSortType(evt.target);
   }
+
+  #renderActiveSortType = (sortButton) => {
+    this.element.querySelectorAll('.sort__button').forEach((button) => {
+      if (button.classList.contains('sort__button--active')) {
+        button.classList.remove('sort__button--active');
+      }
+    });
+    sortButton.classList.add('sort__button--active');
+  };
+
+  restoreHandlers = () => {
+    this.setSortTypeHandler(this._callback.sortTypeChange);
+  };
+
 }
 

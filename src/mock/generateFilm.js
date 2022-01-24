@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
 import {getRandomInteger, shuffle, getRandomFloat} from '../utils/common.js';
 
-const COMMENTS_COUNT = 5;
+export const COMMENTS_COUNT = 5;
 
 export const emojis = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
 const ageRaitings = ['6 +', '10 +', '13 +', '16 +', '18 +'];
@@ -94,7 +94,7 @@ export const generateFilm = () => ({
   rating: getRandomFloat(4, 9).toFixed(1),
   year: getRandomInteger(1930, 1955),
   date: generateDate(),
-  genre:  shuffle(genres)[0, getRandomInteger(0, genres.length-1)],
+  genres:  shuffle(genres)[0, getRandomInteger(0, genres.length-1)],
   description: descriptions[0, getRandomInteger(0, descriptions.length - 1)],
   shortDescription: sliceText(descriptions[0, getRandomInteger(0, descriptions.length - 1)], 140),
   director: 'David Linch',

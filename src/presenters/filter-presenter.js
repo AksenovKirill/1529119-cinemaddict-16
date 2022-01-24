@@ -25,8 +25,8 @@ export default class FilterPresent {
       [FilterType.WATCHLIST]: filter[FilterType.WATCHLIST](films).length,
       [FilterType.HISTORY]: filter[FilterType.HISTORY](films).length,
       [FilterType.FAVORITES]: filter[FilterType.FAVORITES](films).length,
-    }
     };
+  }
 
   init = () => {
     const filters = this.filters;
