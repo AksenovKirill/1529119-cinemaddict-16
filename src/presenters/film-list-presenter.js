@@ -146,21 +146,21 @@ get films () {
 
   #handleFavoriteClick = (film) => {
     this.#handleViewAction(
-      UserAction.ADD_TO_FAVORITE,
+      UserAction.UPDATE,
       UpdateType.MINOR,
       {...film, isFavorite: !film.isFavorite});
   }
 
   #handleWatchedClick = (film) => {
     this.#handleViewAction(
-      UserAction.ADD_TO_HISTORY,
+      UserAction.UPDATE,
       UpdateType.MINOR,
       {...film, isHistory: !film.isHistory});
   }
 
   #handleWatchListClick = (film) => {
     this.#handleViewAction(
-      UserAction.ADD_TO_WATCHLIST,
+      UserAction.UPDATE,
       UpdateType.MINOR,
       {...film, isWatchList: !film.isWatchList});
   };
@@ -282,7 +282,7 @@ get films () {
   }
 
   #handleSubmitComment = (film, newComment) => {
-    this.film = {...film, newComment};
+    this.film = {...film, ...film.comments.push(newComment)};
     this.#handleViewAction(
       UserAction.UPDATE,
       UpdateType.MINOR,

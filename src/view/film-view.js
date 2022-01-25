@@ -8,7 +8,7 @@ const createFilmCardTemplate = (film) =>
         <p class="film-card__info">
           <span class="film-card__year">${film.year}</span>
           <span class="film-card__duration">${film.runTime}</span>
-          <span class="film-card__genre">${film.genre}</span>
+          <span class="film-card__genre">${film.genres}</span>
         </p>
         <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${film.shortDescription}</p>
@@ -49,9 +49,9 @@ export default class FilmView extends AbstractView {
   }
 
   #cardClickHandler = (evt) => {
-    if (!(evt.target.closest('.film-card__controls'))) {
-      this._callback.cardClick();
-    }
+    evt.preventDefault();
+    evt.stopPropagation();
+    this._callback.cardClick();
   }
 
   setIsFavoriteClickHandler = (callback) => {
@@ -75,24 +75,18 @@ export default class FilmView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    if(evt.target.classList.contains('film-card__controls-item--favorite')) {
-      this._callback.favoriteClick();
-    }
+    this._callback.favoriteClick();
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    if(evt.target.classList.contains('film-card__controls-item--mark-as-watched')) {
-      this._callback.watchedClick();
-    }
+    this._callback.watchedClick();
   }
 
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    if(evt.target.classList.contains('film-card__controls-item--add-to-watchlist')) {
-      this._callback.watchListClick();
-    }
+    this._callback.watchListClick();
   }
 }

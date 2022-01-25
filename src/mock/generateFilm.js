@@ -4,7 +4,7 @@ import {getRandomInteger, shuffle, getRandomFloat} from '../utils/common.js';
 
 export const COMMENTS_COUNT = 5;
 
-export const emojis = ['angry.png', 'puke.png', 'sleeping.png', 'smile.png'];
+export const emojis = ['./images/emoji/smile.png', './images/emoji/puke.png', './images/emoji/sleeping.png', './images/emoji/smile.png'];
 const ageRaitings = ['6 +', '10 +', '13 +', '16 +', '18 +'];
 
 const userNames = [

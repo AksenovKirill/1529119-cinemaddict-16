@@ -20,7 +20,7 @@ const renderComments = (comments) => {
   for (const comment of comments) {
     commentList += `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="./images/emoji/${comment.emoji}" width="55" height="55" alt="emoji-${comment.emoji}">
+              <img src="${comment.emoji}" width="55" height="55" alt="emoji-${comment.emoji}">
             </span>
             <div>
               <p class="film-details__comment-text">${comment.message}</p>
@@ -225,11 +225,13 @@ export default class PopupView extends SmartView {
   #handleSubmitFormKeyDown = (evt) => {
     if (evt.ctrlKey && evt.key === 'Enter') {
       const commentInput = this.element.querySelector('.film-details__comment-input').value;
-      const emoji = this.element.querySelector('.comment-emoji');
+      const emoji = this.element.querySelector('.film-details__new-comment').querySelector('img').src;
       const newComment = {
         id: nanoid(),
-        commentText: he.encode(commentInput),
-        emotion: emoji,
+        message: he.encode(commentInput),
+        emoji: emoji,
+        user: 'name',
+        date: 'date',
       };
       this._callback.submitComment(this._data, newComment);
     }
