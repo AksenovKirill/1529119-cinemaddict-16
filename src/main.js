@@ -1,31 +1,54 @@
-import FooterStatisticsView from './view/footer-statistics-view.js';
-import {render, RenderPosition} from './utils/render.js';
-import {generateFilm} from './mock/generateFilm.js';
 import FilmListPresenter from './presenters/film-list-presenter.js';
-import FilterPresent from './presenters/filter-presenter.js';
+import FilterPresenter from './presenters/filter-presenter.js';
 import FilmsModel from './model/films-model.js';
 import FilterModel from './model/filter-model.js';
+import {render, RenderPosition, remove} from './utils/render.js';
+import {generateFilm} from './mock/generateFilm.js';
+import { MenuItem } from './const.js';
+import UserRankView from './view/user-rank-view.js';
+import FooterView from './view/footer-view.js';
+import StatisticView from './view/stat-view.js';
+
 
 const FILM_COUNT = 29;
 
-const siteMainElement = document.querySelector('.main');
-const siteFooter = document.querySelector('.footer');
+const siteHeader = document.querySelector('.header');
+export const siteMainElement = document.querySelector('.main');
+export const siteFooter = document.querySelector('.footer');
 const siteFooterStatistics = siteFooter.querySelector('.footer__statistics');
 
 export const films = Array.from({ length: FILM_COUNT }, generateFilm);
-
 const filmsModel = new FilmsModel();
 filmsModel.films = films;
-
 const filterModel = new FilterModel();
 
+render(siteHeader, new UserRankView(), RenderPosition.BEFOREEND);
+render(siteFooterStatistics, new FooterView(films).element, RenderPosition.AFTERBEGIN);
+
 const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel, filterModel);
-const filterPresent = new FilterPresent(siteMainElement, filterModel, filmsModel);
+const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
 
+let statisticComponent = null;
 
-const footerStaticsComponent = new FooterStatisticsView(films).element;
+const handleMenuClick = (menuItem) => {
+  switch (menuItem) {
+    case MenuItem.FILM:
+      remove(statisticComponent);
+      filmListPresenter.destroy();
+      filterPresenter.destroy();
+      filterPresenter.init();
+      filmListPresenter.init();
+      break;
+    case MenuItem.STATISTIC:
+      filterPresenter.destroy();
+      filmListPresenter.destroy();
+      filterPresenter.init();
+      statisticComponent = new StatisticView(filmsModel.films);
+      render(siteMainElement, statisticComponent, RenderPosition.BEFOREEND);
+      break;
+  }
+};
 
-render(siteFooterStatistics, footerStaticsComponent, RenderPosition.AFTERBEGIN);
-
-filterPresent.init();
-filmListPresenter.init();
+filterPresenter.setMenuStatisticClickHandler(handleMenuClick);
+filterPresenter.init();
+//filmListPresenter.init();

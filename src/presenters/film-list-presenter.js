@@ -1,10 +1,10 @@
-import UserRankView from '../view/user-rank-view.js';
 import NoFilmView from '../view/no-film-view.js';
 import SortView from '../view/sort-view.js';
 import FilmListView from '../view/film-list-view.js';
 import ShowMoreButtonView from '../view/showmore-view.js';
 import PopupView from '../view/popup-view.js';
 import FilmPresenter from '../presenters/film-presenter.js';
+import { siteMainElement, siteFooter } from '../main.js';
 import { remove, render, RenderPosition } from '../utils/render.js';
 import { sorters, sortFilmsType } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
@@ -12,10 +12,7 @@ import { FilterType, SortType, UpdateType, UserAction } from '../const.js';
 
 const FILM_COUNT_PER_STEP = 5;
 
-const siteHeader = document.querySelector('.header');
-const siteMainElement = document.querySelector('.main');
 const bodyElement = document.querySelector('body');
-const siteFooter = document.querySelector('.footer');
 
 export default class FilmListPresenter {
 #filmListContainer = null;
@@ -23,7 +20,6 @@ export default class FilmListPresenter {
 #filterModel = null;
 #noFilmComponent = null;
 
-#userRankComponent = new UserRankView();
 #filmListComponent = new FilmListView();
 
 #sortComponent = null;
@@ -38,9 +34,6 @@ constructor(filmListContainer, filmsModel, filterModel) {
   this.#filmListContainer = filmListContainer;
   this.#filmsModel = filmsModel;
   this.#filterModel = filterModel;
-
-  this.#filmsModel.addObserver(this.#handleModelEvent);
-  this.#filterModel.addObserver(this.#handleModelEvent);
 }
 
 get films () {
@@ -62,11 +55,29 @@ get films () {
   init = () => {
     render(siteMainElement, this.#filmListComponent, RenderPosition.BEFOREEND);
     this.#renderList();
+    this.#filmsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   };
+
+  destroy = () => {
+    this.#clearList ({resetRenderedTaskCount: true, resetSortType: true});
+
+    remove(this.#filmListComponent);
+    remove(this.#sortComponent);
+
+    this.#filmsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
+  }
 
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE:
+        this.#filmsModel.updateFilm(updateType, update);
+        break;
+      case UserAction.ADD_COMMENT:
+        this.#filmsModel.updateFilm(updateType, update);
+        break;
+      case UserAction.DELETE_COMMENT:
         this.#filmsModel.updateFilm(updateType, update);
         break;
     }
@@ -93,18 +104,6 @@ get films () {
         this.#clearList({resetRenderedFilmCount: true, resetSortType:true});
         this.#renderFilmList();
         break;
-    }
-  };
-
-  #renderUserRank = () => {
-    const filmCount = this.films.length;
-
-    render(siteHeader, this.#userRankComponent, RenderPosition.BEFOREEND);
-
-    if (filmCount === 0) {
-      remove(this.#filmListComponent);
-      remove(this.#sortComponent);
-      this.#renderNoFilms();
     }
   };
 
@@ -275,7 +274,7 @@ get films () {
   #handleDeleteComment = (film, commentId) => {
     const newFilm = {...film, comments: film.comments.filter((comment) => (comment.id !== commentId))};
     this.#handleViewAction(
-      UserAction.UPDATE,
+      UserAction.DELETE_COMMENT,
       UpdateType.MINOR,
       newFilm
     );
@@ -284,15 +283,13 @@ get films () {
   #handleSubmitComment = (film, newComment) => {
     this.film = {...film, ...film.comments.push(newComment)};
     this.#handleViewAction(
-      UserAction.UPDATE,
+      UserAction.ADD_COMMENT,
       UpdateType.MINOR,
       this.film
     );
   };
 
   #renderList = () => {
-    this.#renderUserRank();
-
     this.#renderSort();
 
     this.#renderFilmList();

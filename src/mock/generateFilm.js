@@ -1,6 +1,8 @@
-import dayjs from 'dayjs';
 import {nanoid} from 'nanoid';
 import {getRandomInteger, shuffle, getRandomFloat} from '../utils/common.js';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 export const COMMENTS_COUNT = 5;
 
@@ -101,7 +103,7 @@ export const generateFilm = () => ({
   screenwriter: 'Anne Wigton, Heinz Herald, Richard Weil',
   actors: 'Erich von Stroheim, Mary Beth Hughes, Dan Duryea',
   realeaseDate: generateDate(),
-  runTime: `1h ${getRandomInteger(10,59)} m`,
+  runTime: getRandomInteger(75, 210),
   country: countries[0, getRandomInteger(0, countries.length - 1)],
   ageRating: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
   comments: Array.from({length: getRandomInteger(0, COMMENTS_COUNT)}, generateComment),

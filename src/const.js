@@ -6,7 +6,8 @@ export const FilterType = {
 };
 
 export const MenuItem = {
-  STATS: 'STATISTICS',
+  STATISTIC: 'STATISTIC',
+  FILM: 'FILM',
 };
 
 export const SortType = {
@@ -16,11 +17,21 @@ export const SortType = {
 };
 
 export const UserAction = {
-  UPDATE: 'update',
+  UPDATE: 'UPDATE',
+  ADD_COMMENT: 'ADD_COMMENT',
+  DELETE_COMMENT: 'DELETE_COMMENT',
 };
 
 export const UpdateType = {
   PATCH: 'PATCH',
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
+};
+
+export const StatisticsFilterType = {
+  ALL_TIME: 'all-time',
+  TODAY: 'today',
+  WEEK: 'week',
+  MONTH: 'month',
+  YEAR: 'year'
 };

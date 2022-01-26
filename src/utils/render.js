@@ -63,3 +63,18 @@ export const replace = (newElement, oldElement) => {
 
   parent.replaceChild(newChild, oldChild);
 };
+
+export const getRating = (watchedFilms) => {
+  if(watchedFilms === 0){
+    return '';
+  }
+  if(watchedFilms <= 10){
+    return 'Novice';
+  }
+  if(watchedFilms <= 20){
+    return 'Fan';
+  }
+  if(watchedFilms >= 21){
+    return 'Movie Buff';
+  }
+};
