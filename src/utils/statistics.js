@@ -1,38 +1,31 @@
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+import {StatisticsFilterType} from '../const.js';
 
 dayjs.extend(isBetween);
 dayjs.extend(isSameOrBefore);
 
-export const statisticsPeriod = {
-  ALL_TIME: 'all-time',
-  TODAY: 'today',
-  WEEK: 'week',
-  MONTH: 'month',
-  YEAR: 'year',
-};
-
-export const filterFilmsPeriod = (films, dateTo, dateFrom, currentInput) => {
-  if(currentInput === statisticsPeriod.ALL_TIME){
-    return films.filter((film) => dayjs(film.watchingDate).isSameOrBefore(dayjs()));
+export const filterStaticFilms = (films, dateTo, dateFrom, currentInput) => {
+  if(currentInput === StatisticsFilterType.ALL_TIME){
+    return films.filter((film) => dayjs(film.realeaseDate).isSameOrBefore(dayjs()));
   }
-  if(currentInput === statisticsPeriod.TODAY){
-    return films.filter((film) => dayjs(film.watchingDate).isSame(dateTo, 'day'));
+  if(currentInput === StatisticsFilterType.TODAY){
+    return films.filter((film) => dayjs(film.realeaseDate).isSame(dateTo, 'day'));
   }
-  if(currentInput === statisticsPeriod.YEAR){
-    return films.filter((film) => dayjs(film.watchingDate).isBetween(dayjs().add(-365, 'day'), dayjs(), 'day'));
+  if(currentInput === StatisticsFilterType.YEAR){
+    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-365, 'day'), dayjs(), 'day'));
   }
-  if(currentInput === statisticsPeriod.MONTH){
-    return films.filter((film) => dayjs(film.watchingDate).isBetween(dayjs().add(-30, 'day'), dayjs(), 'day'));
+  if(currentInput === StatisticsFilterType.MONTH){
+    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-30, 'day'), dayjs(), 'day'));
   }
-  if(currentInput === statisticsPeriod.WEEK){
-    return films.filter((film) => dayjs(film.watchingDate).isBetween(dayjs().add(-7, 'day'), dayjs(), 'day'));
+  if(currentInput === StatisticsFilterType.WEEK){
+    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-7, 'day'), dayjs(), 'day'));
   }
   return films.filter((film) =>
-    dayjs(film.watchingDate).isSame(dateFrom , 'day') ||
-    dayjs(film.watchingDate).isBetween(dateFrom, dateTo) ||
-    dayjs(film.watchingDate).isSame(dateTo, 'day'),
+    dayjs(film.realeaseDate).isSame(dateFrom , 'day') ||
+    dayjs(film.realeaseDate).isBetween(dateFrom, dateTo) ||
+    dayjs(film.realeaseDate).isSame(dateTo, 'day'),
   );
 };
 
@@ -40,11 +33,11 @@ export const getWatchedFilmsForStatistics = (films, dateTo, dateFrom, currentInp
   const watchedFilmsStat = {
     films: new Array(),
     genres: new Array(),
-    filmsCountWithSameGanres: new Array(),
+    filmsCountWithSameGenres: new Array(),
   };
   watchedFilmsStat.films = films.filter((film) => film.isHistory);
   films = films.filter((film) => film.isHistory);
-  watchedFilmsStat.films = filterFilmsPeriod(films, dateTo, dateFrom, currentInput);
+  watchedFilmsStat.films = filterStaticFilms(films, dateTo, dateFrom, currentInput);
   const filmsGenres = [];
   watchedFilmsStat.films.filter((film) => filmsGenres.push(film.genres));
   watchedFilmsStat.genres = filmsGenres.flat().reduce((acc, el) => {

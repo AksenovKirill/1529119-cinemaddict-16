@@ -1,8 +1,10 @@
 import {nanoid} from 'nanoid';
-import {getRandomInteger, shuffle, getRandomFloat} from '../utils/common.js';
+import {getRandomInteger, getRandomFloat} from '../utils/common.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
 export const COMMENTS_COUNT = 5;
 
@@ -26,18 +28,6 @@ const images = [
   'the-man-with-the-golden-arm.jpg',
 ];
 
-const genres = [
-  'Drama',
-  'Film-Noir',
-  'Mystery',
-  'Action',
-  'Comedy',
-  'Fantasy',
-  'Horror',
-  'Romanc',
-  'Thriller',
-];
-
 const descriptions = [
   'Lorem ipsum dolor sit ametLorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra.',
@@ -56,18 +46,34 @@ const countries = [
   'Vietnam'
 ];
 
-const generateDate = () => {
-  const minGap = 10;
-  const maxGap = 30;
-  const gap = getRandomInteger(minGap, maxGap);
-  return dayjs(`19${gap}`).add(gap, 'day').format('DD MMMM YYYY');
+const generateGenre = () => {
+  const genresCount = getRandomInteger(1, 3);
+  const genres = [
+    'action',
+    'drama',
+    'horror',
+    'animation',
+    'comedy',
+    'historical',
+    'adventure',
+  ];
+  return new Array(genresCount)
+    .fill()
+    .map(() => genres[getRandomInteger(0, genres.length - 1)]);
+};
+
+const getRandomDate = () => {
+  const yearRandom = getRandomFloat(0, 0);
+  const monthRandom = getRandomFloat(-11, 0);
+  const dayRandom = getRandomFloat(-29, 0);
+  const day = dayjs().add(yearRandom, 'year').add(monthRandom, 'month').add(dayRandom, 'day').toDate();
+  return dayjs(day).format('DD MMMM YYYY');
 };
 
 const generateDateComments = () => {
-  const minGap = -30;
-  const maxGap = 10;
-  const daysGap = getRandomInteger(minGap, maxGap);
-  return dayjs().add(daysGap, 'day').format('YYYY/MM/DD HH:mm');
+  const dayRandom = getRandomInteger(-600, 0);
+  const commentDate = dayjs().add(dayRandom, 'day').format('YYYY-MM-DD HH:mm:ss');
+  return dayjs(commentDate).fromNow();
 };
 
 const generateComment = () => {
@@ -95,15 +101,15 @@ export const generateFilm = () => ({
   title: 'Popeye the Sailor Meets Sindbad the Sailor',
   rating: getRandomFloat(4, 9).toFixed(1),
   year: getRandomInteger(1930, 1955),
-  date: generateDate(),
-  genres:  shuffle(genres)[0, getRandomInteger(0, genres.length-1)],
+  date: dayjs(getRandomDate()),
+  genres:  generateGenre(),
   description: descriptions[0, getRandomInteger(0, descriptions.length - 1)],
   shortDescription: sliceText(descriptions[0, getRandomInteger(0, descriptions.length - 1)], 140),
   director: 'David Linch',
   screenwriter: 'Anne Wigton, Heinz Herald, Richard Weil',
   actors: 'Erich von Stroheim, Mary Beth Hughes, Dan Duryea',
-  realeaseDate: generateDate(),
-  runTime: getRandomInteger(75, 210),
+  realeaseDate: dayjs(getRandomDate()).format('DD MMMM YYYY'),
+  runTime: getRandomInteger(60, 300),
   country: countries[0, getRandomInteger(0, countries.length - 1)],
   ageRating: ageRaitings[0, getRandomInteger(0, ageRaitings.length - 1)],
   comments: Array.from({length: getRandomInteger(0, COMMENTS_COUNT)}, generateComment),

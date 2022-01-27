@@ -10,7 +10,7 @@ import FooterView from './view/footer-view.js';
 import StatisticView from './view/stat-view.js';
 
 
-const FILM_COUNT = 29;
+const FILM_COUNT = 39;
 
 const siteHeader = document.querySelector('.header');
 export const siteMainElement = document.querySelector('.main');
@@ -22,7 +22,7 @@ const filmsModel = new FilmsModel();
 filmsModel.films = films;
 const filterModel = new FilterModel();
 
-render(siteHeader, new UserRankView(), RenderPosition.BEFOREEND);
+render(siteHeader, new UserRankView(filmsModel.films), RenderPosition.BEFOREEND);
 render(siteFooterStatistics, new FooterView(films).element, RenderPosition.AFTERBEGIN);
 
 const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel, filterModel);
@@ -51,4 +51,4 @@ const handleMenuClick = (menuItem) => {
 
 filterPresenter.setMenuStatisticClickHandler(handleMenuClick);
 filterPresenter.init();
-//filmListPresenter.init();
+filmListPresenter.init();

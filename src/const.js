@@ -35,3 +35,4 @@ export const StatisticsFilterType = {
   MONTH: 'month',
   YEAR: 'year'
 };
+

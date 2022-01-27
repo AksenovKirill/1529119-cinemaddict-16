@@ -1,7 +1,7 @@
 import AbstractView from './abstract-view.js';
 import { SortType } from '../const.js';
 
-const createSortFilmsViewTemplate = (currentSortType) => {
+const createSortTemplate = (currentSortType) => {
 
   const getSortTemplate = (sortType) => (
     `<li><a href="#" class="sort__button ${currentSortType === sortType ? 'sort__button--active' : ''}" data-sort-type="${sortType}">Sort by ${sortType}</a></li>`
@@ -28,7 +28,7 @@ export default class SortFilmsView extends AbstractView {
   }
 
   get template() {
-    return createSortFilmsViewTemplate(this.#currentSortType);
+    return createSortTemplate(this.#currentSortType);
   }
 
   setSortTypeChangeHandler(callback) {
