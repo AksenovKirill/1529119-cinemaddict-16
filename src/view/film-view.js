@@ -8,7 +8,7 @@ const createFilmCardTemplate = (film) =>
         <p class="film-card__info">
           <span class="film-card__year">${film.year}</span>
           <span class="film-card__duration">${film.runTime}</span>
-          <span class="film-card__genre">${film.genre}</span>
+          <span class="film-card__genre">${film.genres}</span>
         </p>
         <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
         <p class="film-card__description">${film.shortDescription}</p>
@@ -30,7 +30,7 @@ const createFilmCardTemplate = (film) =>
       </div>
   </article>`;
 
-export default class FilmCardView extends AbstractView {
+export default class FilmView extends AbstractView {
   #film = null;
 
   constructor(film) {
@@ -45,45 +45,48 @@ export default class FilmCardView extends AbstractView {
 
   setCardClickHandler = (callback) => {
     this._callback.cardClick = callback;
-    this.element.querySelector('.film-card__poster').addEventListener('click', this.#cardClickHandler);
-    this.element.querySelector('.film-card__title').addEventListener('click', this.#cardClickHandler);
+    this.element.addEventListener('click', this.#cardClickHandler);
   }
 
   #cardClickHandler = (evt) => {
+    evt.preventDefault();
     evt.stopPropagation();
     this._callback.cardClick();
   }
 
-  setFavoriteClickHandler = (callback) => {
+  setIsFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element.querySelector('.film-card__controls-item--favorite')
       .addEventListener('click', this.#favoriteClickHandler);
   }
 
-  #favoriteClickHandler = (evt) => {
-    evt.preventDefault();
-    evt.target.classList.toggle('film-card__controls-item--active');
-  }
-
-  setWatchedClickHandler = (callback) => {
+  setIsWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
     this.element.querySelector('.film-card__controls-item--mark-as-watched')
       .addEventListener('click', this.#watchedClickHandler);
   }
 
-  #watchedClickHandler = (evt) => {
-    evt.preventDefault();
-    evt.target.classList.toggle('film-card__controls-item--active');
-  }
-
-  setWatchListClickHandler = (callback) => {
+  setIsWatchListClickHandler = (callback) => {
     this._callback.watchListClick = callback;
     this.element.querySelector('.film-card__controls-item--add-to-watchlist')
       .addEventListener('click', this.#watchListClickHandler);
   }
 
+  #favoriteClickHandler = (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this._callback.favoriteClick();
+  }
+
+  #watchedClickHandler = (evt) => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    this._callback.watchedClick();
+  }
+
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
-    evt.target.classList.toggle('film-card__controls-item--active');
+    evt.stopPropagation();
+    this._callback.watchListClick();
   }
 }

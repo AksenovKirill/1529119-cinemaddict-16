@@ -1,56 +1,68 @@
-import FilmCardView from '../view/movie-card-view.js';
-import {remove,render,RenderPosition, updateItem} from '../render.js';
+import FilmView from '../view/film-view.js';
+import { remove, render, RenderPosition, replace } from '../utils/render.js';
+import { UpdateType, UserAction } from '../const.js';
 
 export default class FilmPresenter {
   #filmListContainer = null;
-  changeData = null;
+  #changeData = null;
 
-  #filmCardComponent = null;
+  #filmComponent = null;
   #handleCardClick = null;
 
   #film = null;
 
-  constructor(filmListContainer, handleCardClick) {
+  constructor(filmListContainer, changeData, handleCardClick) {
     this.#filmListContainer = filmListContainer;
+    this.#changeData = changeData;
     this.#handleCardClick = handleCardClick;
   }
 
   init = (film) => {
     this.#film = film;
 
-    const previous = this.#filmCardComponent;
+    const previous = this.#filmComponent;
 
-    this.#filmCardComponent = new FilmCardView(film);
+    this.#filmComponent = new FilmView(film);
 
-    this.#filmCardComponent.setCardClickHandler(() => {
+    this.#filmComponent.setCardClickHandler(() => {
       this.#handleCardClick(this.#film);
     });
 
-    this.#filmCardComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#filmCardComponent.setWatchedClickHandler(this.#handleWatchedClick);
-    this.#filmCardComponent.setWatchListClickHandler(this.#handleWatchListClick);
+    this.#filmComponent.setIsFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#filmComponent.setIsWatchedClickHandler(this.#handleWatchedClick);
+    this.#filmComponent.setIsWatchListClickHandler(this.#handleWatchListClick);
 
     if (previous === null) {
-      render(this.#filmListContainer, this.#filmCardComponent, RenderPosition.BEFOREEND);
+      render(this.#filmListContainer, this.#filmComponent, RenderPosition.BEFOREEND);
       return;
     }
 
+    replace(this.#filmComponent, previous);
     remove(previous);
-  };
+  }
 
   destroy = () => {
-    remove(this.#filmCardComponent);
-  };
+    remove(this.#filmComponent);
+  }
 
-  #handleFavoriteClick = (film) => {
-    updateItem({...film, isFavorite: !film.isFavorite});
-  };
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      UserAction.UPDATE,
+      UpdateType.MINOR,
+      {...this.#film, isFavorite: !this.#film.isFavorite});
+  }
 
-  #handleWatchedClick = (film) => {
-    updateItem({ ...film, isHistory: !film.isHistory });
-  };
+  #handleWatchedClick = () => {
+    this.#changeData(
+      UserAction.UPDATE,
+      UpdateType.MINOR,
+      {...this.#film, isHistory: !this.#film.isHistory});
+  }
 
-  #handleWatchListClick = (film) => {
-    updateItem({ ...film, isWatchList: !film.isWatchList });
-  };
+  #handleWatchListClick = () => {
+    this.#changeData(
+      UserAction.UPDATE,
+      UpdateType.MINOR,
+      {...this.#film, isWatchList: !this.#film.isWatchList});
+  }
 }

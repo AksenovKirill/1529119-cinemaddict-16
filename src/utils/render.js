@@ -1,4 +1,4 @@
-import AbstractView from './view/abstract-view';
+import AbstractView from '../view/abstract-view';
 
 export const RenderPosition = {
   BEFOREBEGIN: 'beforebegin',
@@ -64,16 +64,17 @@ export const replace = (newElement, oldElement) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-export const updateItem = (items, update) => {
-  const index = items.findIndex((item) => item.id === update.id);
-
-  if (index === -1) {
-    return items;
+export const getRating = (watchedFilms) => {
+  if(watchedFilms === 0){
+    return '';
   }
-
-  return [
-    ...items.slice(0, index),
-    update,
-    ...items.slice(index + 1),
-  ];
+  if(watchedFilms <= 10){
+    return 'Novice';
+  }
+  if(watchedFilms <= 20){
+    return 'Fan';
+  }
+  if(watchedFilms >= 21){
+    return 'Movie Buff';
+  }
 };
