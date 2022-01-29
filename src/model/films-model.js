@@ -23,14 +23,14 @@ export default class FilmsModel extends AbstractObservable {
       this.#films = [];
     }
 
-    this._notify(UpdateType.INIT)
+    this._notify(UpdateType.INIT);
   }
 
-  updateFilm = async (updateType, update) => {
+  updateFilm = async (updateType, update, comments) => {
     const index = this.#films.findIndex((film) => film.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update unexisting film');
+      throw new Error('Can\'t update!!! unexisting film');
     }
 
     try {
@@ -41,11 +41,11 @@ export default class FilmsModel extends AbstractObservable {
         update,
         ...this.#films.slice(index + 1),
       ];
-      this._notify(updateType, updatedFilm);
+      this._notify(updateType, updatedFilm, comments);
     } catch(err) {
       throw new Error('Can\'t update film');
+    }
   }
-}
 
   #adapterToClient = (film) => {
     const adaptedFilm = {...film,

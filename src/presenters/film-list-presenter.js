@@ -1,5 +1,5 @@
 import NoFilmView from '../view/no-film-view.js';
-import LoadingView from '../view/loading-view.js'
+import LoadingView from '../view/loading-view.js';
 import SortView from '../view/sort-view.js';
 import FilmListView from '../view/film-list-view.js';
 import ShowMoreButtonView from '../view/showmore-view.js';
@@ -7,7 +7,7 @@ import PopupView from '../view/popup-view.js';
 import FilmPresenter from '../presenters/film-presenter.js';
 import { siteMainElement, siteFooter } from '../main.js';
 import { remove, render, RenderPosition } from '../utils/render.js';
-import { sortFilmsType } from '../utils/sort.js';
+import { sortFilmsType, sorters } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
 import { FilterType, SortType, UpdateType, UserAction } from '../const.js';
 
@@ -33,8 +33,8 @@ export default class FilmListPresenter {
 #currentSortType = SortType.DEFAULT;
 #renderedFilmCount = FILM_COUNT_PER_STEP;
 #filmPresenter = new Map();
-#filmCardTopRatedPresenters = new Map();
-#filmCardMostCommentedPresenters = new Map();
+#filmTopRatedPresenter = new Map();
+#filmMostCommentedPresenter = new Map();
 #isLoading = true;
 
 constructor(filmListContainer, filmsModel, filterModel, commentsModel) {
@@ -45,14 +45,13 @@ constructor(filmListContainer, filmsModel, filterModel, commentsModel) {
 }
 
 get films () {
+  const films = [...this.#filmsModel.films];
   this.#filterType = this.#filterModel.filter;
+  const filteredFilms = filter[this.#filterType](films);
 
   if (this.#filterModel.filter === 'stats') {
-     return filter[FilterType.ALL_MOVIES](films);
-    }
-
-  const films = [...this.#filmsModel.films];
-  const filteredFilms = filter[this.#filterType](films);
+    return filter[FilterType.ALL_MOVIES](films);
+  }
 
   switch (this.#currentSortType) {
     case SortType.DEFAULT:
@@ -86,19 +85,19 @@ get films () {
   }
 
   getComments = async (film) => {
-    const commentsPromise = await this.#commentsModel.getСommentItems(film.id);
-    const CommentsList = [...commentsPromise];
-    return CommentsList;
+    const commentsPromise = await this.#commentsModel.getСomment(film.id);
+    const commentsList = [...commentsPromise];
+    return commentsList;
   };
 
   #handleViewAction = (actionType, updateType, update, id, newComment) => {
     switch (actionType) {
-      case UserAction.UPDATE:
+      case UserAction.UPDATE_FILM:
         this.#filmsModel.updateFilm(updateType, update, id);
         break;
-        case UserAction.UPDATE:
-          this.#filmsModel.updateComments(updateType, update, id);
-          break;
+      case UserAction.UPDATE_FILM_WITH_COMMENTS:
+        this.#commentsModel.updateComments(updateType, update, id);
+        break;
       case UserAction.ADD_COMMENT:
         this.#filmsModel.addComment(updateType, update, id, newComment);
         break;
@@ -217,12 +216,11 @@ get films () {
     render(this.#filmListComponent.filmListTemplate, this.#showMoreButtonComponent, RenderPosition.BEFOREEND);
   };
 
-/*   #renderTopRatedFilm = (film) => {
+  #renderTopRatedFilm = (film) => {
     const topRatedFilmsPresenter = new FilmPresenter(
-      this.#filmListComponent.filmListTopRatedTemplate, this.#handleViewAction, this.#handleFilmClick
-    );
+      this.#filmListComponent.filmListTopRatedTemplate, this.#handleViewAction, this.#handleFilmClick);
     topRatedFilmsPresenter.init(film);
-    //this.#filmPresenter.set(film.id, topRatedFilmsPresenter);
+    this.#filmTopRatedPresenter.set(film.id, topRatedFilmsPresenter);
   };
 
   #renderTopRatedFilms = () => {
@@ -231,15 +229,14 @@ get films () {
 
   #renderMostCommentedFilm = (film) => {
     const mostCommentedFilmsPresenter = new FilmPresenter(
-      this.#filmListComponent.filmListMostCommentedTemplate, this.#handleViewAction, this.#handleFilmClick
-    );
+      this.#filmListComponent.filmListMostCommentedTemplate, this.#handleViewAction, this.#handleFilmClick);
     mostCommentedFilmsPresenter.init(film);
-    //this.#filmPresenter.set(film.id, mostCommentedFilmsPresenter);
+    this.#filmMostCommentedPresenter.set(film.id, mostCommentedFilmsPresenter);
   };
 
   #renderMostCommentedFilms = () => {
     this.films.sort(sorters.comments).slice(0,2).forEach(this.#renderMostCommentedFilm);
-  }; */
+  };
 
   #clearList = ({resetRenderedFilmCount = false, resetSortType = false} = {}) => {
     this.#filmPresenter.forEach((presenter) => presenter.destroy());
@@ -293,7 +290,7 @@ get films () {
     this.#popupComponent.setWatchedClickHandler(this.#handleWatchedClick);
     this.#popupComponent.setWatchListClickHandler(this.#handleWatchListClick);
     this.#popupComponent.setClosePopupButtonClickHandler(this.#closePopup);
-    this.#popupComponent.setDeleteCommentButtonClickHandler(this.#handleDeleteComment);
+    this.#popupComponent.setDeleteClickHandler(this.#handleDeleteComment);
     this.#popupComponent.setSubmitFormClickHandler(this.#handleSubmitComment);
     document.addEventListener('keydown', this.#handleEscKeyDown);
 

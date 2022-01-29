@@ -16,7 +16,7 @@ const createStatisticsTemplate = (data) => {
   const keysGenres = Object.keys(filmsForStatistic.genres);
   const topGenre = keysGenres.sort((a, b) => filmsForStatistic.genres[b] - filmsForStatistic.genres[a])[0];
 
-  const getTotalDuration = (films) => films.reduce((acc, film) => (acc += film.runTime),0);
+  const getTotalDuration = () => data.reduce((acc, film) => (acc += film.runTime),0);
 
   const duration = getTotalDuration(filmsForStatistic.films);
   const hours = Math.floor(duration/MINUTES);

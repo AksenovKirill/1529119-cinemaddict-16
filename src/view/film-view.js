@@ -39,7 +39,8 @@ const createFilmCardTemplate = (film) => {
           type="button">Mark as favorite
         </button>
       </div>
-  </article>`;}
+  </article>`;
+};
 
 export default class FilmView extends SmartView {
   #film = null;

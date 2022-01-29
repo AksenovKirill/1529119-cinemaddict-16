@@ -17,9 +17,10 @@ export default class ApiService {
       .then(ApiService.parseResponse);
   }
 
-  getComments(filmId) {
-    return this.#loadComments({ url: `comments/${filmId}`})
-      .then(ApiService.parseResponse).then((commentsText) => ({id: filmId, comments: commentsText}));
+  async getComments(filmId) {
+    const response = await this.#loadComments({ url: `comments/${filmId}` });
+    const commentsText = await ApiService.parseResponse(response);
+    return ({ id: filmId, comments: commentsText });
   }
 
   updateFilm = async (film) => {
@@ -91,32 +92,32 @@ export default class ApiService {
 
   adapterToServer(film) {
     const adaptedFilm = {...film,
-        'comments': film.comments.map((comment) => comment.id ? comment.id : comment),
-        'id': film.id,
-        'film_info': {
-          'title': film.title,
-          'alternative_title': film.alternativeTitle,
-          'total_rating': film.rating,
-          'poster': film.poster,
-          'age_rating': film.ageRating,
-          'director': film.director,
-          'writers': film.screenwriter,
-          'actors': film.actors,
-          'release': {
-            'date': String(film.filmDate),
-            'release_country': String(film.country),
-          },
-          'runtime': film.runTime,
-          'genre': film.genres,
-          'description': film.description,
+      'comments': film.comments.map((comment) => comment.id ? comment.id : comment),
+      'id': film.id,
+      'film_info': {
+        'title': film.title,
+        'alternative_title': film.alternativeTitle,
+        'total_rating': film.rating,
+        'poster': film.poster,
+        'age_rating': film.ageRating,
+        'director': film.director,
+        'writers': film.screenwriter,
+        'actors': film.actors,
+        'release': {
+          'date': String(film.filmDate),
+          'release_country': String(film.country),
         },
-        'user_details': {
-          'watchlist': film.isWatchList,
-          'already_watched': film.isHistory,
-          'watching_date': film.realeaseDate,
-          'favorite': film.isFavorite,
-        },
-      };
+        'runtime': film.runTime,
+        'genre': film.genres,
+        'description': film.description,
+      },
+      'user_details': {
+        'watchlist': film.isWatchList,
+        'already_watched': film.isHistory,
+        'watching_date': film.realeaseDate,
+        'favorite': film.isFavorite,
+      },
+    };
 
     delete adaptedFilm.filmInfo;
     delete adaptedFilm.userDetails;
