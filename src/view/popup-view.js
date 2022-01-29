@@ -29,11 +29,12 @@ const createCommentsTemplate = (commentItem, isDeleting) => {
     </li>`);
 };
 
-//const createAllCommentsTemplate = (commentsText, isDeleting, idCommentDelete) => commentsText
-// .map((comment) => createCommentsTemplate(comment, isDeleting, idCommentDelete)).join(' ');
+const createAllCommentsTemplate = (commentsText, isDeleting, idCommentDelete) => commentsText
+  .map((comment) => createCommentsTemplate(comment, isDeleting, idCommentDelete)).join(' ');
 
-const createPopupTemplate = (data, comments, emotionNew, commentNewText, isDeleting, idCommentDelete, isDisabled) => {
+const createPopupTemplate = (data, emotionNew, commentNewText, isDeleting, idCommentDelete, isDisabled) => {
   const {title,
+    comments,
     poster,
     alternativeTitle,
     rating,
@@ -135,16 +136,16 @@ const createPopupTemplate = (data, comments, emotionNew, commentNewText, isDelet
             </span>
             </h3>
             <ul class="film-details__comments-list">
-
+            ${createAllCommentsTemplate(comments)}
             </ul>
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label">
-              ${emotionNew !== null && emotionNew !== ' ' ? `<img src="./images/emoji/${emotionNew}.png"
+              ${emotionNew ? `<img src="./images/emoji/${emotionNew}.png"
               width="55" height="55" alt="emoji-${emotionNew}">` : '' }
             </div>
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"
-              ${isDisabled ? 'disabled' : ''}>${commentNewText}</textarea>
+              ${isDisabled ? 'disabled' : ''}>${commentNewText ? commentNewText : ''}</textarea>
             </label>
             <div class="film-details__emoji-list">
               <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile"
@@ -212,13 +213,13 @@ export default class PopupView extends SmartView {
   };
 
   restoreHandlers = () => {
-    this.element.scrollTop = this.#currentScrollTop;
-    this.element.setClosePopupButtonClickHandler(this.#handleCloseButtonClick);
-    this.element.setWatchListClickHandler(this.#handleWatchListClick);
-    this.element.setWatchedClickHandler(this.#handleWatchedClick);
-    this.element.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.element.setDeleteClickHandler(this.#deleteCommentClick);
-    this.element.setSubmitFormClickHandler(this.#handleSubmitForm);
+    this.scrollTop = this.#currentScrollTop;
+    this.setClosePopupButtonClickHandler(this.#handleCloseButtonClick);
+    this.setWatchListClickHandler(this.#handleWatchListClick);
+    this.setWatchedClickHandler(this.#handleWatchedClick);
+    this.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.setDeleteClickHandler(this._callback.deleteCommentClick);
+    this.setSubmitFormClickHandler(this.#handleSubmitForm);
 
     this.#setInnerHandlers();
   };
@@ -315,7 +316,6 @@ export default class PopupView extends SmartView {
   #emojiClickHandler = (evt) => {
     evt.preventDefault();
     this.#emotionNew = evt.target.value;
-    this._callback.getEmotionClick(evt.target.value);
     this.updateData({
       commentEmotion: this.#emotionNew,
     });
@@ -324,14 +324,13 @@ export default class PopupView extends SmartView {
   #commentInputHandler = (evt) => {
     evt.preventDefault();
     this.#commentNewText = evt.target.value;
-    this._callback.getCommentNewText(evt.target.value);
     this.updateData({
       commentText: evt.target.value,
     }, true);
   };
 
   #handleSubmitForm = (evt) => {
-    if (evt.keyCode === 13 && (evt.metaKey || evt.ctrlKey) && (evt.keyCode === 13 || evt.keyCode === 10) && (evt.metaKey || evt.ctrlKey)) {
+    if (evt.ctrlKey && evt.key === 'Enter') {
       if(this.#emotionNew !== '' && this.#commentNewText !== '') {
         this.#isDisabled = true;
         this._callback.submitComment(PopupView.parseFilmToData(this._data), this.createNewComment(), PopupView.parseCommentsToData(this.#comments),
@@ -360,4 +359,3 @@ export default class PopupView extends SmartView {
 
   static parseCommentsToData = (newComments) =>  newComments;
 }
-
