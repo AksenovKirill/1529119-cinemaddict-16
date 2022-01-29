@@ -70,7 +70,7 @@ const getRandomDate = () => {
   return dayjs(day).format('DD MMMM YYYY');
 };
 
-const generateDateComments = () => {
+export const generateDateComments = () => {
   const dayRandom = getRandomInteger(-600, 0);
   const commentDate = dayjs().add(dayRandom, 'day').format('YYYY-MM-DD HH:mm:ss');
   return dayjs(commentDate).fromNow();
@@ -101,7 +101,7 @@ export const generateFilm = () => ({
   title: 'Popeye the Sailor Meets Sindbad the Sailor',
   rating: getRandomFloat(4, 9).toFixed(1),
   year: getRandomInteger(1930, 1955),
-  date: dayjs(getRandomDate()),
+  filmDate: dayjs(getRandomDate()),
   genres:  generateGenre(),
   description: descriptions[0, getRandomInteger(0, descriptions.length - 1)],
   shortDescription: sliceText(descriptions[0, getRandomInteger(0, descriptions.length - 1)], 140),

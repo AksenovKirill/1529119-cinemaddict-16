@@ -1,42 +1,58 @@
+import SmartView from './smart-view';
 import { nanoid } from 'nanoid';
-import SmartView from './smart-view.js';
-import he from 'he';
+import { getTime } from '../utils/film.js';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
-const renderGenres = (genres) => {
-  let genresList = '';
-  for (const genre of genres) {
-    genresList += `<span class="film-details__genre">${genre}</span>`;
-  }
-  return genresList;
+const creatCommentCountTemplate = (comments) => comments > 0 ? `<h3 class="film-details__comments-title">Comments
+  <span class="film-details__comments-count">${comments}</span></h3>` : ' ';
+
+const createFilmPopupCommentsTemplate = (commentItem) => {
+  const {id, author, comment, dateComment, emotion} = commentItem;
+
+  return (
+    `<li class="film-details__comment" id="${id}">
+    <span class="film-details__comment-emoji">
+      <img src="/images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
+    </span>
+    <div>
+      <p class="film-details__comment-text">${comment}</p>
+      <p class="film-details__comment-info">
+        <span class="film-details__comment-author">${author}</span>
+        <span class="film-details__comment-day">${dateComment}</span>
+        <button class="film-details__comment-delete">Delete</button>
+      </p>
+    </div>
+    </li>`);
 };
 
-const renderComments = (comments) => {
-  let commentList = '';
-  if (comments.length === 0) {
-    return `<div>
-              <p class="film-details__comment-text">${'Sorry there are no comments'}</p>
-            </div>`;
-  }
-  for (const comment of comments) {
-    commentList += `<li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="${comment.emoji}" width="55" height="55" alt="emoji-${comment.emoji}">
-            </span>
-            <div>
-              <p class="film-details__comment-text">${comment.message}</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">${comment.user ? comment.user : ''}</span>
-                <span class="film-details__comment-day">${comment.date ? comment.date : ''}</span>
-                <button type="button" class="film-details__comment-delete" data-id="${comment.id}">Delete</button>
-              </p>
-            </div>
-          </li>`;
-  }
-  return commentList;
-};
+const createPopupAllCommentsTemplate = (commentsText) => commentsText.map((comment) => createFilmPopupCommentsTemplate(comment)).join(' ');
 
-const createPopupTemplate = (film) =>
-  `<section class="film-details">
+const createPopupTemplate = (film, comments, emotionNew, commentText) => {
+  const {title,
+     poster,
+     alternativeTitle,
+     rating,
+     director,
+     writers, actors,
+     filmDate,
+     runTime,
+     country,
+     genres,
+     description,
+     ageRating,
+     isWatchList,
+     isHistory,
+     isFavorite } = film;
+
+  const date = dayjs(filmDate).format('DD MMMM YYYY');
+  const filmRunTime = getTime(runTime);
+
+  return (
+    `<section class="film-details">
     <form class="film-details__inner" action="" method="get">
       <div class="film-details__top-container">
         <div class="film-details__close">
@@ -44,82 +60,82 @@ const createPopupTemplate = (film) =>
         </div>
         <div class="film-details__info-wrap">
           <div class="film-details__poster">
-            <img class="film-details__poster-img" src="./images/posters/${film.poster}" alt="">
-            <p class="film-details__age">${film.ageRating}</p>
+            <img class="film-details__poster-img" src="./${poster}" alt="">
+            <p class="film-details__age">${ageRating}+</p>
           </div>
           <div class="film-details__info">
             <div class="film-details__info-head">
               <div class="film-details__title-wrap">
-                <h3 class="film-details__title">The Great Flamarion</h3>
-                <p class="film-details__title-original">Original: The Great Flamarion</p>
+                <h3 class="film-details__title">${title}</h3>
+                <p class="film-details__title-original">${alternativeTitle}</p>
               </div>
               <div class="film-details__rating">
-                <p class="film-details__total-rating">${film.rating}</p>
+                <p class="film-details__total-rating">${rating}</p>
               </div>
             </div>
             <table class="film-details__table">
               <tr class="film-details__row">
                 <td class="film-details__term">Director</td>
-                <td class="film-details__cell">${film.director}</td>
+                <td class="film-details__cell">${director}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${film.screenwriter}</td>
+                <td class="film-details__cell">${writers}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
-                <td class="film-details__cell">${film.actors}</td>
+                <td class="film-details__cell">${actors}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Release Date</td>
-                <td class="film-details__cell">${film.date}</td>
+                <td class="film-details__cell">${date}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Runtime</td>
-                <td class="film-details__cell">${film.runTime}</td>
+                <td class="film-details__cell">${filmRunTime}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Country</td>
-                <td class="film-details__cell">${film.country}</td>
+                <td class="film-details__cell">${country}</td>
               </tr>
               <tr class="film-details__row">
-                <td class="film-details__term">${film.genres.length === 1 ? 'Genre' : 'Genres'}</td>
+                <td class="film-details__term">${genres.length === 1 ? 'Genre' : 'Genres'}</td>
                 <td class="film-details__cell">
-                ${renderGenres(film.genres)}
+                ${genres}
               </tr>
             </table>
             <p class="film-details__film-description">
-            ${film.description}
+            ${description}
             </p>
           </div>
         </div>
         <section class="film-details__controls">
           <button type="button" class="film-details__control-button
             film-details__control-button--watchlist
-            ${film.isWatchList ? 'film-details__control-button--active' : ''}"
+            ${isWatchList ? 'film-details__control-button--active' : ''}"
             id="watchlist" name="watchlist">Add to watchlist</button>
           <button type="button" class="film-details__control-button
             film-details__control-button--watched
-            ${film.isHistory ? 'film-details__control-button--active' : ''}"
+            ${isHistory ? 'film-details__control-button--active' : ''}"
             id="watched name="watched">Already watched
           </button>
           <button type="button" class="film-details__control-button
             film-details__control-button--favorite
-            ${film.isFavorite ? 'film-details__control-button--active' : ''}"
+            ${isFavorite ? 'film-details__control-button--active' : ''}"
             id="favorite" name="favorite">Add to favorites
           </button>
         </section>
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
             <h3 class="film-details__comments-title">Comments
-            <span class="film-details__comments-count">${film.comments.length}</span>
+            <span class="film-details__comments-count">${creatCommentCountTemplate(comments)}</span>
             </h3>
             <ul class="film-details__comments-list">
-            ${renderComments(film.comments)}
+            ${createPopupAllCommentsTemplate(comments)}
             </ul>
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label">
-              ${film.emoji ? `<img src="./images/emoji/${film.emoji}.png" width="55" height="55" alt="emoji-${film.emoji}">` : '' }
+              ${film.emotion ? `<img src="./images/emoji/${film.emotion}.png" width="55" height="55" alt="emoji-${film.emotion}">` : '' }
             </div>
             <label class="film-details__comment-label">
               <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -146,7 +162,8 @@ const createPopupTemplate = (film) =>
           </section>
         </div>
     </form>
-  </section>`;
+  </section>`);
+};
 
 export default class PopupView extends SmartView {
   #currentScrollTop = 0;
@@ -174,7 +191,7 @@ export default class PopupView extends SmartView {
 
   #setInnerHandlers = () => {
     this.element.querySelector('.film-details__emoji-list').addEventListener('change', this.#emojiClickHandler);
-    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#descriptionInputHandler);
+    this.element.querySelector('.film-details__comment-input').addEventListener('input', this.#commentInputHandler);
     this.element.querySelector('.film-details__close-btn').addEventListener('click', this.#handleCloseButtonClick);
     this.element.querySelector('.film-details__control-button--watched').addEventListener('click', this.#handleWatchedClick);
     this.element.querySelector('.film-details__control-button--favorite').addEventListener('click', this.#handleFavoriteClick);
@@ -202,10 +219,9 @@ export default class PopupView extends SmartView {
       .addEventListener('click', this.#handleWatchListClick);
   };
 
-  setDeleteCommentButtonClickHandler = (callback) => {
+  setDeleteClickHandler = (callback) => {
     this._callback.deleteCommentClick = callback;
-    const buttons = this.element.querySelectorAll('.film-details__comment-delete');
-    buttons.forEach((button) => {
+    this.element.querySelectorAll('.film-details__comments').forEach((button) => {
       button.addEventListener('click', this.#deleteCommentClick);
     });
   };
@@ -222,18 +238,24 @@ export default class PopupView extends SmartView {
       .addEventListener('click', this.#handleCloseButtonClick);
   };
 
+  /* createNewComment() {
+    return {
+      id: nanoid(),
+      author: 'Kirill Aksenov',
+      comment: he.encode(this._data.commentText),
+      dateComment: dayjs().fromNow(),
+      emotion: `./images/emoji/${this._data.commentEmotion}.png`,
+ */
+
   #handleSubmitFormKeyDown = (evt) => {
-    if (evt.ctrlKey && evt.key === 'Enter') {
-      const commentInput = this.element.querySelector('.film-details__comment-input').value;
-      const emoji = this.element.querySelector('.film-details__new-comment').querySelector('img').src;
-      const newComment = {
-        id: nanoid(),
-        message: he.encode(commentInput),
-        emoji: emoji,
-        user: 'name',
-        date: 'date',
-      };
-      this._callback.submitComment(this._data, newComment);
+    if (evt.keyCode === 13 && (evt.metaKey || evt.ctrlKey) && (evt.keyCode === 13 || evt.keyCode === 10) && (evt.metaKey || evt.ctrlKey)) {
+      if(this.#emotionNew !== '' && this.#commentNewText !== '') {
+        const newComment = this.createNewComment();
+        this.#emotionNew = '';
+        this.#commentNewText = '';
+        this._callback.submitComment(FilmInfotmationView.parseFilmToData(this._data), newComment, PopupView.parseCommentsToData(this.#comments),
+        this.#emotionNew, this.#commentNewText);
+      }
     }
   };
 
@@ -266,9 +288,11 @@ export default class PopupView extends SmartView {
   };
 
   #emojiClickHandler = (evt) => {
-    evt.stopPropagation();
+    evt.preventDefault();
+    this.#emotionNew = evt.target.value;
+    this._callback.getComments(evt.target.value);
     this.updateData({
-      emoji: evt.target.value,
+      commentEmotion: this.#emotionNew,
     });
   };
 
@@ -276,11 +300,23 @@ export default class PopupView extends SmartView {
     this.#currentScrollTop = evt.target.scrollTop;
   }
 
-  #descriptionInputHandler = (evt) => {
+  #commentInputHandler = (evt) => {
     evt.preventDefault();
+    this.#commentNewText = evt.target.value;
+    this._callback.getCommentNewText(evt.target.value);
     this.updateData({
       commentText: evt.target.value,
     }, true);
   };
+
+  static parseFilmToData = (data) => {
+    const film = { ...data, commentText: '', commentEmotion: ' ' };
+    return film;
+  }
+
+  static parseCommentsToData = (newComments) => {
+    const comments = newComments;
+    return comments;
+  }
 
 }
