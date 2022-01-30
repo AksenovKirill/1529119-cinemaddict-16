@@ -1,7 +1,4 @@
-const Method = {
-  GET: 'GET',
-  PUT: 'PUT',
-};
+import { Method } from './const.js';
 
 export default class ApiService {
   #endPoint = null;
@@ -17,12 +14,6 @@ export default class ApiService {
       .then(ApiService.parseResponse);
   }
 
-  async getComments(filmId) {
-    const response = await this.#loadComments({ url: `comments/${filmId}` });
-    const commentsText = await ApiService.parseResponse(response);
-    return ({ id: filmId, comments: commentsText });
-  }
-
   updateFilm = async (film) => {
     const response = await this.#load({
       url: `movies/${film.id}`,
@@ -36,6 +27,33 @@ export default class ApiService {
     return parsedResponse;
   }
 
+  getComments = async (filmId) => {
+    const response = await this.#load({ url: `comments/${filmId}` });
+    return await ApiService.parseResponse(response);
+  }
+
+
+  addComment = async (comment, film) => {
+    const response = await this.#load({
+      url: `movies/${film.id}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+
+    const parsedResponse = await ApiService.parseResponse(response);
+    return parsedResponse;
+  }
+
+  deleteComment = async (comment) => {
+    const response = await this.#load({
+      url: `comments/${comment.id}`,
+      method: Method.DELETE,
+    });
+
+    return response;
+  }
+
   #load = async ({
     url,
     method = Method.GET,
@@ -47,27 +65,6 @@ export default class ApiService {
     const response = await fetch(
       `${this.#endPoint}/${url}`,
       {method, body, headers},
-    );
-
-    try {
-      ApiService.checkStatus(response);
-      return response;
-    } catch (err) {
-      ApiService.catchError(err);
-    }
-  }
-
-  #loadComments = async ({
-    url,
-    method = Method.GET,
-    body = null,
-    headers = new Headers(),
-  }) => {
-    headers.append('Authorization', this.#authorization);
-
-    const response = await fetch(
-      `${this.#endPoint}/${url}`,
-      { method, body, headers },
     );
 
     try {

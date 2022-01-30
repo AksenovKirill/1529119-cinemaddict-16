@@ -16,9 +16,9 @@ const createStatisticsTemplate = (data) => {
   const keysGenres = Object.keys(filmsForStatistic.genres);
   const topGenre = keysGenres.sort((a, b) => filmsForStatistic.genres[b] - filmsForStatistic.genres[a])[0];
 
-  const getTotalDuration = () => data.reduce((acc, film) => (acc += film.runTime),0);
+  const getTotalDuration = () => films.reduce((acc, film) => (acc += film.runTime),0);
 
-  const duration = getTotalDuration(filmsForStatistic.films);
+  const duration = getTotalDuration(filmsForStatistic.filmsList);
   const hours = Math.floor(duration/MINUTES);
   const minutes = duration%MINUTES;
 
@@ -50,11 +50,13 @@ const createStatisticsTemplate = (data) => {
   <ul class="statistic__text-list">
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">You watched</h4>
-      <p class="statistic__item-text">${filmsForStatistic.films.length} <span class="statistic__item-description">movies</span></p>
+      <p class="statistic__item-text">${filmsForStatistic.filmsList.length} <span class="statistic__item-description">movies</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Total duration</h4>
-      <p class="statistic__item-text">${hours > 0 ? hours : 0}<span class="statistic__item-description">h</span>${duration%MINUTES > 0 ? minutes : 0}<span class="statistic__item-description">m</span></p>
+      <p class="statistic__item-text">${hours > 0 ? hours : 0}
+      <span class="statistic__item-description">h</span>${duration%MINUTES > 0 ? minutes : 0}
+      <span class="statistic__item-description">m</span></p>
     </li>
     <li class="statistic__text-item">
       <h4 class="statistic__item-title">Top genre</h4>

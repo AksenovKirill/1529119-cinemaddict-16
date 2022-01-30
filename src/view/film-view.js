@@ -87,18 +87,21 @@ export default class FilmView extends SmartView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    this._callback.favoriteClick();
+    evt.target.classList.toggle('film-card__controls-item--active');
+    this._callback.watchListClick();
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
+    evt.target.classList.toggle('film-card__controls-item--active');
     this._callback.watchedClick();
   }
 
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
+    evt.target.classList.toggle('film-card__controls-item--active');
     this._callback.watchListClick();
   }
 }

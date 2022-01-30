@@ -1,16 +1,25 @@
 export const MINUTES = 60;
 export const AUTHORIZATION = 'Basic errtty12093388tyu';
 export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
+export const FILM_COUNT_PER_STEP = 5;
+
+export const Method = {
+  GET: 'GET',
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
+};
 
 export const FilterType = {
   ALL_MOVIES: 'all movies',
   WATCHLIST: 'watchlist',
   HISTORY: 'history',
   FAVORITES: 'favorites',
+  STATISTICS: 'statistics',
 };
 
 export const MenuItem = {
-  STATISTIC: 'STATISTIC',
+  STATISTICS: 'STATISTICS',
   FILM: 'FILM',
 };
 
@@ -22,7 +31,6 @@ export const SortType = {
 
 export const UserAction = {
   UPDATE: 'UPDATE',
-  UPDATE_FILM_WITH_COMMENTS: 'UPDATE_FILM_WITH_COMMENTS',
   ADD_COMMENT: 'ADD_COMMENT',
   DELETE_COMMENT: 'DELETE_COMMENT',
 };

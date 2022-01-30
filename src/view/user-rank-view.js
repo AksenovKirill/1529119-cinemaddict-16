@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 import { getRating } from '../utils/render.js';
 
 const createUserRankTemplate = (films) => {
@@ -10,7 +10,7 @@ const createUserRankTemplate = (films) => {
   </section>`);
 };
 
-export default class UserRankView extends AbstractView {
+export default class UserRankView extends SmartView {
   #films = null;
 
   constructor(films) {

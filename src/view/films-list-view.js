@@ -4,7 +4,8 @@ const createFilmListTemplate = () =>
   `<section class="films">
     <section class="films-list">
       <div class="films-list__container"></div>
-    </section>`;
+    </section>
+  </section>`;
 
 export default class FilmListView extends AbstractView {
   get template() {

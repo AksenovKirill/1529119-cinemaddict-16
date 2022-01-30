@@ -1,5 +1,4 @@
 import SmartView from './smart-view';
-import { nanoid } from 'nanoid';
 import { getTime } from '../utils/film.js';
 import dayjs from 'dayjs';
 import he from 'he';
@@ -9,10 +8,11 @@ dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
 const creatCommentCountTemplate = (comments) => comments > 0 ? `<h3 class="film-details__comments-title">Comments
-  <span class="film-details__comments-count">${comments}</span></h3>` : ' ';
+<span class="film-details__comments-count">${comments}</span></h3>` : ' ';
 
-const createCommentsTemplate = (commentItem, isDeleting) => {
-  const {id, author, comment, date, emotion, commentDelete} = commentItem;
+const createCommentsTemplate = (comments) => {
+  const {id, author, comment, date, emotion} = comments;
+  const commentDate = dayjs(date).format('YYYY/MM/DD HH:mm');
   return (
     `<li class="film-details__comment" id="${id}">
     <span class="film-details__comment-emoji">
@@ -22,34 +22,16 @@ const createCommentsTemplate = (commentItem, isDeleting) => {
       <p class="film-details__comment-text">${comment}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
-        <span class="film-details__comment-day">${dayjs(date).fromNow()}</span>
-        <button class="film-details__comment-delete">${isDeleting ? 'disabled' : ''}>${commentDelete ? 'Deleting...' : 'Delete'}</button>
+        <span class="film-details__comment-day">${commentDate}</span>
+        <button class="film-details__comment-delete"data-comment-id="${id}">Delete</button>
       </p>
     </div>
     </li>`);
 };
 
-const createAllCommentsTemplate = (commentsText, isDeleting, idCommentDelete) => commentsText
-  .map((comment) => createCommentsTemplate(comment, isDeleting, idCommentDelete)).join(' ');
-
-const createPopupTemplate = (data, emotionNew, commentNewText, isDeleting, idCommentDelete, isDisabled) => {
-  const {title,
-    comments,
-    poster,
-    alternativeTitle,
-    rating,
-    director,
-    writers,
-    actors,
-    filmDate,
-    runTime,
-    country,
-    genres,
-    description,
-    ageRating,
-    isWatchList,
-    isHistory,
-    isFavorite } = data;
+const createPopupTemplate = (data, comments, emotionNew, commentNewText, isDisabled) => {
+  const {title, poster, alternativeTitle, rating, director, writers, actors, filmDate, runTime, country, genres,
+    description, ageRating, isWatchList, isHistory, isFavorite } = data;
 
   const date = dayjs(filmDate).format('DD MMMM YYYY');
   const filmRunTime = getTime(runTime);
@@ -130,13 +112,9 @@ const createPopupTemplate = (data, emotionNew, commentNewText, isDeleting, idCom
         </section>
         <div class="film-details__bottom-container">
           <section class="film-details__comments-wrap">
-            <h3 class="film-details__comments-title">Comments
-            <span class="film-details__comments-count">
-            ${creatCommentCountTemplate(comments)}
-            </span>
-            </h3>
+            ${creatCommentCountTemplate(comments.length)}
             <ul class="film-details__comments-list">
-            ${createAllCommentsTemplate(comments)}
+            ${comments.map((comment) => createCommentsTemplate(comment)).join(' ')}
             </ul>
             <div class="film-details__new-comment">
               <div class="film-details__add-emoji-label">
@@ -177,7 +155,6 @@ const createPopupTemplate = (data, emotionNew, commentNewText, isDeleting, idCom
 };
 
 export default class PopupView extends SmartView {
-  #currentScrollTop = 0;
   #comments = null;
   #emotionNew = null;
   #commentNewText = null;
@@ -195,8 +172,6 @@ export default class PopupView extends SmartView {
     this.#isDisabled = isDisabled;
     this.#idCommentDelete = idCommentDelete;
     this.#setInnerHandlers();
-
-    this.element.addEventListener('scroll', this.#handleScroll);
   }
 
   get template() {
@@ -205,7 +180,8 @@ export default class PopupView extends SmartView {
 
   reset = (film, comments) => {
     this._data = PopupView.parseFilmToData({ ...film });
-    this.#comments = PopupView.parseCommentsToData(comments);
+    this.#comments = comments;
+    //this.#scrollTop = 0;
     this.#emotionNew = ' ';
     this.#commentNewText = '';
     this.updateData(this._data);
@@ -213,14 +189,12 @@ export default class PopupView extends SmartView {
   };
 
   restoreHandlers = () => {
-    this.scrollTop = this.#currentScrollTop;
     this.setClosePopupButtonClickHandler(this.#handleCloseButtonClick);
     this.setWatchListClickHandler(this.#handleWatchListClick);
     this.setWatchedClickHandler(this.#handleWatchedClick);
     this.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.setDeleteClickHandler(this._callback.deleteCommentClick);
     this.setSubmitFormClickHandler(this.#handleSubmitForm);
-
     this.#setInnerHandlers();
   };
 
@@ -278,14 +252,20 @@ export default class PopupView extends SmartView {
     this.updateData({...this._data});
   }
 
-  createNewComment() {
-    return {
-      id: nanoid(),
-      author: 'Kirill Aksenov',
+  addComment = () => {
+    if (this._data.emotionNew === '' || this._data.emotionNew === false || this._data.commentNewText === '') {
+      return;
+    }
+
+    const newComment = {
+      id: '',
+      author: 'Alex Ivanov',
       comment: he.encode(this.#commentNewText),
-      dateComment: dayjs().fromNow(),
-      emotion: `./images/emoji/${this.#emotionNew}.png`,
+      date: dayjs(),
+      emotion: this.#emotionNew,
     };
+    this.#comments.push(newComment);
+    this.updateData(this._data);
   }
 
   #handleCloseButtonClick = (evt) => {
@@ -333,7 +313,8 @@ export default class PopupView extends SmartView {
     if (evt.ctrlKey && evt.key === 'Enter') {
       if(this.#emotionNew !== '' && this.#commentNewText !== '') {
         this.#isDisabled = true;
-        this._callback.submitComment(PopupView.parseFilmToData(this._data), this.createNewComment(), PopupView.parseCommentsToData(this.#comments),
+        const newComment = this.addComment();
+        this._callback.submitComment(PopupView.parseFilmToData(this._data), newComment, PopupView.parseCommentsToData(this.#comments),
           this.#emotionNew, this.#commentNewText);
         document.removeEventListener('keypress', this.#handleSubmitForm);
       }
@@ -342,18 +323,12 @@ export default class PopupView extends SmartView {
 
   #deleteCommentClick = (evt) => {
     evt.preventDefault();
-    if(evt.target.tagName !== 'BUTTON') {
-      return;
-    }
-    const commentForDelete = this.#comments.findIndex((comment) => comment.id === evt.currentTarget.id);
-    this.#comments[commentForDelete].commentDelete = true;
-    this.#isDeleting = true;
-    this._callback.deleteCommentClick(this._data, evt.target.dataset.id);
+    const idComment = evt.target.dataset.commentId;
+    this._callback.deleteClick(idComment);
+    const deleteButton = this.element.querySelector(`[data-comment-id = "${idComment}"]`);
+    deleteButton.disabled = true;
+    deleteButton.textContent = 'Deleting...';
   };
-
-  #handleScroll = (evt) => {
-    this.#currentScrollTop = evt.target.scrollTop;
-  }
 
   static parseFilmToData = (data) => ({ ...data, commentText: '', commentEmotion: ' ' });
 

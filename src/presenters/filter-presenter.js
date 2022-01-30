@@ -17,7 +17,7 @@ export default class FilterPresent {
   }
 
   get filters() {
-    const films = this.#filmsModel.films;
+    const films = [...this.#filmsModel.films];
 
     return {
       [FilterType.WATCHLIST]: filter[FilterType.WATCHLIST](films).length,

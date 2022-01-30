@@ -1,4 +1,4 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view';
 import { FilterType } from '../const.js';
 
 const NoFilmsTextType = {
@@ -14,7 +14,7 @@ const createNoFilmTemplate = (filterType) => {
   return `<h2 class="films-list__title">${noFilmTextValue}</h2>`;
 };
 
-export default class NoFilmView extends AbstractView {
+export default class NoFilmView extends SmartView  {
   constructor(data) {
     super();
     this._data = data;

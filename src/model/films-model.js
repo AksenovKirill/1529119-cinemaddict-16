@@ -14,6 +14,10 @@ export default class FilmsModel extends AbstractObservable {
     return this.#films;
   }
 
+  async getComments (filmId) {
+    return await this.#apiService.getComments(filmId);
+  }
+
   init = async () => {
 
     try {
@@ -26,11 +30,11 @@ export default class FilmsModel extends AbstractObservable {
     this._notify(UpdateType.INIT);
   }
 
-  updateFilm = async (updateType, update, comments) => {
+  updateFilm = async (updateType, update) => {
     const index = this.#films.findIndex((film) => film.id === update.id);
 
     if (index === -1) {
-      throw new Error('Can\'t update!!! unexisting film');
+      throw new Error('Can\'t update unexisting film');
     }
 
     try {
@@ -38,13 +42,42 @@ export default class FilmsModel extends AbstractObservable {
       const updatedFilm = this.#adapterToClient(response);
       this.#films = [
         ...this.#films.slice(0, index),
-        update,
+        updatedFilm,
         ...this.#films.slice(index + 1),
       ];
-      this._notify(updateType, updatedFilm, comments);
-    } catch(err) {
+      this._notify(updateType, updatedFilm);
+    } catch (err) {
       throw new Error('Can\'t update film');
     }
+  }
+
+  deleteComment = (updateType, update) => {
+    const { filmId, commentId } = update;
+
+    this.#films.map((film) => {
+      if (film.id === filmId) {
+        film.comments = film.comments.filter((comment) => comment !== commentId);
+      }
+    });
+
+    const updatedFilm = this.#films.find((film) => film.id === filmId);
+
+    this._notify(updateType, updatedFilm);
+  }
+
+  addComment = (updateType, update) => {
+    const { filmId, newComment } = update;
+    const { id } = newComment;
+
+    this.#films.map((film) => {
+      if (film.id === filmId) {
+        film.comments.push(id);
+      }
+    });
+
+    const updatedFilm = this.#films.find((film) => film.id === filmId);
+
+    this._notify(updateType, updatedFilm);
   }
 
   #adapterToClient = (film) => {
