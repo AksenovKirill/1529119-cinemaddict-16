@@ -106,8 +106,7 @@ get films () {
       case UserAction.ADD_COMMENT:
         this.#setViewState(State.ADDING);
         try {
-         await this.#filmsModel.addComment(updateType, update, this.#filmId);
-         this.#popupComponent.reset(this.#film);
+         await this.#filmsModel.addComment(updateType, update);
         } catch(error) {
           this.#setViewState(State.ABORTING);
         }
@@ -156,9 +155,6 @@ get films () {
   };
 
   #setViewState = (state) => {
-    if (this.#mode === Mode.DEFAULT) {
-      return;
-    }
     const resetFormState = () => {
       this.#popupComponent.updateData({
         isDisabled: false,
@@ -176,7 +172,6 @@ get films () {
         });
         break;
       case State.ABORTING:
-        this.#filmCardComponent.shake(resetFormState);
         this.#popupComponent.shake(resetFormState);
         break;
     }
