@@ -156,10 +156,9 @@ const createPopupTemplate = (data, comments, emotionNew, commentNewText, isDisab
 
 export default class PopupView extends SmartView {
   #comments = null;
+  #currentScrollTop = 0;
   #emotionNew = null;
   #commentNewText = null;
-  #idCommentDelete = null;
-  #isDeleting = null;
   #isDisabled = null;
 
   constructor(film, comments, emotionNew, commentNewText, isDeleting, idCommentDelete, isDisabled) {
@@ -168,14 +167,12 @@ export default class PopupView extends SmartView {
     this.#comments = PopupView.parseCommentsToData(comments);
     this.#emotionNew = emotionNew;
     this.#commentNewText = commentNewText;
-    this.#isDeleting = isDeleting;
     this.#isDisabled = isDisabled;
-    this.#idCommentDelete = idCommentDelete;
     this.#setInnerHandlers();
   }
 
   get template() {
-    return createPopupTemplate(this._data, this.#comments, this.#emotionNew, this.#commentNewText, this.#isDeleting, this.#idCommentDelete, this.#isDisabled);
+    return createPopupTemplate(this._data, this.#comments, this.#emotionNew, this.#commentNewText, this.#isDisabled);
   }
 
   reset = (film, comments) => {
@@ -195,6 +192,7 @@ export default class PopupView extends SmartView {
     this.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.setDeleteClickHandler(this._callback.deleteCommentClick);
     this.setSubmitFormClickHandler(this.#handleSubmitForm);
+    this.element.scrollTop = this.#currentScrollTop;
     this.#setInnerHandlers();
   };
 
@@ -268,6 +266,10 @@ export default class PopupView extends SmartView {
     this.updateData(this._data);
   }
 
+  #handleScroll = (evt) => {
+    this.#currentScrollTop = evt.target.scrollTop;
+  }
+
   #handleCloseButtonClick = (evt) => {
     evt.preventDefault();
     this.#emotionNew = ' ';
@@ -330,7 +332,11 @@ export default class PopupView extends SmartView {
     deleteButton.textContent = 'Deleting...';
   };
 
-  static parseFilmToData = (data) => ({ ...data, commentText: '', commentEmotion: ' ' });
+  static parseFilmToData = (data) => ({...data,
+     commentText: '',
+     commentEmotion: '',
+     isDisabled: false
+    });
 
   static parseCommentsToData = (newComments) =>  newComments;
 }

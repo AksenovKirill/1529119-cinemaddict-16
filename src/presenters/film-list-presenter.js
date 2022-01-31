@@ -12,7 +12,7 @@ import { siteMainElement, siteFooter } from '../main.js';
 import { remove, render, RenderPosition } from '../utils/render.js';
 import { sortFilmsType, sorters } from '../utils/sort.js';
 import { filter } from '../utils/filter.js';
-import { FilterType, SortType, UpdateType, UserAction, FILM_COUNT_PER_STEP } from '../const.js';
+import { FilterType, SortType, UpdateType, UserAction, FILM_COUNT_PER_STEP, State } from '../const.js';
 
 const bodyElement = document.querySelector('body');
 const siteHeader = document.querySelector('.header');
@@ -97,14 +97,31 @@ get films () {
   #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        this.#filmsModel.updateFilm(updateType, update);
+        try {
+          await this.#filmsModel.updateFilm(updateType, update);
+        } catch(error) {
+          this.#setViewState(State.ABORTING);
+        }
         break;
       case UserAction.ADD_COMMENT:
-        this.#filmsModel.addComment(updateType, update);
+        this.#setViewState(State.ADDING);
+        try {
+         await this.#filmsModel.addComment(updateType, update, this.#filmId);
+         this.#popupComponent.reset(this.#film);
+        } catch(error) {
+          this.#setViewState(State.ABORTING);
+        }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#filmsModel.deleteComment(updateType, update);
+        this.#setViewState(State.ADDING);
+        try {
+          await this.#filmsModel.deleteComment(updateType, update);
+        } catch(error) {
+          this.#setViewState(State.ABORTING);
+        }
         break;
+        default:
+          break;
     }
   };
 
@@ -137,6 +154,33 @@ get films () {
         break;
     }
   };
+
+  #setViewState = (state) => {
+    if (this.#mode === Mode.DEFAULT) {
+      return;
+    }
+    const resetFormState = () => {
+      this.#popupComponent.updateData({
+        isDisabled: false,
+      });
+    };
+    switch (state) {
+      case State.ADDING:
+        this.#popupComponent.updateData({
+          isDisabled: true,
+        });
+        break;
+      case State.DELETING:
+        this.#popupComponent.updateData({
+          isDisabled: true,
+        });
+        break;
+      case State.ABORTING:
+        this.#filmCardComponent.shake(resetFormState);
+        this.#popupComponent.shake(resetFormState);
+        break;
+    }
+  }
 
   #handleSortTypeChange = (sortType) => {
     if (this.#currentSortType === sortType) {
@@ -312,8 +356,9 @@ get films () {
     this.#popupComponent = null;
   };
 
-  #handleScroll = () => {
+/*   #handleScroll = () => {
   }
+ */
 
   #handleEscKeyDown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {

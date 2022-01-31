@@ -3,6 +3,12 @@ export const AUTHORIZATION = 'Basic errtty12093388tyu';
 export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
 export const FILM_COUNT_PER_STEP = 5;
 
+export const State = {
+  ADDING: 'ADDING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
 export const Method = {
   GET: 'GET',
   PUT: 'PUT',

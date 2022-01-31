@@ -26,7 +26,7 @@ export const createFilterTemplate = (filter, currentFilterType) => `<nav class="
       <span class="main-navigation__item-count">${filter[FilterType.FAVORITES]}</span>
     </a>
   </div>
-    <a href="#stats" id="${FilterType.STATISTICS}" data-menu-type="${MenuItem.STATISTIC}" class="main-navigation__additional
+    <a href="#stats" id="${FilterType.STATISTICS}" data-menu-type="${MenuItem.STATISTICS}" class="main-navigation__additional
     ${currentFilterType === FilterType.STATISTICS ? 'main-navigation__additional-active' : ''}">Stats</a>
 </nav>`;
 
@@ -57,7 +57,7 @@ export default class FilterView extends AbstractView {
     if (evt.target.tagName !== 'A') {
       return;
     }
-    
+
       this._callback.menuClick(evt.target.dataset.menuType);
       this._callback.filterTypeChange(evt.target.id);
     }
