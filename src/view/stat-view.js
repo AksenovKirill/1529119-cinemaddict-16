@@ -12,10 +12,8 @@ const BAR_HEIGHT = 50;
 const createStatisticsTemplate = (data) => {
   const {films, dateTo, dateFrom, currentInput} = data;
   const filmsForStatistic = getWatchedFilmsForStatistics(films, dateTo, dateFrom, currentInput);
-
   const keysGenres = Object.keys(filmsForStatistic.genres);
   const topGenre = keysGenres.sort((a, b) => filmsForStatistic.genres[b] - filmsForStatistic.genres[a])[0];
-
   const getTotalDuration = () => films.reduce((acc, film) => (acc += film.runTime),0);
 
   const duration = getTotalDuration(filmsForStatistic.filmsList);
@@ -27,7 +25,9 @@ const createStatisticsTemplate = (data) => {
   <p class="statistic__rank">
     Your rank
     <img class="statistic__img" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
-    <span class="statistic__rank-label">${getRating(filmsForStatistic.films.length)}</span>
+    <span class="statistic__rank-label">
+    ${currentInput === StatisticsFilterType.ALL_TIME ? getRating(filmsForStatistic.films.length) :
+      getRating(filmsForStatistic.films.length)}</span>
   </p>
   <form action="https://echo.htmlacademy.ru/" method="get" class="statistic__filters">
     <p class="statistic__filters-description">Show stats:</p>

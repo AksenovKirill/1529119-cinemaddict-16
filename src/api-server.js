@@ -32,10 +32,9 @@ export default class ApiService {
     return await ApiService.parseResponse(response);
   }
 
-
-  addComment = async (comment, film) => {
+  addComment = async (comment, filmId) => {
     const response = await this.#load({
-      url: `movies/${film.id}`,
+      url: `comments/${filmId}`,
       method: Method.POST,
       body: JSON.stringify(comment),
       headers: new Headers({'Content-Type': 'application/json'}),
@@ -45,9 +44,9 @@ export default class ApiService {
     return parsedResponse;
   }
 
-  deleteComment = async (comment) => {
+  deleteComment = async (filmId) => {
     const response = await this.#load({
-      url: `comments/${comment.id}`,
+      url: `comments/${filmId}`,
       method: Method.DELETE,
     });
 

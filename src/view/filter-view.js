@@ -57,9 +57,8 @@ export default class FilterView extends AbstractView {
     if (evt.target.tagName !== 'A') {
       return;
     }
-
-      this._callback.menuClick(evt.target.dataset.menuType);
-      this._callback.filterTypeChange(evt.target.id);
-    }
+    this._callback.menuClick(evt.target.dataset.menuType);
+    this._callback.filterTypeChange(evt.target.id);
   }
+}
 

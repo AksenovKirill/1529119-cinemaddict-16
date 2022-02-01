@@ -4,6 +4,7 @@ import { UpdateType } from '../const.js';
 export default class FilmsModel extends AbstractObservable {
   #apiService = null;
   #films = [];
+  #comments = [];
 
   constructor(apiService) {
     super();
@@ -14,19 +15,22 @@ export default class FilmsModel extends AbstractObservable {
     return this.#films;
   }
 
-  async getComments (filmId) {
-    return await this.#apiService.getComments(filmId);
+  getComments = async (filmId) => {
+    try {
+      this.#comments = await this.#apiService.getComments(filmId);
+      return this.#comments;
+    } catch (err) {
+      this.#comments = [];
+    }
   }
 
   init = async () => {
-
     try {
       const films = await this.#apiService.films;
       this.#films = films.map(this.#adapterToClient);
     } catch(err) {
       this.#films = [];
     }
-
     this._notify(UpdateType.INIT);
   }
 
@@ -51,33 +55,37 @@ export default class FilmsModel extends AbstractObservable {
     }
   }
 
-  deleteComment = (updateType, update) => {
-    const { filmId, commentId } = update;
-
-    this.#films.map((film) => {
-      if (film.id === filmId) {
-        film.comments = film.comments.filter((comment) => comment !== commentId);
-      }
-    });
-
-    const updatedFilm = this.#films.find((film) => film.id === filmId);
-
-    this._notify(updateType, updatedFilm);
+  addComment = async (update) => {
+    try {
+      const { filmId, newComment } = update;
+      const { id } = newComment;
+      const response = await this.#apiService.addComment(newComment, filmId);
+      this.#films.map((film) => {
+        if (film.id === filmId) {
+          film.comments.push(id);
+        }
+      });
+      this._notify(response);
+    } catch(err) {
+      throw new Error('Can\'t add comment');
+    }
   }
 
-  addComment = (updateType, update) => {
-    const { filmId, newComment } = update;
-    const { id } = newComment;
-
-    this.#films.map((film) => {
-      if (film.id === filmId) {
-        film.comments.push(id);
+  deleteComment = async (updateType, update) => {
+    try {
+      const index = this.#comments.findIndex((comment) => comment.id === update);
+      if (index === -1) {
+        throw new Error('Can\'t delete unexisting comment');
       }
-    });
-
-    const updatedFilm = this.#films.find((film) => film.id === filmId);
-
-    this._notify(updateType, updatedFilm);
+      const response = await this.#apiService.deleteComment(update);
+      this.#comments = [
+        ...this.#comments.slice(0, index),
+        ...this.#comments.slice(index + 1),
+      ];
+      this._notify(updateType, response);
+    } catch(err) {
+      throw new Error('Can\'t delete comment');
+    }
   }
 
   #adapterToClient = (film) => {
