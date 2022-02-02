@@ -55,10 +55,5 @@ export default class SortFilmsView extends AbstractView {
     });
     sortButton.classList.add('sort__button--active');
   };
-
-  restoreHandlers = () => {
-    this.setSortTypeHandler(this._callback.sortTypeChange);
-  };
-
 }
 

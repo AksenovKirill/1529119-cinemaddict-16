@@ -1,8 +1,8 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view';
 import { FilterType } from '../const.js';
 
 const NoFilmsTextType = {
-  [FilterType.ALL_MOVIES]: 'There are no films now',
+  [FilterType.ALL_MOVIES]: 'There are no movies in our database',
   [FilterType.WATCHLIST]: 'There are no watch list films now',
   [FilterType.HISTORY]: 'There are no watched films now',
   [FilterType.FAVORITES]: 'There are no favorite films now',
@@ -11,14 +11,10 @@ const NoFilmsTextType = {
 const createNoFilmTemplate = (filterType) => {
   const noFilmTextValue = NoFilmsTextType[filterType];
 
-  return  `<section class="films">
-    <section class="films-list">
-      <h2 class="films-list__title">${noFilmTextValue}</h2>
-    </section>
-  </section>`;
+  return `<h2 class="films-list__title">${noFilmTextValue}</h2>`;
 };
 
-export default class NoFilmView extends AbstractView {
+export default class NoFilmView extends SmartView  {
   constructor(data) {
     super();
     this._data = data;

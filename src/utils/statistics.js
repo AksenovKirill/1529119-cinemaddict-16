@@ -11,16 +11,16 @@ export const filterStaticFilms = (films, dateTo, dateFrom, currentInput) => {
     return films.filter((film) => dayjs(film.realeaseDate).isSameOrBefore(dayjs()));
   }
   if(currentInput === StatisticsFilterType.TODAY){
-    return films.filter((film) => dayjs(film.realeaseDate).isSame(dateTo, 'day'));
+    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-7, 'day'), dayjs(), 'day'));
   }
   if(currentInput === StatisticsFilterType.YEAR){
     return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-365, 'day'), dayjs(), 'day'));
   }
   if(currentInput === StatisticsFilterType.MONTH){
-    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-30, 'day'), dayjs(), 'day'));
+    return films.filter((film) => dayjs(film.realeaseDate).isSame(dateTo, 'day'));
   }
   if(currentInput === StatisticsFilterType.WEEK){
-    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-7, 'day'), dayjs(), 'day'));
+    return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-30, 'day'), dayjs(), 'day'));
   }
   return films.filter((film) =>
     dayjs(film.realeaseDate).isSame(dateFrom , 'day') ||
@@ -31,15 +31,16 @@ export const filterStaticFilms = (films, dateTo, dateFrom, currentInput) => {
 
 export const getWatchedFilmsForStatistics = (films, dateTo, dateFrom, currentInput) => {
   const watchedFilmsStat = {
-    films: new Array(),
-    genres: new Array(),
-    filmsCountWithSameGenres: new Array(),
+    films: [],
+    filmsList: [],
+    genres: [],
+    filmsCountWithSameGenres: [],
   };
   watchedFilmsStat.films = films.filter((film) => film.isHistory);
   films = films.filter((film) => film.isHistory);
-  watchedFilmsStat.films = filterStaticFilms(films, dateTo, dateFrom, currentInput);
+  watchedFilmsStat.filmsList = filterStaticFilms(films, dateTo, dateFrom, currentInput);
   const filmsGenres = [];
-  watchedFilmsStat.films.filter((film) => filmsGenres.push(film.genres));
+  watchedFilmsStat.filmsList.filter((film) => filmsGenres.push(film.genres));
   watchedFilmsStat.genres = filmsGenres.flat().reduce((acc, el) => {
     acc[el] = (acc[el] || 0) + 1;
     return acc;
