@@ -51,7 +51,6 @@ export default class FilmsModel extends AbstractObservable {
       ];
       this._notify(updateType, updatedFilm);
     } catch (err) {
-      console.log(err);
       throw new Error('Can\'t update film');
     }
   }
@@ -62,7 +61,6 @@ export default class FilmsModel extends AbstractObservable {
       const response = await this.#apiService.addComment(newComment, filmId);
       this._notify(updateType, this.#adapterToClient(response.movie));
     } catch(err) {
-      console.log(err);
       throw new Error('Can\'t add comment');
     }
   }
