@@ -54,7 +54,7 @@ export const StatisticsFilterType = {
   TODAY: 'today',
   WEEK: 'week',
   MONTH: 'month',
-  YEAR: 'year'
+  YEAR: 'year',
 };
 
 
