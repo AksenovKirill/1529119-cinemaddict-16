@@ -44,13 +44,11 @@ export default class ApiService {
     return parsedResponse;
   }
 
-  deleteComment = async (filmId) => {
-    const response = await this.#load({
-      url: `comments/${filmId}`,
+  deleteComment = async (commentId) => {
+    return await this.#load({
+      url: `comments/${commentId}`,
       method: Method.DELETE,
     });
-
-    return response;
   }
 
   #load = async ({

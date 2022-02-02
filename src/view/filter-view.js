@@ -27,7 +27,7 @@ export const createFilterTemplate = (filter, currentFilterType) => `<nav class="
     </a>
   </div>
     <a href="#stats" id="${FilterType.STATISTICS}" data-menu-type="${MenuItem.STATISTICS}" class="main-navigation__additional
-    ${currentFilterType === FilterType.STATISTICS ? 'main-navigation__additional-active' : ''}">Stats</a>
+    ${currentFilterType === FilterType.STATISTICS ? 'main-navigation__additional--active' : ''}">Stats</a>
 </nav>`;
 
 export default class FilterView extends AbstractView {

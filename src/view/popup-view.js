@@ -308,10 +308,10 @@ export default class PopupView extends SmartView {
   #handleSubmitForm = (evt) => {
     if (evt.ctrlKey && evt.key === 'Enter') {
       if(this.#emotionNew !== '' && this.#commentNewText !== '') {
-        this.#isDisabled = true;
+        // this.#isDisabled = true;
         const newComment = this.addComment();
         this._callback.submitComment(PopupView.parseFilmToData(this._data), newComment);
-        document.removeEventListener('keypress', this.#handleSubmitForm);
+        // document.removeEventListener('keypress', this.#handleSubmitForm);
       }
     }
   };

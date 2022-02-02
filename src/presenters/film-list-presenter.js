@@ -97,22 +97,21 @@ export default class FilmListPresenter {
         try {
           await this.#filmsModel.updateFilm(updateType, update);
         } catch (error) {
+          console.log(error);
         }
         break;
       case UserAction.ADD_COMMENT:
-        this.#filmPresenter.get(update.id).setViewState(State.ADDING);
         try {
-          await this.#filmsModel.addComment(update);
+          this.setViewState(State.ADDING);
         } catch (error) {
-          this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
+          this.setViewState(State.ABORTING);
         }
         break;
       case UserAction.DELETE_COMMENT:
-        this.#filmPresenter.get(update.id).setViewState(State.DELETING);
         try {
-          await this.#filmsModel.deleteComment(update);
+          this.setViewState(State.DELETING);
         } catch (error) {
-          this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
+          this.setViewState(State.ABORTING);
         }
         break;
     }
@@ -122,13 +121,13 @@ export default class FilmListPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#filmPresenter.get(data.id).init(data, this.#filmsModel.comments);
+        if (this.#popupComponent !== null) {
+          this.#closePopup();
+          this.#renderPopup(data);
+        }
         break;
 
       case UpdateType.MINOR:
-        if (this.#popupComponent !== null) {
-          this.#closePopup();
-        }
-        this.#renderPopup(data);
         this.#clearList();
         this.#renderUserRank();
         this.#renderList();
@@ -356,23 +355,23 @@ export default class FilmListPresenter {
   };
 
   #handleDeleteComment = (film, commentId) => {
-    this.#filmsModel.deleteComment(UpdateType, commentId);
-    this.#handleViewAction(
-      UserAction.DELETE_COMMENT,
-      UpdateType.MINOR,
-      film,
-      commentId,
-    );
+    this.#filmsModel.deleteComment(UpdateType.PATCH, film, commentId);
+    // this.#handleViewAction(
+    //   UserAction.DELETE_COMMENT,
+    //   UpdateType.PATCH,
+    //   film,
+    //   commentId,
+    // );
   };
 
   #handleSubmitComment = (film, newComment) => {
-    this.#filmsModel.addComment({newComment, filmId: film.id});
-    this.#handleViewAction(
-      UserAction.ADD_COMMENT,
-      UpdateType.MINOR,
-      film,
-      newComment,
-    );
+    this.#filmsModel.addComment(UpdateType.PATCH, {newComment, filmId: film.id});
+    // this.#handleViewAction(
+    //   UserAction.ADD_COMMENT,
+    //   UpdateType.PATCH,
+    //   film,
+    //   newComment,
+    // );
   };
 
   #renderList = () => {
