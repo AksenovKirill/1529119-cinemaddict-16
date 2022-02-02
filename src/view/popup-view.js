@@ -176,16 +176,6 @@ export default class PopupView extends SmartView {
     return createPopupTemplate(this._data, this.#comments, this.#emotionNew, this.#commentNewText, this.#isDisabled);
   }
 
-  reset = (film, comments) => {
-    this._data = PopupView.parseFilmToData({ ...film });
-    this.#comments = comments;
-    this.#emotionNew = ' ';
-    this.#commentNewText = '';
-    this.updateData(this._data);
-    this.updateData(this.#comments);
-    this.element.scrollTop = this.#currentScrollTop;
-  };
-
   restoreHandlers = () => {
     this.setClosePopupButtonClickHandler(this.#handleCloseButtonClick);
     this.setWatchListClickHandler(this.#handleWatchListClick);
@@ -330,12 +320,4 @@ export default class PopupView extends SmartView {
 
   static parseCommentsToData = (newComments) =>  newComments;
 
-  static parseDataToFilm = (data) => {
-    const film = {...data};
-
-    delete film.isDisabled;
-    delete film.isDeleting;
-
-    return film;
-  }
 }

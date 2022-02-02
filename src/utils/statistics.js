@@ -31,10 +31,10 @@ export const filterStaticFilms = (films, dateTo, dateFrom, currentInput) => {
 
 export const getWatchedFilmsForStatistics = (films, dateTo, dateFrom, currentInput) => {
   const watchedFilmsStat = {
-    films: new Array(),
-    filmsList: new Array(),
-    genres: new Array(),
-    filmsCountWithSameGenres: new Array(),
+    films: [],
+    filmsList: [],
+    genres: [],
+    filmsCountWithSameGenres: [],
   };
   watchedFilmsStat.films = films.filter((film) => film.isHistory);
   films = films.filter((film) => film.isHistory);

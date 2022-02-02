@@ -7,9 +7,3 @@ export const filter = {
   [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),
   [FilterType.STATISTICS]: (films) => films,
 };
-
-export const generateFilter = (films) =>
-  Object.entries(filter).map(([filterName, countFilms]) => ({
-    name: filterName,
-    count: countFilms(films),
-  }));
