@@ -60,11 +60,6 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const { filmId, newComment } = update;
       const response = await this.#apiService.addComment(newComment, filmId);
-      // this.#films.map((film) => {
-      //   if (film.id === filmId) {
-      //     film.comments.push(response.);
-      //   }
-      // });
       this._notify(updateType, this.#adapterToClient(response.movie));
     } catch(err) {
       console.log(err);
