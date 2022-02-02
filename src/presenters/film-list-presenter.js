@@ -94,27 +94,25 @@ export default class FilmListPresenter {
   #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_FILM:
-        //this.#filmPresenter.get(update.id).setViewState(State.UPDATING);
         try {
           await this.#filmsModel.updateFilm(updateType, update);
         } catch (error) {
-          //this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
         }
         break;
       case UserAction.ADD_COMMENT:
-        //this.#filmPresenter.get(update.id).setViewState(State.ADDING);
+        this.#filmPresenter.get(update.id).setViewState(State.ADDING);
         try {
           await this.#filmsModel.addComment(update);
         } catch (error) {
-          //this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
+          this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
         }
         break;
       case UserAction.DELETE_COMMENT:
-        //this.#filmPresenter.get(update.id).setViewState(State.DELETING);
+        this.#filmPresenter.get(update.id).setViewState(State.DELETING);
         try {
           await this.#filmsModel.deleteComment(update);
         } catch (error) {
-          //this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
+          this.#filmPresenter.get(update.id).setViewState(State.ABORTING);
         }
         break;
     }
