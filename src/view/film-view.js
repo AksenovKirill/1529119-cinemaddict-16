@@ -1,36 +1,48 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view';
+import { getTime, sliceText } from '../utils/film.js';
+import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+import relativeTime from 'dayjs/plugin/relativeTime';
+dayjs.extend(duration);
+dayjs.extend(relativeTime);
 
-const createFilmCardTemplate = (film) =>
-  `<article class="film-card">
+const createFilmCardTemplate = (film) => {
+  const {filmDate, runTime, description, genres, rating, title, poster, isHistory, isWatchList, isFavorite} = film;
+  const date = dayjs(filmDate).format('YYYY');
+  const filmRunTime = getTime(runTime);
+  const descriptionFilm = sliceText(description, 139);
+
+  return`<article class="film-card">
       <a class="film-card__link">
-        <h3 class="film-card__title">Popeye the Sailor Meets Sindbad the Sailor</h3>
-        <p class="film-card__rating">${film.rating}</p>
+        <h3 class="film-card__title">${title}</h3>
+        <p class="film-card__rating">${rating}</p>
         <p class="film-card__info">
-          <span class="film-card__year">${film.year}</span>
-          <span class="film-card__duration">${film.runTime}</span>
-          <span class="film-card__genre">${film.genres}</span>
+          <span class="film-card__year">${date}</span>
+          <span class="film-card__duration">${filmRunTime}</span>
+          <span class="film-card__genre">${genres.slice(0,1)}</span>
         </p>
-        <img src="./images/posters/${film.poster}" alt="" class="film-card__poster">
-        <p class="film-card__description">${film.shortDescription}</p>
+        <img src="${poster}" alt="" class="film-card__poster">
+        <p class="film-card__description">${descriptionFilm}</p>
         <span class="film-card__comments">${film.comments.length} comments</span>
       </a>
       <div class="film-card__controls">
         <button class="film-card__controls-item film-card__controls-item
-          film-card__controls-item--add-to-watchlist ${film.isWatchList ? 'film-card__controls-item--active' : ''}"
+          film-card__controls-item--add-to-watchlist ${isWatchList ? 'film-card__controls-item--active' : ''}"
           type="button">Add to watchlist
         </button>
         <button class="film-card__controls-item
-          film-card__controls-item--mark-as-watched ${film.isHistory ? 'film-card__controls-item--active' : ''}"
+          film-card__controls-item--mark-as-watched ${isHistory ? 'film-card__controls-item--active' : ''}"
           type="button">Mark as watched
         </button>
         <button class="film-card__controls-item film-card__controls-item
-          film-card__controls-item--favorite ${film.isFavorite ? 'film-card__controls-item--active' : ''}"
+          film-card__controls-item--favorite ${isFavorite ? 'film-card__controls-item--active' : ''}"
           type="button">Mark as favorite
         </button>
       </div>
   </article>`;
+};
 
-export default class FilmView extends AbstractView {
+export default class FilmView extends SmartView {
   #film = null;
 
   constructor(film) {
@@ -75,18 +87,21 @@ export default class FilmView extends AbstractView {
   #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
-    this._callback.favoriteClick();
+    evt.target.classList.toggle('film-card__controls-item--active');
+    this._callback.watchListClick();
   }
 
   #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
+    evt.target.classList.toggle('film-card__controls-item--active');
     this._callback.watchedClick();
   }
 
   #watchListClickHandler = (evt) => {
     evt.preventDefault();
     evt.stopPropagation();
+    evt.target.classList.toggle('film-card__controls-item--active');
     this._callback.watchListClick();
   }
 }

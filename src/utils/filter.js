@@ -5,10 +5,5 @@ export const filter = {
   [FilterType.WATCHLIST]: (films) => films.filter((film) => film.isWatchList),
   [FilterType.HISTORY]: (films) => films.filter((film) => film.isHistory),
   [FilterType.FAVORITES]: (films) => films.filter((film) => film.isFavorite),
+  [FilterType.STATISTICS]: (films) => films,
 };
-
-export const generateFilter = (films) =>
-  Object.entries(filter).map(([filterName, countFilms]) => ({
-    name: filterName,
-    count: countFilms(films),
-  }));

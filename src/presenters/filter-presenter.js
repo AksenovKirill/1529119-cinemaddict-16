@@ -17,12 +17,13 @@ export default class FilterPresent {
   }
 
   get filters() {
-    const films = this.#filmsModel.films;
+    const films = [...this.#filmsModel.films];
 
     return {
       [FilterType.WATCHLIST]: filter[FilterType.WATCHLIST](films).length,
       [FilterType.HISTORY]: filter[FilterType.HISTORY](films).length,
       [FilterType.FAVORITES]: filter[FilterType.FAVORITES](films).length,
+      [FilterType.STATISTICS]: filter[FilterType.STATISTICS](films),
     };
   }
 

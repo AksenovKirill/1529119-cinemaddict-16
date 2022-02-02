@@ -1,7 +1,7 @@
 import { SortType } from '../const.js';
 
 export const sorters = {
-  date: (a, b) => b.year - a.year,
+  date: (a, b) => new Date(b.filmDate) - new Date(a.filmDate),
   rating: (a, b) => b.rating - a.rating,
   comments: (a, b) => b.comments.length - a.comments.length,
 };
