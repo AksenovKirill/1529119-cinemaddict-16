@@ -9,14 +9,14 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 const MINUTES = 60;
 const BAR_HEIGHT = 50;
 
-const getTotalDuration = (films) => films.reduce((acc, film) => (acc += film.runTime),0);
-
 const createStatisticsTemplate = (data) => {
   const {films, dateTo, dateFrom, currentInput} = data;
   const filmsForStatistic = getWatchedFilmsForStatistics(films, dateTo, dateFrom, currentInput);
 
   const keysGenres = Object.keys(filmsForStatistic.genres);
   const topGenre = keysGenres.sort((a, b) => filmsForStatistic.genres[b] - filmsForStatistic.genres[a])[0];
+
+  const getTotalDuration = (films) => films.reduce((acc, film) => (acc += film.runTime),0);
 
   const duration = getTotalDuration(filmsForStatistic.films);
   const hours = Math.floor(duration/MINUTES);
