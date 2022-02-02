@@ -51,6 +51,7 @@ export default class FilmsModel extends AbstractObservable {
       ];
       this._notify(updateType, updatedFilm);
     } catch (err) {
+      console.log(err);
       throw new Error('Can\'t update film');
     }
   }

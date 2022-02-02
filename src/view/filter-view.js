@@ -26,7 +26,7 @@ export const createFilterTemplate = (filter, currentFilterType) => `<nav class="
       <span class="main-navigation__item-count">${filter[FilterType.FAVORITES]}</span>
     </a>
   </div>
-    <a href="#stats" id="${FilterType.STATISTICS}" data-menu-type="${MenuItem.STATISTICS}" class="main-navigation__additional
+    <a href="#stats" id="${FilterType.STATISTICS}" data-menu-type="${MenuItem.STATISTICS}" class="main-navigation__item main-navigation__additional
     ${currentFilterType === FilterType.STATISTICS ? 'main-navigation__additional--active' : ''}">Stats</a>
 </nav>`;
 
@@ -46,7 +46,8 @@ export default class FilterView extends AbstractView {
 
   setFilterTypeChangeHandler = (callback) => {
     this._callback.filterTypeChange = callback;
-    this.element.addEventListener('click', this.#filterTypeChangeHandler);
+    this.element.querySelectorAll('.main-navigation__item')
+      .forEach((filter) => filter.addEventListener('click', this.#filterTypeChangeHandler));
   }
 
   setStatisticsClickHandler = (callback) => {
@@ -54,11 +55,8 @@ export default class FilterView extends AbstractView {
   }
 
   #filterTypeChangeHandler = (evt) => {
-    if (evt.target.tagName !== 'A') {
-      return;
-    }
-    this._callback.menuClick(evt.target.dataset.menuType);
-    this._callback.filterTypeChange(evt.target.id);
+    this._callback.menuClick(evt.currentTarget.dataset.menuType);
+    this._callback.filterTypeChange(evt.currentTarget.id);
   }
 }
 

@@ -93,7 +93,7 @@ export default class FilmListPresenter {
 
   #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
-      case UserAction.UPDATE_FILM:
+      case UserAction.UPDATE:
         try {
           await this.#filmsModel.updateFilm(updateType, update);
         } catch (error) {
@@ -239,21 +239,21 @@ export default class FilmListPresenter {
   };
 
   #handleFavoriteClick = (film) => {
-    this.#handleViewAction(UserAction.UPDATE, UpdateType.MINOR, {
+    this.#handleViewAction(UserAction.UPDATE, UpdateType.PATCH, {
       ...film,
       isFavorite: !film.isFavorite,
     });
   };
 
   #handleWatchedClick = (film) => {
-    this.#handleViewAction(UserAction.UPDATE, UpdateType.MINOR, {
+    this.#handleViewAction(UserAction.UPDATE, UpdateType.PATCH, {
       ...film,
       isHistory: !film.isHistory,
     });
   };
 
   #handleWatchListClick = (film) => {
-    this.#handleViewAction(UserAction.UPDATE, UpdateType.MINOR, {
+    this.#handleViewAction(UserAction.UPDATE, UpdateType.PATCH, {
       ...film,
       isWatchList: !film.isWatchList,
     });
@@ -356,22 +356,10 @@ export default class FilmListPresenter {
 
   #handleDeleteComment = (film, commentId) => {
     this.#filmsModel.deleteComment(UpdateType.PATCH, film, commentId);
-    // this.#handleViewAction(
-    //   UserAction.DELETE_COMMENT,
-    //   UpdateType.PATCH,
-    //   film,
-    //   commentId,
-    // );
   };
 
   #handleSubmitComment = (film, newComment) => {
     this.#filmsModel.addComment(UpdateType.PATCH, {newComment, filmId: film.id});
-    // this.#handleViewAction(
-    //   UserAction.ADD_COMMENT,
-    //   UpdateType.PATCH,
-    //   film,
-    //   newComment,
-    // );
   };
 
   #renderList = () => {

@@ -48,21 +48,21 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.UPDATE,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#film, isFavorite: !this.#film.isFavorite});
   }
 
   #handleWatchedClick = () => {
     this.#changeData(
       UserAction.UPDATE,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#film, isHistory: !this.#film.isHistory});
   }
 
   #handleWatchListClick = () => {
     this.#changeData(
       UserAction.UPDATE,
-      UpdateType.MINOR,
+      UpdateType.PATCH,
       {...this.#film, isWatchList: !this.#film.isWatchList});
   }
 }

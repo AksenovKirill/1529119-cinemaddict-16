@@ -15,9 +15,7 @@ const siteFooterStatistics = siteFooter.querySelector('.footer__statistics');
 const filmsModel = new FilmsModel(new ApiService(END_POINT, AUTHORIZATION));
 const filterModel = new FilterModel();
 
-filmsModel.addObserver(() => {
-  render(siteFooterStatistics, new FooterView(filmsModel.films), RenderPosition.AFTERBEGIN);
-});
+render(siteFooterStatistics, new FooterView(filmsModel.films), RenderPosition.AFTERBEGIN);
 
 const filmListPresenter = new FilmListPresenter(siteMainElement, filmsModel, filterModel);
 const filterPresenter = new FilterPresenter(siteMainElement, filterModel, filmsModel);
