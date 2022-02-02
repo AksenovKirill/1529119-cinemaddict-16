@@ -97,7 +97,6 @@ export default class FilmListPresenter {
         try {
           await this.#filmsModel.updateFilm(updateType, update);
         } catch (error) {
-          console.log(error);
         }
         break;
       case UserAction.ADD_COMMENT:
