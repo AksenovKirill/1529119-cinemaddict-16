@@ -169,7 +169,7 @@ export default class PopupView extends SmartView {
     this.#commentNewText = commentNewText;
     this.#isDisabled = isDisabled;
     this.#setInnerHandlers();
-    this.element.addEventListener('scroll', this.#handleScroll);
+    this.element.addEventListener('scroll', this.#scrollHandler);
   }
 
   get template() {
@@ -177,10 +177,10 @@ export default class PopupView extends SmartView {
   }
 
   restoreHandlers = () => {
-    this.setClosePopupButtonClickHandler(this.#handleCloseButtonClick);
-    this.setWatchListClickHandler(this.#handleWatchListClick);
-    this.setWatchedClickHandler(this.#handleWatchedClick);
-    this.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.setClosePopupButtonClickHandler(this.#closeButtonClickHandler);
+    this.setWatchListClickHandler(this.#watchListClickHandler);
+    this.setWatchedClickHandler(this.#watchedClickHandler);
+    this.setFavoriteClickHandler(this.#favoriteClickHandler);
     this.setDeleteClickHandler(this._callback.deleteCommentClick);
     this.setSubmitFormClickHandler(this._callback.submitComment);
     this.element.scrollTop = this.#currentScrollTop;
@@ -196,41 +196,41 @@ export default class PopupView extends SmartView {
     this._callback.closeButtonClick = callback;
     this.element
       .querySelector('.film-details__close-btn')
-      .addEventListener('click', this.#handleCloseButtonClick);
+      .addEventListener('click', this.#closeButtonClickHandler);
   };
 
   setWatchListClickHandler = (callback) => {
     this._callback.watchListClick = callback;
     this.element
       .querySelector('.film-details__control-button--watchlist')
-      .addEventListener('click', this.#handleWatchListClick);
+      .addEventListener('click', this.#watchListClickHandler);
   };
 
   setWatchedClickHandler = (callback) => {
     this._callback.watchedClick = callback;
     this.element
       .querySelector('.film-details__control-button--watched')
-      .addEventListener('click', this.#handleWatchedClick);
+      .addEventListener('click', this.#watchedClickHandler);
   };
 
   setFavoriteClickHandler = (callback) => {
     this._callback.favoriteClick = callback;
     this.element
       .querySelector('.film-details__control-button--favorite')
-      .addEventListener('click', this.#handleFavoriteClick);
+      .addEventListener('click', this.#favoriteClickHandler);
   };
 
   setDeleteClickHandler = (callback) => {
     this._callback.deleteClick = callback;
     this.element.querySelectorAll('.film-details__comment-delete').forEach((button) => {
-      button.addEventListener('click', this.#handleDeleteCommentClick);
+      button.addEventListener('click', this.#deleteCommentClickHandler);
     });
   };
 
   setSubmitFormClickHandler = (callback) => {
     const popup = document.querySelector('.film-details');
     if(popup) {
-      document.addEventListener('keydown', this.#handleSubmitForm);
+      document.addEventListener('keydown', this.#submitFormHandler);
     }
     this._callback.submitComment = callback;
   };
@@ -250,30 +250,35 @@ export default class PopupView extends SmartView {
     return newComment;
   }
 
-  #handleScroll = (evt) => {
+  removeFormSubmitHandler = () => {
+    document.removeEventListener('keydown', this._callback.submitComment);
+    document.removeEventListener('keydown',  this.#submitFormHandler);
+  }
+
+  #scrollHandler = (evt) => {
     this.#currentScrollTop = evt.target.scrollTop;
   }
 
-  #handleCloseButtonClick = (evt) => {
+  #closeButtonClickHandler = (evt) => {
     evt.preventDefault();
     this.#emotionNew = ' ';
     this.#commentNewText = '';
     this._callback.closeButtonClick();
   };
 
-  #handleWatchListClick = (evt) => {
+  #watchListClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-details__control-button--active');
     this._callback.watchListClick(this._data);
   };
 
-  #handleFavoriteClick = (evt) => {
+  #favoriteClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-details__control-button--active');
     this._callback.favoriteClick(this._data);
   };
 
-  #handleWatchedClick = (evt) => {
+  #watchedClickHandler = (evt) => {
     evt.preventDefault();
     evt.target.classList.toggle('film-details__control-button--active');
     this._callback.watchedClick(this._data);
@@ -295,7 +300,7 @@ export default class PopupView extends SmartView {
     }, true);
   };
 
-  #handleSubmitForm = (evt) => {
+  #submitFormHandler = (evt) => {
     if (evt.ctrlKey && evt.key === 'Enter') {
       if(this.#emotionNew !== '' && this.#commentNewText !== '') {
         const newComment = this.addComment();
@@ -304,7 +309,7 @@ export default class PopupView extends SmartView {
     }
   };
 
-  #handleDeleteCommentClick = (evt) => {
+  #deleteCommentClickHandler = (evt) => {
     evt.preventDefault();
     this._callback.deleteClick(PopupView.parseFilmToData(this._data), evt.target.dataset.commentId);
   };

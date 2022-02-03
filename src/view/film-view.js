@@ -1,5 +1,6 @@
 import SmartView from './smart-view';
 import { getTime, sliceText } from '../utils/film.js';
+import { SHORT_TEXT } from '../const.js';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -10,7 +11,7 @@ const createFilmCardTemplate = (film) => {
   const {filmDate, runTime, description, genres, rating, title, poster, isHistory, isWatchList, isFavorite} = film;
   const date = dayjs(filmDate).format('YYYY');
   const filmRunTime = getTime(runTime);
-  const descriptionFilm = sliceText(description, 139);
+  const descriptionFilm = sliceText(description, SHORT_TEXT);
 
   return`<article class="film-card">
       <a class="film-card__link">
@@ -88,7 +89,7 @@ export default class FilmView extends SmartView {
     evt.preventDefault();
     evt.stopPropagation();
     evt.target.classList.toggle('film-card__controls-item--active');
-    this._callback.watchListClick();
+    this._callback.favoriteClick();
   }
 
   #watchedClickHandler = (evt) => {

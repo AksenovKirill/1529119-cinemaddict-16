@@ -1,6 +1,6 @@
 import FilmView from '../view/film-view.js';
-import { remove, render, RenderPosition, replace } from '../utils/render.js';
-import { UpdateType, UserAction } from '../const.js';
+import { remove, render, replace } from '../utils/render.js';
+import { UpdateType, UserAction, RenderPosition } from '../const.js';
 
 export default class FilmPresenter {
   #filmListContainer = null;
@@ -48,21 +48,21 @@ export default class FilmPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(
       UserAction.UPDATE,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#film, isFavorite: !this.#film.isFavorite});
   }
 
   #handleWatchedClick = () => {
     this.#changeData(
       UserAction.UPDATE,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#film, isHistory: !this.#film.isHistory});
   }
 
   #handleWatchListClick = () => {
     this.#changeData(
       UserAction.UPDATE,
-      UpdateType.PATCH,
+      UpdateType.MINOR,
       {...this.#film, isWatchList: !this.#film.isWatchList});
   }
 }

@@ -1,6 +1,6 @@
 import { Method } from './const.js';
 
-export default class ApiService {
+export default class ApiServer {
   #endPoint = null;
   #authorization = null;
 
@@ -11,7 +11,7 @@ export default class ApiService {
 
   get films() {
     return this.#load({url: 'movies'})
-      .then(ApiService.parseResponse);
+      .then(ApiServer.parseResponse);
   }
 
   updateFilm = async (film) => {
@@ -22,12 +22,12 @@ export default class ApiService {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
-    return await ApiService.parseResponse(response);
+    return await ApiServer.parseResponse(response);
   }
 
   getComments = async (filmId) => {
     const response = await this.#load({ url: `comments/${filmId}` });
-    return await ApiService.parseResponse(response);
+    return await ApiServer.parseResponse(response);
   }
 
   addComment = async (comment, filmId) => {
@@ -38,7 +38,7 @@ export default class ApiService {
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
-    return await ApiService.parseResponse(response);
+    return await ApiServer.parseResponse(response);
   }
 
   deleteComment = async (commentId) => await this.#load({
@@ -60,10 +60,10 @@ export default class ApiService {
     );
 
     try {
-      ApiService.checkStatus(response);
+      ApiServer.checkStatus(response);
       return response;
     } catch (err) {
-      ApiService.catchError(err);
+      ApiServer.catchError(err);
     }
   }
 

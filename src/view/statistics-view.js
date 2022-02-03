@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import SmartView from '../view/smart-view.js';
+import SmartView from './smart-view.js';
 import { getRating } from '../utils/render.js';
 import { getWatchedFilmsForStatistics} from '../utils/statistics.js';
 import { StatisticsFilterType } from '../const.js';
