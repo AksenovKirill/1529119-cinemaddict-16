@@ -120,19 +120,18 @@ export default class FilmListPresenter {
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
       case UpdateType.PATCH:
-        this.#filmPresenter.get(data.id).init(data, this.#filmsModel.comments);
+        this.#filmPresenter.get(data.id).init(data);
+        break;
+      case UpdateType.MINOR:
         if (this.#popupComponent !== null) {
           this.#closePopup();
           this.#renderPopup(data);
         }
-        break;
-
-      case UpdateType.MINOR:
         this.#clearList();
+        this.#renderNoFilms();
         this.#renderUserRank(data);
         this.#renderFilmList();
         break;
-
       case UpdateType.MAJOR:
         this.#clearList({resetRenderedFilmCount: true, resetSortType: true});
         this.#renderUserRank(data);
@@ -140,7 +139,6 @@ export default class FilmListPresenter {
         this.#renderNoFilms();
         this.#renderFilmList();
         break;
-
       case UpdateType.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
@@ -153,7 +151,7 @@ export default class FilmListPresenter {
     }
   };
 
-  setViewState = (state) => {
+  setViewState = (state, film) => {
     const resetFormState = () => {
       this.#popupComponent.updateData({
         isDisabled: false,
@@ -161,15 +159,15 @@ export default class FilmListPresenter {
     };
     switch (state) {
       case State.ADDING:
-        this.#popupComponent.updateData({
+        this.#popupComponent.updateData({...film,
           isDisabled: true,
         });
         break;
       case State.UPDATING:
-        this.#popupComponent.updateData({isDisabled: true});
+        this.#popupComponent.updateData({isDisabled: false});
         break;
       case State.DELETING:
-        this.#popupComponent.updateData({
+        this.#popupComponent.updateData({...film,
           isDisabled: true,
         });
         break;
@@ -186,6 +184,7 @@ export default class FilmListPresenter {
     this.#currentSortType = sortType;
     this.#renderedFilmCount = FILM_COUNT_PER_STEP;
     this.#clearList({resetRenderedFilmsCount: false});
+    this.#renderUserRank();
     this.#renderFilmList();
   };
 
@@ -222,6 +221,7 @@ export default class FilmListPresenter {
     this.#noFilmComponent = new NoFilmView(this.#filterType);
     const filmCount = this.films.length;
     if (filmCount === 0) {
+      remove(this.#sortComponent);
       render(
         this.#filmListComponent.filmListContainerTemplate,
         this.#noFilmComponent,
@@ -246,21 +246,21 @@ export default class FilmListPresenter {
   };
 
   #handleFavoriteClick = (film) => {
-    this.#handleViewAction(UserAction.UPDATE, UpdateType.PATCH, {
+    this.#handleViewAction(UserAction.UPDATE, UpdateType.MINOR, {
       ...film,
       isFavorite: !film.isFavorite,
     });
   };
 
   #handleWatchedClick = (film) => {
-    this.#handleViewAction(UserAction.UPDATE, UpdateType.PATCH, {
+    this.#handleViewAction(UserAction.UPDATE, UpdateType.MINOR, {
       ...film,
       isHistory: !film.isHistory,
     });
   };
 
   #handleWatchListClick = (film) => {
-    this.#handleViewAction(UserAction.UPDATE, UpdateType.PATCH, {
+    this.#handleViewAction(UserAction.UPDATE, UpdateType.MINOR, {
       ...film,
       isWatchList: !film.isWatchList,
     });
@@ -306,11 +306,9 @@ export default class FilmListPresenter {
     if (resetRenderedFilmCount) {
       this.#renderedFilmCount = FILM_COUNT_PER_STEP;
     }
-
     if (resetSortType) {
       this.#currentSortType = SortType.DEFAULT;
     }
-
     if (this.#noFilmComponent) {
       remove(this.#noFilmComponent);
     }
@@ -328,7 +326,6 @@ export default class FilmListPresenter {
 
   #renderFooter = () => {
     this.#footerComponent = new FooterView(this.#filmsModel.films);
-
     render(siteFooter, this.#footerComponent, RenderPosition.BEFOREEND);
   }
 
@@ -350,7 +347,6 @@ export default class FilmListPresenter {
   #closePopup = () => {
     bodyElement.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#escKeyDownHandler);
-
     remove(this.#popupComponent);
     this.#popupComponent = null;
   };

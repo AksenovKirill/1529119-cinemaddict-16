@@ -1,8 +1,8 @@
-export const MINUTES = 60;
 export const AUTHORIZATION = 'Basic errtty12093388tyu';
 export const END_POINT = 'https://16.ecmascript.pages.academy/cinemaddict';
 export const FILM_COUNT_PER_STEP = 5;
 export const SHORT_TEXT = 139;
+export const MINUTES = 60;
 
 export const RenderPosition = {
   BEFOREBEGIN: 'beforebegin',
@@ -69,5 +69,5 @@ export const StatusRank = {
   NOVICE: 'Novice',
   FAN: 'Fan',
   MOVIE_BUFF: 'Movie buff',
-}
+};
 
