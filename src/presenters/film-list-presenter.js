@@ -121,6 +121,10 @@ export default class FilmListPresenter {
     switch (updateType) {
       case UpdateType.PATCH:
         this.#filmPresenter.get(data.id).init(data);
+        if (this.#popupComponent !== null) {
+          this.#closePopup();
+          this.#renderPopup(data);
+        }
         break;
       case UpdateType.MINOR:
         if (this.#popupComponent !== null) {
@@ -152,11 +156,6 @@ export default class FilmListPresenter {
   };
 
   setViewState = (state, film) => {
-    const resetFormState = () => {
-      this.#popupComponent.updateData({
-        isDisabled: false,
-      });
-    };
     switch (state) {
       case State.ADDING:
         this.#popupComponent.updateData({...film,
@@ -164,7 +163,9 @@ export default class FilmListPresenter {
         });
         break;
       case State.UPDATING:
-        this.#popupComponent.updateData({isDisabled: false});
+        this.#popupComponent.updateData({
+          isDisabled: false
+        });
         break;
       case State.DELETING:
         this.#popupComponent.updateData({...film,
@@ -172,7 +173,10 @@ export default class FilmListPresenter {
         });
         break;
       case State.ABORTING:
-        this.#popupComponent.shake(resetFormState);
+        this.#popupComponent.updateData({
+          isDisabled: false,
+        });
+        this.#popupComponent.shake();
         break;
     }
   };
@@ -357,8 +361,18 @@ export default class FilmListPresenter {
     }
   };
 
-  #handleDeleteComment = (film, commentId) => {
-    this.#filmsModel.deleteComment(UpdateType.PATCH, film, commentId);
+  #handleDeleteComment = async (film, commentId) => {
+    try {
+      await this.#filmsModel.deleteComment(UpdateType.PATCH, film, commentId);
+    } catch (error) {
+      this.#popupComponent.shake( () => {
+        this.#popupComponent.updateData({
+          idDeleting: false,
+          isDisabled: false,
+          deletingCommentId: undefined,
+        });
+      });
+    }
   };
 
   #handleSubmitComment = (film, newComment) => {

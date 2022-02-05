@@ -76,6 +76,7 @@ export default class FilmsModel extends AbstractObservable {
         ...this.#comments.slice(0, index),
         ...this.#comments.slice(index + 1),
       ];
+      update.comments = update.comments.filter((id) => id !== commendId);
       this._notify(updateType, update);
     } catch(err) {
       throw new Error('Can\'t delete comment');
