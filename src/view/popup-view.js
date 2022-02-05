@@ -19,7 +19,7 @@ const createCommentsTemplate = (comments, isDeleting) => {
       <img src="/images/emoji/${emotion}.png" width="55" height="55" alt="emoji-${emotion}">
     </span>
     <div>
-      <p class="film-details__comment-text">${comment}</p>
+      <p class="film-details__comment-text">${he.encode(comment)}</p>
       <p class="film-details__comment-info">
         <span class="film-details__comment-author">${author}</span>
         <span class="film-details__comment-day">${commentDate}</span>
@@ -30,7 +30,7 @@ const createCommentsTemplate = (comments, isDeleting) => {
 };
 
 const createPopupTemplate = (data, comments, emotionNew, commentNewText) => {
-  const {title, poster, alternativeTitle, rating, director, writers, actors, filmDate, runTime, country, genres,
+  const {title, poster, alternativeTitle, rating, director, screenwriter, actors, filmDate, runTime, country, genres,
     description, ageRating, isWatchList, isHistory, isFavorite} = data;
 
   const date = dayjs(filmDate).format('DD MMMM YYYY');
@@ -65,7 +65,7 @@ const createPopupTemplate = (data, comments, emotionNew, commentNewText) => {
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Writers</td>
-                <td class="film-details__cell">${writers}</td>
+                <td class="film-details__cell">${screenwriter.join(', ')}</td>
               </tr>
               <tr class="film-details__row">
                 <td class="film-details__term">Actors</td>
@@ -195,6 +195,7 @@ export default class PopupView extends SmartView {
     this.element
       .querySelector('.film-details__close-btn')
       .addEventListener('click', this.#closeButtonClickHandler);
+
   };
 
   setWatchListClickHandler = (callback) => {
@@ -233,10 +234,16 @@ export default class PopupView extends SmartView {
     this._callback.submitComment = callback;
   };
 
+  setRemoveHandlers = () => {
+    document.removeEventListener('keydown', this.#submitFormHandler);
+    document.removeEventListener('keydown', this._callback.submitComment);
+    document.removeEventListener('click', this._callback.deleteClick);
+  }
+
   addComment = () => ({
     id: '',
     author: 'Author',
-    comment: he.encode(this.#commentNewText),
+    comment: this.#commentNewText,
     date: dayjs(),
     emotion: this.#emotionNew,
   })
@@ -294,8 +301,6 @@ export default class PopupView extends SmartView {
         const newComment = this.addComment();
         this._callback.submitComment(PopupView.parseFilmToData(this._data), newComment);
       }
-      document.removeEventListener('keydown', this._callback.submitComment);
-      document.removeEventListener('keydown',  this.#submitFormHandler);
     }
   };
 

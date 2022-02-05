@@ -344,13 +344,13 @@ export default class FilmListPresenter {
     this.#popupComponent.setDeleteClickHandler(this.#handleDeleteComment);
     this.#popupComponent.setSubmitFormClickHandler(this.#handleSubmitComment);
     document.addEventListener('keydown', this.#escKeyDownHandler);
-
     render(siteFooter, this.#popupComponent, RenderPosition.AFTEREND);
   };
 
   #closePopup = () => {
     bodyElement.classList.remove('hide-overflow');
     document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#popupComponent.setRemoveHandlers();
     remove(this.#popupComponent);
     this.#popupComponent = null;
   };
@@ -375,7 +375,15 @@ export default class FilmListPresenter {
     }
   };
 
-  #handleSubmitComment = (film, newComment) => {
-    this.#filmsModel.addComment(UpdateType.PATCH, {newComment, filmId: film.id});
-  };
+  #handleSubmitComment = async (film, newComment) => {
+    try {
+      await  this.#filmsModel.addComment(UpdateType.PATCH, {newComment, filmId: film.id});
+    } catch (error) {
+      this.#popupComponent.shake( () => {
+        this.#popupComponent.updateData({
+          isDisabled: false,
+        });
+      });
+    }
+  }
 }
