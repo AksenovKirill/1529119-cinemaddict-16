@@ -1,11 +1,10 @@
 import AbstractView from '../view/abstract-view';
+import {StatusRank, RenderPosition} from '../const.js';
 
-export const RenderPosition = {
-  BEFOREBEGIN: 'beforebegin',
-  AFTERBEGIN: 'afterbegin',
-  BEFOREEND: 'beforeend',
-  AFTEREND: 'afterend',
-};
+const MIN_FILMS_TO_EMPTY = 0;
+const MIN_FILMS_TO_NOVICE = 10;
+const MIN_FILMS_TO_FAN = 20;
+const MIN_FILMS_TO_MOVIE_BUFF = 21;
 
 export const render = (container, element, place) => {
   const parent = container instanceof AbstractView ? container.element : container;
@@ -65,16 +64,16 @@ export const replace = (newElement, oldElement) => {
 };
 
 export const getRating = (watchedFilms) => {
-  if(watchedFilms === 0){
+  if(watchedFilms === MIN_FILMS_TO_EMPTY){
     return '';
   }
-  if(watchedFilms <= 10){
-    return 'Novice';
+  if(watchedFilms <= MIN_FILMS_TO_NOVICE){
+    return StatusRank.NOVICE;
   }
-  if(watchedFilms <= 20){
-    return 'Fan';
+  if(watchedFilms <= MIN_FILMS_TO_FAN){
+    return StatusRank.FAN;
   }
-  if(watchedFilms >= 21){
-    return 'Movie Buff';
+  if(watchedFilms >= MIN_FILMS_TO_MOVIE_BUFF){
+    return StatusRank.MOVIE_BUFF;
   }
 };

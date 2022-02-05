@@ -1,18 +1,20 @@
-import AbstractView from './abstract-view.js';
+import SmartView from './smart-view.js';
 
-const createFooterTemplate = (data) => (
-  `<p>${data.length} movies inside</p>`
+const createFooterTemplate = (films) => (
+  `<section class="footer__statistics">
+    <p>${films.length} movies inside</p>
+  </section>`
 );
 
-export default class FooterView extends AbstractView {
-  #data = null;
+export default class FooterView extends SmartView {
+  #films = null;
 
-  constructor(data) {
+  constructor(films) {
     super();
-    this.#data = data;
+    this.#films = films;
   }
 
   get template() {
-    return createFooterTemplate(this.#data);
+    return createFooterTemplate(this.#films);
   }
 }

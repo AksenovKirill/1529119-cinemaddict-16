@@ -27,7 +27,7 @@ export default class FilmsModel extends AbstractObservable {
   init = async () => {
     try {
       const films = await this.#apiService.films;
-      this.#films = films.map(this.#adapterToClient);
+      this.#films = films.map(this.#adaptToClient);
     } catch(err) {
       this.#films = [];
     }
@@ -43,7 +43,7 @@ export default class FilmsModel extends AbstractObservable {
 
     try {
       const response = await this.#apiService.updateFilm(update);
-      const updatedFilm = this.#adapterToClient(response);
+      const updatedFilm = this.#adaptToClient(response);
       this.#films = [
         ...this.#films.slice(0, index),
         updatedFilm,
@@ -59,7 +59,7 @@ export default class FilmsModel extends AbstractObservable {
     try {
       const { filmId, newComment } = update;
       const response = await this.#apiService.addComment(newComment, filmId);
-      this._notify(updateType, this.#adapterToClient(response.movie));
+      this._notify(updateType, this.#adaptToClient(response.movie));
     } catch(err) {
       throw new Error('Can\'t add comment');
     }
@@ -76,13 +76,14 @@ export default class FilmsModel extends AbstractObservable {
         ...this.#comments.slice(0, index),
         ...this.#comments.slice(index + 1),
       ];
+      update.comments = update.comments.filter((id) => id !== commendId);
       this._notify(updateType, update);
     } catch(err) {
       throw new Error('Can\'t delete comment');
     }
   }
 
-  #adapterToClient = (film) => {
+  #adaptToClient = (film) => {
     const adaptedFilm = {...film,
       comments: film['comments'],
       title: film['film_info']['title'],

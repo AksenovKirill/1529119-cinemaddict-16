@@ -8,7 +8,7 @@ dayjs.extend(isSameOrBefore);
 
 export const filterStaticFilms = (films, dateTo, dateFrom, currentInput) => {
   if(currentInput === StatisticsFilterType.ALL_TIME){
-    return films.filter((film) => dayjs(film.realeaseDate).isSameOrBefore(dayjs()));
+    return films.filter((film) => dayjs(film));
   }
   if(currentInput === StatisticsFilterType.TODAY){
     return films.filter((film) => dayjs(film.realeaseDate).isBetween(dayjs().add(-7, 'day'), dayjs(), 'day'));
